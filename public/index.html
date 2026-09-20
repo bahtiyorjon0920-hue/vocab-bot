@@ -529,8 +529,8 @@
             <!-- Login Form -->
             <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-3.5">
                 <div>
-                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Gmail yoki Username</label>
-                    <input type="text" id="loginQuery" required placeholder="user@gmail.com yoki username" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Username (Login)</label>
+                    <input type="text" id="loginQuery" required placeholder="Username kiriting" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500 font-mono">
                 </div>
                 <div>
                     <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Parol</label>
@@ -544,16 +544,8 @@
             <!-- Register Form -->
             <form id="registerForm" onsubmit="handleRegisterSubmit(event)" class="space-y-3.5 hidden">
                 <div>
-                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Gmail / Email Pochta</label>
-                    <input type="email" id="regEmail" required placeholder="ismingiz@gmail.com" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">O'zingizga Username tanlang</label>
-                    <input type="text" id="regUsername" required placeholder="masalan: shermatov_01" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Ism va Familiyangiz</label>
-                    <input type="text" id="regFullName" placeholder="Bahtiyor Shermatov" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Username (Login uchun)</label>
+                    <input type="text" id="regUsername" required placeholder="masalan: shermatov_01" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500 font-mono">
                 </div>
                 <div>
                     <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Parol</label>
@@ -749,19 +741,11 @@
             <div id="admViewCreate" class="flex-grow overflow-y-auto pr-1 hidden">
                 <div class="glass-card p-6 rounded-2xl max-w-md mx-auto space-y-3.5 my-auto">
                     <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-user-plus text-blue-400"></i> Yangi O'quvchi / Foydalanuvchi Yaratish
+                        <i class="fa-solid fa-user-plus text-blue-400"></i> Yangi O'quvchi Yaratish
                     </h3>
                     <div>
-                        <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Gmail / Email *</label>
-                        <input type="email" id="admNewEmail" placeholder="masalan: ali@gmail.com" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
-                    </div>
-                    <div>
                         <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Username (login uchun) *</label>
-                        <input type="text" id="admNewUsername" placeholder="masalan: alisher_01" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Ism va Familiya</label>
-                        <input type="text" id="admNewFullName" placeholder="Alisher Qodirov" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                        <input type="text" id="admNewUsername" placeholder="masalan: alisher_01" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500 font-mono">
                     </div>
                     <div>
                         <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Parol *</label>
@@ -1162,9 +1146,7 @@
 
         async function handleRegisterSubmit(e) {
             e.preventDefault();
-            const email = document.getElementById('regEmail').value.trim();
             const username = document.getElementById('regUsername').value.trim();
-            const fullName = document.getElementById('regFullName').value.trim();
             const password = document.getElementById('regPassword').value.trim();
             const errBox = document.getElementById('authErrorMsg');
 
@@ -1172,7 +1154,7 @@
                 const res = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, username, fullName, password })
+                    body: JSON.stringify({ username, password })
                 });
                 const data = await res.json();
                 if (data.ok) {

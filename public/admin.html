@@ -347,16 +347,8 @@
 
                         <form onsubmit="handleCreateStudent(event)" class="space-y-3.5">
                             <div>
-                                <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Gmail / Email *</label>
-                                <input type="email" id="newStudentEmail" required placeholder="masalan: oquvchi@gmail.com" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
-                            </div>
-                            <div>
                                 <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Username (login uchun) *</label>
                                 <input type="text" id="newStudentUsername" required placeholder="masalan: jasur_99" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500 font-mono">
-                            </div>
-                            <div>
-                                <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Ism va Familiya</label>
-                                <input type="text" id="newStudentFullName" placeholder="Jasur Rahimov" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
                             </div>
                             <div>
                                 <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Parol *</label>
@@ -386,16 +378,8 @@
 
                         <form onsubmit="handleCreateAdmin(event)" class="space-y-3.5">
                             <div>
-                                <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Admin Gmail *</label>
-                                <input type="email" id="newAdminEmail" required placeholder="masalan: yordamchi_admin@gmail.com" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-purple-500">
-                            </div>
-                            <div>
                                 <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Admin Username *</label>
                                 <input type="text" id="newAdminUsername" required placeholder="masalan: admin_sherzod" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-purple-500 font-mono">
-                            </div>
-                            <div>
-                                <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Admin Ismi</label>
-                                <input type="text" id="newAdminFullName" placeholder="Sherzodbek (Admin)" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-purple-500">
                             </div>
                             <div>
                                 <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Xavfsiz Parol *</label>
@@ -830,9 +814,7 @@
         // Handle Forms
         async function handleCreateStudent(e) {
             e.preventDefault();
-            const email = document.getElementById('newStudentEmail').value.trim();
             const username = document.getElementById('newStudentUsername').value.trim();
-            const fullName = document.getElementById('newStudentFullName').value.trim();
             const password = document.getElementById('newStudentPassword').value.trim();
             const days = parseInt(document.getElementById('newStudentDays').value) || 30;
 
@@ -840,15 +822,13 @@
                 const res = await fetch('/api/admin/create-user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'X-Session-Token': adminToken },
-                    body: JSON.stringify({ email, username, fullName, password, days })
+                    body: JSON.stringify({ username, password, days })
                 });
                 const data = await res.json();
                 if (data.ok) {
                     confetti({ particleCount: 90, spread: 70 });
                     showToast('🎉 Yangi o\'quvchi muvaffaqiyatli qo\'shildi!');
-                    document.getElementById('newStudentEmail').value = '';
                     document.getElementById('newStudentUsername').value = '';
-                    document.getElementById('newStudentFullName').value = '';
                     document.getElementById('newStudentPassword').value = '123456';
                     loadAllData();
                     switchTab('users');
@@ -860,24 +840,20 @@
 
         async function handleCreateAdmin(e) {
             e.preventDefault();
-            const email = document.getElementById('newAdminEmail').value.trim();
             const username = document.getElementById('newAdminUsername').value.trim();
-            const fullName = document.getElementById('newAdminFullName').value.trim();
             const password = document.getElementById('newAdminPassword').value.trim();
 
             try {
                 const res = await fetch('/api/admin/create-admin', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'X-Session-Token': adminToken },
-                    body: JSON.stringify({ email, username, fullName, password })
+                    body: JSON.stringify({ username, password })
                 });
                 const data = await res.json();
                 if (data.ok) {
                     confetti({ particleCount: 100, spread: 80 });
                     showToast('👑 Yangi Admin muvaffaqiyatli yaratildi!');
-                    document.getElementById('newAdminEmail').value = '';
                     document.getElementById('newAdminUsername').value = '';
-                    document.getElementById('newAdminFullName').value = '';
                     document.getElementById('newAdminPassword').value = '';
                     loadAllData();
                     switchTab('admins');
