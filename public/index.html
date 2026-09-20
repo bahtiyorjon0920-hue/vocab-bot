@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="uz" class="dark">
 <head>
-    <!-- Telegram WebApp SDK -->
-    <script src=https://telegram.org/js/telegram-web-app.js></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vocab 3X — Apple & Linear Pro Vocabulary Learning</title>
+    <title>Vocab 3X Pro — Professional So'z Yodlash Platformasi</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,13 +18,8 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            accent: '#2997ff',
-                        },
-                        dark: {
-                            bg: '#070709',
-                            card: '#121217',
-                        }
+                        brand: { accent: '#2997ff' },
+                        dark: { bg: '#070709', card: '#121217' }
                     },
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
@@ -56,14 +49,14 @@
         }
 
         .glass-nav {
-            background: rgba(13, 13, 18, 0.85);
+            background: rgba(13, 13, 18, 0.88);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .glass-card {
-            background: rgba(18, 18, 24, 0.7);
+            background: rgba(18, 18, 24, 0.75);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -73,8 +66,6 @@
 
         .glass-card:hover {
             border-color: rgba(255, 255, 255, 0.16);
-            transform: translateY(-2px);
-            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(41, 151, 255, 0.08);
         }
 
         .glass-button {
@@ -90,24 +81,10 @@
             transform: translateY(-1px);
         }
 
-        .glass-button:active {
-            transform: translateY(1px) scale(0.97);
-        }
-
-        /* 3D Flip Card Effect */
-        .perspective-1200 {
-            perspective: 1200px;
-        }
-        .transform-style-3d {
-            transform-style: preserve-3d;
-        }
-        .backface-hidden {
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-        }
-        .rotate-y-180 {
-            transform: rotateY(180deg);
-        }
+        .perspective-1200 { perspective: 1200px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
 
         .kbd-key {
             font-family: 'JetBrains Mono', monospace;
@@ -119,20 +96,9 @@
             color: #94a3b8;
         }
 
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.16);
-            border-radius: 9999px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.16); border-radius: 9999px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-blue-600 selection:text-white">
@@ -150,38 +116,45 @@
                         Vocab<span class="text-blue-400 font-black">3X</span>
                         <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono font-medium">PRO</span>
                     </h1>
-                    <p class="text-[10px] text-zinc-400 font-medium tracking-wider uppercase">Apple Spaced Repetition</p>
+                    <p class="text-[10px] text-zinc-400 font-medium tracking-wider uppercase">Spaced Repetition Web</p>
                 </div>
             </div>
 
-            <!-- Quick Action & Stats in Header -->
-            <div id=userProfileBadge class=hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400>
-                <i class=fa-solid fa-user-check></i>
-                <span id=userNameDisplay>O'quvchi</span>
-                <span class=text-zinc-500>•</span>
-                <span id=userDaysLeft class=text-emerald-300>30 kun</span>
-            </div>
-            <div class="flex items-center gap-3">
-                <div class="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-400">
-                    <i class="fa-solid fa-fire text-amber-500 animate-pulse"></i>
-                    <span id="streakCount">1 kun</span>
+            <!-- User Status & Actions -->
+            <div class="flex items-center gap-2.5">
+                <!-- Admin Panel Button (shown for Admin) -->
+                <button id="adminPanelBtn" onclick="openAdminModal()" class="hidden px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 font-bold text-xs flex items-center gap-1.5 transition-all shadow-md shadow-amber-500/10 active:scale-95">
+                    <i class="fa-solid fa-crown text-amber-400"></i>
+                    <span>Admin Panel</span>
+                </button>
+
+                <!-- User Profile Capsule -->
+                <div id="userProfileBadge" class="hidden flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/80 border border-white/10 text-xs font-semibold text-zinc-300">
+                    <i class="fa-solid fa-circle-user text-blue-400 text-sm"></i>
+                    <span id="userNameDisplay">O'quvchi</span>
+                    <span class="text-zinc-600">•</span>
+                    <span id="userDaysLeft" class="text-emerald-400">30 kun</span>
                 </div>
 
-                <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-semibold text-blue-400">
-                    <i class="fa-solid fa-brain"></i>
-                    <span id="headerMasteredCount">0</span>/<span id="headerTotalCount">0</span>
-                    <span class="hidden md:inline font-normal text-zinc-400">Yodlandi</span>
-                </div>
+                <!-- Auth / Logout Buttons -->
+                <button id="loginTriggerBtn" onclick="openAuthModal('login')" class="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all shadow-md shadow-blue-600/30 flex items-center gap-1.5 active:scale-95">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                    <span>Kirish</span>
+                </button>
 
-                <button type="button" onclick="openImportModal()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all shadow-md shadow-blue-600/30 flex items-center gap-2 active:scale-95 cursor-pointer">
+                <button id="logoutBtn" onclick="handleLogout()" class="hidden px-2.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white text-xs border border-white/10 transition-all" title="Chiqish">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
+
+                <button type="button" onclick="openImportModal()" class="hidden sm:flex px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs transition-all border border-white/10 items-center gap-1.5 active:scale-95">
                     <i class="fa-solid fa-plus text-[11px]"></i>
-                    <span>Qo'shish</span>
+                    <span>So'z qo'shish</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- iOS / Linear Navigation Tabs -->
+    <!-- Navigation Tabs -->
     <nav class="max-w-6xl mx-auto w-full px-4 pt-6">
         <div class="p-1.5 rounded-2xl bg-zinc-900/90 border border-white/[0.08] flex items-center justify-start sm:justify-center gap-1.5 overflow-x-auto scrollbar-none shadow-xl">
             <button type="button" onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold bg-white/10 text-white shadow-sm transition-all whitespace-nowrap cursor-pointer">
@@ -207,7 +180,6 @@
 
         <!-- ================= TAB 1: DASHBOARD ================= -->
         <section id="view-dashboard" class="tab-content space-y-6">
-            
             <!-- Hero Banner -->
             <div class="glass-card rounded-3xl p-6 md:p-8 relative overflow-hidden">
                 <div class="absolute -right-16 -bottom-16 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl pointer-events-none"></div>
@@ -219,10 +191,8 @@
                         So'zlarni unutilmas qilib xotirangizga muhrlang.
                     </h2>
                     <p class="text-zinc-400 text-xs sm:text-sm mt-2.5 leading-relaxed">
-                        Aqlli oraliqli takrorlash usuli orqali unutilish ehtimoli yuqori so'zlar o'yinlarda tez-tez takrorlanadi va yodlash tezligingiz 3 baravarga oshadi.
+                        Oraliq takrorlash va interaktiv o'yinlar orqali so'zlarni 3 barobar tezroq o'rganing.
                     </p>
-                    
-                    <!-- Preset Decks Buttons -->
                     <div class="flex flex-wrap items-center gap-2.5 mt-6">
                         <button type="button" onclick="openImportModal()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all shadow-lg shadow-blue-600/30 flex items-center gap-2 active:scale-95 cursor-pointer">
                             <i class="fa-solid fa-plus"></i> Yangi so'z kiritish
@@ -243,37 +213,22 @@
             <!-- Stats Grid -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
                 <div class="glass-card p-5 rounded-2xl">
-                    <div class="flex items-center justify-between text-zinc-400">
-                        <span class="text-xs font-semibold">Jami So'zlar</span>
-                        <i class="fa-solid fa-book-open text-xs"></i>
-                    </div>
+                    <div class="flex items-center justify-between text-zinc-400"><span class="text-xs font-semibold">Jami So'zlar</span><i class="fa-solid fa-book-open text-xs"></i></div>
                     <h3 id="statTotal" class="text-2xl sm:text-3xl font-black text-white mt-2">0</h3>
                     <p class="text-[11px] text-zinc-500 mt-1 font-medium">Lug'atingiz hajmi</p>
                 </div>
-
                 <div class="glass-card p-5 rounded-2xl border-emerald-500/20 bg-emerald-500/[0.03]">
-                    <div class="flex items-center justify-between text-emerald-400">
-                        <span class="text-xs font-semibold">O'zlashtirilgan</span>
-                        <i class="fa-solid fa-check-double text-xs"></i>
-                    </div>
+                    <div class="flex items-center justify-between text-emerald-400"><span class="text-xs font-semibold">O'zlashtirilgan</span><i class="fa-solid fa-check-double text-xs"></i></div>
                     <h3 id="statMastered" class="text-2xl sm:text-3xl font-black text-emerald-400 mt-2">0</h3>
                     <p class="text-[11px] text-emerald-500/80 mt-1 font-medium">5-qutidagi so'zlar</p>
                 </div>
-
                 <div class="glass-card p-5 rounded-2xl">
-                    <div class="flex items-center justify-between text-blue-400">
-                        <span class="text-xs font-semibold">O'rganilmoqda</span>
-                        <i class="fa-solid fa-arrows-rotate text-xs"></i>
-                    </div>
+                    <div class="flex items-center justify-between text-blue-400"><span class="text-xs font-semibold">O'rganilmoqda</span><i class="fa-solid fa-arrows-rotate text-xs"></i></div>
                     <h3 id="statLearning" class="text-2xl sm:text-3xl font-black text-blue-400 mt-2">0</h3>
                     <p class="text-[11px] text-zinc-500 mt-1 font-medium">1-4 qutilarda</p>
                 </div>
-
                 <div class="glass-card p-5 rounded-2xl">
-                    <div class="flex items-center justify-between text-purple-400">
-                        <span class="text-xs font-semibold">O'zlashtirish</span>
-                        <i class="fa-solid fa-chart-pie text-xs"></i>
-                    </div>
+                    <div class="flex items-center justify-between text-purple-400"><span class="text-xs font-semibold">O'zlashtirish</span><i class="fa-solid fa-chart-pie text-xs"></i></div>
                     <h3 id="statRate" class="text-2xl sm:text-3xl font-black text-purple-400 mt-2">0%</h3>
                     <div class="w-full bg-white/[0.06] h-1.5 rounded-full overflow-hidden mt-2.5">
                         <div id="statProgressBar" class="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 h-full w-0 transition-all duration-700"></div>
@@ -288,33 +243,25 @@
                         <h3 class="text-lg font-bold text-white tracking-tight">Mening Lug'atim</h3>
                         <p class="text-xs text-zinc-400 mt-0.5">Barcha kiritilgan so'zlar ro'yxati</p>
                     </div>
-
-                    <!-- Search & Action Controls -->
                     <div class="flex items-center gap-2.5">
                         <div class="relative flex-grow md:w-72">
                             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-xs"></i>
                             <input type="text" id="searchInput" oninput="renderWordList()" placeholder="So'zlarni qidirish..." 
-                                class="w-full bg-black/50 border border-white/[0.1] rounded-xl pl-9 pr-12 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
-                            <span class="absolute right-2.5 top-1/2 -translate-y-1/2 kbd-key hidden sm:inline">⌘K</span>
+                                class="w-full bg-black/50 border border-white/[0.1] rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
                         </div>
-
                         <button type="button" onclick="clearAllWords()" class="px-3 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-semibold border border-red-500/20 transition-all flex items-center gap-1.5 cursor-pointer" title="Lug'atni tozalash">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- Word Filter Buttons -->
                 <div class="flex items-center gap-1.5 overflow-x-auto pb-3 mb-2 scrollbar-none text-xs">
                     <button type="button" onclick="filterCategory('all', this)" class="category-chip px-3 py-1.5 rounded-lg bg-white/10 text-white font-medium border border-white/10 transition-all cursor-pointer">Barchasi</button>
                     <button type="button" onclick="filterCategory('box1', this)" class="category-chip px-3 py-1.5 rounded-lg glass-button text-zinc-400 font-medium transition-all cursor-pointer">Quti 1 (Yangi)</button>
                     <button type="button" onclick="filterCategory('box5', this)" class="category-chip px-3 py-1.5 rounded-lg glass-button text-zinc-400 font-medium transition-all cursor-pointer">Quti 5 (Yodlangan)</button>
                 </div>
 
-                <!-- Word List Container -->
-                <div id="wordListContainer" class="space-y-2 max-h-[500px] overflow-y-auto pr-1">
-                    <!-- Loaded dynamically via JS -->
-                </div>
+                <div id="wordListContainer" class="space-y-2 max-h-[500px] overflow-y-auto pr-1"></div>
             </div>
         </section>
 
@@ -322,46 +269,29 @@
         <section id="view-flashcard" class="tab-content max-w-xl mx-auto py-2" style="display: none;">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-2">
-                    <span class="text-[11px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
-                        Flesh-Karta Rejimi
-                    </span>
-                    <span id="fcBoxTag" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-white/[0.06] text-zinc-400 border border-white/[0.08]">
-                        Quti: 1/5
-                    </span>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">Flesh-Karta Rejimi</span>
+                    <span id="fcBoxTag" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-white/[0.06] text-zinc-400 border border-white/[0.08]">Quti: 1/5</span>
                 </div>
                 <div id="fcProgress" class="text-xs font-mono font-semibold text-zinc-400">1 / 10</div>
             </div>
 
-            <!-- 3D Flip Card Container -->
             <div id="cardFlipWrapper" onclick="flipCard()" class="perspective-1200 w-full h-88 sm:h-96 cursor-pointer group select-none">
                 <div id="cardInner" class="relative w-full h-full transform-style-3d transition-transform duration-500 glass-card rounded-3xl p-8 flex flex-col justify-between items-center text-center border border-white/10 shadow-2xl">
-                    
-                    <!-- Front Side (English) -->
                     <div class="absolute inset-0 backface-hidden p-8 flex flex-col justify-between items-center rounded-3xl bg-gradient-to-b from-white/[0.04] to-transparent">
                         <div class="w-full flex justify-between items-center">
                             <span class="text-[11px] uppercase tracking-widest text-zinc-500 font-bold">Inglizcha</span>
-                            <button type="button" onclick="event.stopPropagation(); speakCurrentWord();" class="w-10 h-10 rounded-2xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer" title="Talaffuzni eshitish">
+                            <button type="button" onclick="event.stopPropagation(); speakCurrentWord();" class="w-10 h-10 rounded-2xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer">
                                 <i class="fa-solid fa-volume-high text-sm"></i>
                             </button>
                         </div>
-
                         <div class="my-auto text-center space-y-3">
                             <h2 id="fcEnglish" class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">Apple</h2>
                             <p id="fcPhonetic" class="text-xs font-mono text-blue-400/80">/ˈæp.əl/</p>
-                            <div class="pt-2">
-                                <span class="text-xs text-zinc-400 flex items-center justify-center gap-2">
-                                    <span>Aylantirish uchun bosing</span>
-                                    <kbd class="kbd-key">Space</kbd>
-                                </span>
-                            </div>
+                            <div class="pt-2"><span class="text-xs text-zinc-400 flex items-center justify-center gap-2"><span>Aylantirish uchun bosing</span><kbd class="kbd-key">Space</kbd></span></div>
                         </div>
-
-                        <div class="text-[11px] text-zinc-500 font-medium">
-                            <i class="fa-solid fa-rotate text-[10px] mr-1"></i> Orqa tomonida o'zbekcha tarjimasi
-                        </div>
+                        <div class="text-[11px] text-zinc-500 font-medium"><i class="fa-solid fa-rotate text-[10px] mr-1"></i> Orqa tomonida o'zbekcha tarjimasi</div>
                     </div>
 
-                    <!-- Back Side (Uzbek) -->
                     <div class="absolute inset-0 backface-hidden rotate-y-180 p-8 flex flex-col justify-between items-center rounded-3xl bg-gradient-to-b from-blue-950/40 via-zinc-900 to-zinc-950 border border-blue-500/30">
                         <div class="w-full flex justify-between items-center">
                             <span class="text-[11px] uppercase tracking-widest text-blue-400 font-bold">O'zbekcha Tarjimasi</span>
@@ -369,20 +299,15 @@
                                 <i class="fa-solid fa-volume-high text-sm"></i>
                             </button>
                         </div>
-
                         <div class="my-auto text-center space-y-2">
                             <h2 id="fcUzbek" class="text-3xl sm:text-4xl font-bold text-blue-300 tracking-tight">Olma</h2>
                             <p id="fcExample" class="text-xs text-zinc-400 italic max-w-sm">"An apple a day keeps the doctor away."</p>
                         </div>
-
-                        <div class="text-[11px] text-zinc-400 font-medium">
-                            O'zlashtirish holatini belgilang:
-                        </div>
+                        <div class="text-[11px] text-zinc-400 font-medium">O'zlashtirish holatini belgilang:</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Action Controls -->
             <div class="grid grid-cols-2 gap-3.5 mt-6">
                 <button type="button" onclick="handleCardReview(false)" class="py-3.5 rounded-2xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/25 text-red-400 font-semibold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
                     <i class="fa-solid fa-xmark text-sm"></i> Qiynaldim <kbd class="kbd-key">1</kbd>
@@ -410,230 +335,365 @@
                     </button>
                 </div>
             </div>
-
-            <!-- Game Board Grid -->
-            <div id="matchGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <!-- Cards generated dynamically -->
-            </div>
+            <div id="matchGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
         </section>
 
         <!-- ================= TAB 4: SPEED QUIZ MODE ================= -->
         <section id="view-quiz" class="tab-content max-w-xl mx-auto py-2" style="display: none;">
             <div class="glass-card rounded-3xl p-6 sm:p-8 space-y-6">
-                <!-- Quiz Progress Bar -->
                 <div class="flex items-center justify-between text-xs text-zinc-400 font-medium">
                     <span>Savol: <strong id="quizCurrentNum" class="text-white font-bold">1</strong> / <span id="quizTotalNum">10</span></span>
                     <span>Ball: <strong id="quizScore" class="text-blue-400 font-bold text-sm">0</strong></span>
                 </div>
-                
                 <div class="w-full bg-white/[0.06] h-1.5 rounded-full overflow-hidden">
                     <div id="quizTimerBar" class="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 h-full w-full transition-all duration-100 ease-linear"></div>
                 </div>
-
-                <!-- Word Question -->
                 <div class="text-center py-6 space-y-2">
                     <span class="text-[11px] text-zinc-400 uppercase tracking-widest font-bold">Ushbu so'zning to'g'ri tarjimasi qaysi?</span>
                     <h2 id="quizQuestionWord" class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Apple</h2>
-                    <button type="button" onclick="speakQuizWord()" class="pt-2 text-xs text-blue-400 hover:text-blue-300 inline-flex items-center gap-1.5 transition-colors cursor-pointer">
-                        <i class="fa-solid fa-volume-high"></i> Talaffuzni eshitish
-                    </button>
                 </div>
-
-                <!-- Multiple Choice Options -->
-                <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <!-- Dynamic option buttons -->
-                </div>
+                <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
             </div>
         </section>
 
         <!-- ================= TAB 5: SPELLING PRACTICE ================= -->
         <section id="view-spelling" class="tab-content max-w-lg mx-auto py-4" style="display: none;">
-            <div class="glass-card rounded-3xl p-6 sm:p-8 text-center space-y-6">
-                <span class="text-[11px] font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20">
-                    Imlo va Yozish Mashqi
-                </span>
-
+            <div class="glass-card rounded-3xl p-6 sm:p-8 space-y-6 text-center">
                 <div>
-                    <p class="text-xs text-zinc-400 mb-1">Berilgan so'zning inglizcha to'g'ri yozilishini kiriting:</p>
-                    <h2 id="spellingTargetUz" class="text-3xl font-bold text-purple-300 tracking-tight">Olma</h2>
+                    <span class="text-[11px] text-zinc-400 uppercase tracking-widest font-bold">O'zbekcha tarjimasi:</span>
+                    <h2 id="spellPrompt" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-1">Olma</h2>
                 </div>
-
-                <!-- Audio & Hint Buttons -->
-                <div class="flex justify-center gap-2.5">
-                    <button type="button" onclick="speakSpellingWord()" class="px-3.5 py-1.5 rounded-xl glass-button text-xs text-zinc-400 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer">
-                        <i class="fa-solid fa-volume-high text-blue-400"></i> Ovoz
-                    </button>
-                    <button type="button" onclick="showSpellingHint()" class="px-3.5 py-1.5 rounded-xl glass-button text-xs text-zinc-400 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer">
-                        <i class="fa-regular fa-lightbulb text-amber-400"></i> Ishora (Hint)
-                    </button>
+                <div class="space-y-3">
+                    <input type="text" id="spellInput" autocomplete="off" autofocus placeholder="Inglizcha so'zni yozing..." oninput="checkSpellingRealtime()" 
+                        class="w-full bg-black/60 border border-white/15 rounded-2xl px-5 py-4 text-center text-lg sm:text-xl font-bold tracking-wider text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500 transition-all font-mono">
+                    <div id="spellFeedback" class="text-xs font-semibold h-4"></div>
                 </div>
-
-                <div id="spellingHintBox" class="hidden text-xs text-amber-400 font-mono tracking-widest bg-amber-500/10 py-2 px-4 rounded-xl border border-amber-500/20">
-                    A _ _ L E
+                <div class="flex items-center justify-between pt-2">
+                    <button type="button" onclick="skipSpelling()" class="px-4 py-2 rounded-xl glass-button text-xs text-zinc-400 hover:text-white">O'tkazib yuborish</button>
+                    <button type="button" onclick="submitSpelling()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all shadow-md shadow-blue-600/30">Tekshirish</button>
                 </div>
-
-                <!-- Input Form -->
-                <form onsubmit="checkSpellingAnswer(event)" class="space-y-3.5">
-                    <input type="text" id="spellingInput" autocomplete="off" placeholder="Inglizcha so'zni yozing..." 
-                        class="w-full bg-black/60 border border-white/[0.12] rounded-2xl px-4 py-3.5 text-center text-lg text-white placeholder-zinc-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all font-medium">
-                    <button type="submit" class="w-full py-3.5 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs sm:text-sm transition-all shadow-lg shadow-purple-600/30 active:scale-98 cursor-pointer">
-                        Tekshirish <i class="fa-solid fa-arrow-right ml-1"></i>
-                    </button>
-                </form>
-
-                <div id="spellingFeedback" class="text-xs font-semibold h-4"></div>
             </div>
         </section>
-
     </main>
 
-    <!-- Modal: Add / Import Words -->
-    <div id="importModal" style="display: none;" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md items-center justify-center p-4">
-        <div class="glass-card rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-white/[0.15] space-y-5 relative shadow-2xl">
-            <button type="button" onclick="closeImportModal()" class="absolute top-5 right-5 text-zinc-400 hover:text-white text-base cursor-pointer">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-            <div>
-                <h3 class="text-lg font-bold text-white tracking-tight">Yangi So'z Qo'shish</h3>
-                <p class="text-xs text-zinc-400 mt-1">O'zingiz yodlamoqchi bo'lgan so'zlarni lug'atingizga kiriting.</p>
+    <!-- ================= AUTHENTICATION MODAL (LOGIN & REGISTER) ================= -->
+    <div id="authModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl flex items-center justify-center p-4 transition-all duration-300 hidden">
+        <div class="glass-card max-w-md w-full p-6 sm:p-8 rounded-3xl border border-white/15 relative overflow-hidden shadow-2xl">
+            <div class="flex items-center justify-center mb-6">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-xl shadow-lg shadow-blue-500/30">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
             </div>
 
-            <!-- Tabs: Bittalab / Ko'plab -->
-            <div class="flex rounded-xl bg-black/50 p-1 border border-white/10 gap-1 text-xs">
-                <button type="button" id="tabSingleBtn" onclick="switchAddMode('single')" class="flex-1 py-2 rounded-lg font-bold bg-blue-600 text-white transition-all">
-                    <i class="fa-solid fa-plus mr-1"></i> Bittalab qo'shish
-                </button>
-                <button type="button" id="tabBulkBtn" onclick="switchAddMode('bulk')" class="flex-1 py-2 rounded-lg font-semibold text-zinc-400 hover:text-white transition-all">
-                    <i class="fa-solid fa-list mr-1"></i> Ro'yxat ko'rinishida
-                </button>
+            <!-- Auth Tabs -->
+            <div class="flex rounded-xl bg-white/[0.06] p-1 mb-6 border border-white/10">
+                <button type="button" id="authTabLogin" onclick="switchAuthTab('login')" class="flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all">Kirish</button>
+                <button type="button" id="authTabRegister" onclick="switchAuthTab('register')" class="flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all">Ro'yxatdan o'tish</button>
             </div>
 
-            <!-- Mode 1: Single Word Form -->
-            <form id="singleAddForm" onsubmit="saveSingleWord(event)" class="space-y-3.5">
-                <div>
-                    <label class="block text-[11px] font-semibold text-zinc-400 mb-1.5">Inglizcha so'z *</label>
-                    <input type="text" id="singleEnInput" required placeholder="Masalan: persistent" 
-                        class="w-full bg-black/70 border border-white/[0.12] rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-medium">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-zinc-400 mb-1.5">O'zbekcha tarjimasi *</label>
-                    <input type="text" id="singleUzInput" required placeholder="Masalan: qat'iyatli, tirishqoq" 
-                        class="w-full bg-black/70 border border-white/[0.12] rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-medium">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-zinc-400 mb-1.5">Misol gap (ixtiyoriy)</label>
-                    <input type="text" id="singleExampleInput" placeholder="Masalan: Be persistent in your goals." 
-                        class="w-full bg-black/70 border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500">
-                </div>
+            <!-- Error message container -->
+            <div id="authErrorMsg" class="hidden mb-4 p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-medium text-center"></div>
 
-                <div class="flex items-center justify-end gap-2.5 pt-2">
-                    <button type="button" onclick="closeImportModal()" class="px-4 py-2.5 rounded-xl glass-button text-xs font-medium text-zinc-400 hover:text-white cursor-pointer">
-                        Bekor qilish
-                    </button>
-                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg shadow-blue-600/30 transition-all active:scale-95 cursor-pointer">
-                        <i class="fa-solid fa-check mr-1"></i> Qo'shish
-                    </button>
+            <!-- Login Form -->
+            <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-3.5">
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Gmail yoki Username</label>
+                    <input type="text" id="loginQuery" required placeholder="user@gmail.com yoki username" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
                 </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Parol</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all active:scale-98 cursor-pointer mt-2">
+                    Kirish 🚀
+                </button>
             </form>
 
-            <!-- Mode 2: Bulk Import -->
-            <div id="bulkAddSection" class="space-y-3.5" style="display: none;">
-                <p class="text-[11px] text-zinc-400">Har bir qatorda <code class="text-blue-400 font-mono">so'z - tarjimasi</code> formatida yozing:</p>
-                <textarea id="bulkInput" rows="6" placeholder="apple - olma&#10;book - kitob&#10;beautiful - chiroyli&#10;knowledge - bilim" 
-                    class="w-full bg-black/70 border border-white/[0.12] rounded-2xl p-4 text-xs font-mono text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 leading-relaxed"></textarea>
+            <!-- Register Form -->
+            <form id="registerForm" onsubmit="handleRegisterSubmit(event)" class="space-y-3.5 hidden">
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Gmail / Email Pochta</label>
+                    <input type="email" id="regEmail" required placeholder="ismingiz@gmail.com" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">O'zingizga Username tanlang</label>
+                    <input type="text" id="regUsername" required placeholder="masalan: shermatov_01" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Ism va Familiyangiz</label>
+                    <input type="text" id="regFullName" placeholder="Bahtiyor Shermatov" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Parol</label>
+                    <input type="password" id="regPassword" required placeholder="Kamida 4 ta belgi" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all active:scale-98 cursor-pointer mt-2">
+                    Ro'yxatdan o'tish ✨
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= SUBSCRIPTION PAYWALL OVERLAY ================= -->
+    <div id="paywallOverlay" class="fixed inset-0 z-40 bg-[#070709]/95 backdrop-blur-2xl flex items-center justify-center p-4 transition-all duration-300 hidden">
+        <div class="glass-card max-w-lg w-full p-6 sm:p-8 rounded-3xl border border-white/15 text-center relative overflow-hidden shadow-2xl">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center text-white text-2xl mx-auto mb-4 shadow-lg shadow-amber-500/25">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <h3 class="text-2xl font-black text-white mb-1.5 tracking-tight">Obuna talab qilinadi</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed mb-5">
+                Platformaga to'liq kirish va barcha so'z mashqlaridan foydalanish oylik to'lov asosida ishlaydi.
+            </p>
+
+            <div class="glass-card p-4 sm:p-5 rounded-2xl mb-5 text-left border border-white/10 bg-white/[0.03]">
+                <div class="flex justify-between items-center mb-3 pb-3 border-b border-white/10">
+                    <span class="text-xs font-semibold text-zinc-300">Oylik to'liq obuna:</span>
+                    <span class="text-base font-black text-emerald-400">50 000 so'm / oy</span>
+                </div>
+                <div>
+                    <span class="text-[11px] text-zinc-400 font-medium">To'lov kartasi (ustiga bosing - nusxalanadi):</span>
+                    <div onclick="copyCardNumber()" class="mt-1.5 p-3 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-between cursor-pointer hover:bg-blue-500/15 transition-all">
+                        <span id="paywallCardNumber" class="font-mono font-extrabold text-blue-300 text-sm tracking-widest">5614 6820 5096 7480</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-400/20 text-blue-300 font-semibold">Nusxalash 📋</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Click & Payme Buttons -->
+            <div class="grid grid-cols-2 gap-2.5 mb-5">
+                <a href="/pay/click" target="_blank" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-emerald-600/20">
+                    <i class="fa-solid fa-bolt"></i> Click orqali
+                </a>
+                <a href="/pay/payme" target="_blank" class="py-2.5 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-cyan-600/20">
+                    <i class="fa-solid fa-credit-card"></i> Payme orqali
+                </a>
+            </div>
+
+            <!-- Receipt Upload Box -->
+            <div class="border-t border-white/10 pt-4 text-left">
+                <label class="block text-xs font-bold text-zinc-300 mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-file-invoice text-blue-400"></i> To'lov chekini (rasmini) yuklang:
+                </label>
                 
-                <div class="flex items-center justify-end gap-2.5 pt-1">
-                    <button type="button" onclick="closeImportModal()" class="px-4 py-2.5 rounded-xl glass-button text-xs font-medium text-zinc-400 hover:text-white cursor-pointer">
-                        Bekor qilish
+                <div id="pendingAlertBox" class="hidden mb-3 p-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs">
+                    <div class="flex items-center gap-2 font-bold mb-1">
+                        <i class="fa-solid fa-clock animate-spin"></i>
+                        <span>Chekingiz qabul qilindi!</span>
+                    </div>
+                    <p class="text-[11px] text-amber-200/80">Admin to'lovni tasdiqlashi bilan tizim avtomatik ochiladi. Iltimos kuting...</p>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <input type="file" id="receiptFileInput" accept="image/*" onchange="handleReceiptFileSelect(event)" class="hidden">
+                    <button type="button" onclick="document.getElementById('receiptFileInput').click()" class="flex-1 py-2.5 px-3 rounded-xl glass-button text-xs text-zinc-300 hover:text-white font-medium flex items-center justify-center gap-2 truncate">
+                        <i class="fa-solid fa-image text-blue-400"></i>
+                        <span id="receiptFileName">Rasm tanlash...</span>
                     </button>
-                    <button type="button" onclick="saveBulkWords()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-lg shadow-blue-600/30 transition-all active:scale-95 cursor-pointer">
-                        Barchasini saqlash
+                    <button type="button" onclick="uploadReceipt()" id="receiptUploadBtn" class="py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-all shadow-md shadow-blue-600/30 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        Yuborish 📤
                     </button>
                 </div>
+                <div id="receiptPreviewWrapper" class="hidden mt-3 text-center">
+                    <img id="receiptPreviewImg" src="" alt="Chek" class="max-h-32 mx-auto rounded-xl border border-white/20 shadow-md">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 👑 ADMIN DASHBOARD MODAL ================= -->
+    <div id="adminModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 transition-all duration-300 hidden">
+        <div class="glass-card max-w-4xl w-full h-[90vh] p-5 sm:p-7 rounded-3xl border border-white/20 flex flex-col shadow-2xl relative overflow-hidden">
+            
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between pb-4 border-b border-white/10 flex-shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-crown text-base"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+                            <span>Admin Boshqaruv Markazi</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">@BM_visual</span>
+                        </h2>
+                        <p class="text-[11px] text-zinc-400">Foydalanuvchilar, to'lov cheklari va obunalar</p>
+                    </div>
+                </div>
+                <button onclick="closeAdminModal()" class="w-8 h-8 rounded-xl glass-button text-zinc-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Admin Stats Bar -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 my-4 flex-shrink-0">
+                <div class="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                    <span class="text-[10px] uppercase font-bold text-zinc-400">Jami O'quvchilar</span>
+                    <p id="admStatTotal" class="text-lg font-black text-white mt-0.5">0 ta</p>
+                </div>
+                <div class="p-3 rounded-xl bg-emerald-500/[0.06] border border-emerald-500/15">
+                    <span class="text-[10px] uppercase font-bold text-emerald-400">Faol Obunachilar</span>
+                    <p id="admStatActive" class="text-lg font-black text-emerald-400 mt-0.5">0 ta</p>
+                </div>
+                <div class="p-3 rounded-xl bg-amber-500/[0.06] border border-amber-500/15">
+                    <span class="text-[10px] uppercase font-bold text-amber-400">Kutilayotgan Cheklar</span>
+                    <p id="admStatPending" class="text-lg font-black text-amber-400 mt-0.5">0 ta</p>
+                </div>
+                <div class="p-3 rounded-xl bg-blue-500/[0.06] border border-blue-500/15">
+                    <span class="text-[10px] uppercase font-bold text-blue-400">Jami Tushum</span>
+                    <p id="admStatRevenue" class="text-lg font-black text-blue-400 mt-0.5">0 so'm</p>
+                </div>
+            </div>
+
+            <!-- Admin Tabs Navigation -->
+            <div class="flex rounded-xl bg-white/[0.04] p-1 mb-3 border border-white/10 flex-shrink-0">
+                <button type="button" id="admTabReceipts" onclick="switchAdminTab('receipts')" class="flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all">
+                    🔔 Cheklarni Tasdiqlash (<span id="admPendingCountBadge">0</span>)
+                </button>
+                <button type="button" id="admTabUsers" onclick="switchAdminTab('users')" class="flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all">
+                    👥 O'quvchilar Ro'yxati
+                </button>
+                <button type="button" id="admTabManual" onclick="switchAdminTab('manual')" class="flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all">
+                    ➕ Qo'lda Obuna Berish
+                </button>
+            </div>
+
+            <!-- Admin Tab 1: Receipts Review -->
+            <div id="admViewReceipts" class="flex-grow overflow-y-auto space-y-3 pr-1">
+                <div id="admReceiptsList" class="space-y-3"></div>
+            </div>
+
+            <!-- Admin Tab 2: Users Management -->
+            <div id="admViewUsers" class="flex-grow overflow-y-auto space-y-3 pr-1 hidden">
+                <div class="flex items-center gap-2 mb-2">
+                    <input type="text" id="admUserSearch" oninput="renderAdminUsers()" placeholder="Username yoki Gmail orqali qidirish..." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="overflow-x-auto rounded-2xl border border-white/10">
+                    <table class="w-full text-left text-xs text-zinc-300">
+                        <thead class="bg-white/[0.05] text-zinc-400 uppercase text-[10px] font-bold border-b border-white/10">
+                            <tr>
+                                <th class="p-3">O'quvchi</th>
+                                <th class="p-3">Gmail</th>
+                                <th class="p-3">Holat</th>
+                                <th class="p-3">Qolgan kun</th>
+                                <th class="p-3 text-right">Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admUsersTableBody" class="divide-y divide-white/5"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Admin Tab 3: Manual Grant -->
+            <div id="admViewManual" class="flex-grow overflow-y-auto pr-1 hidden">
+                <div class="glass-card p-6 rounded-2xl max-w-md mx-auto space-y-4 my-auto">
+                    <h3 class="text-sm font-bold text-white">Istalgan hisobga obuna qo'shish</h3>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Username yoki Gmail</label>
+                        <input type="text" id="admManualTarget" placeholder="masalan: shermatov yoki ali@gmail.com" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Beriladigan kunlar soni</label>
+                        <input type="number" id="admManualDays" value="30" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                    </div>
+                    <button type="button" onclick="handleAdminGrantSub()" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/30 transition-all active:scale-98">
+                        Obunani faollashtirish ✅
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ================= ADD WORD MODAL ================= -->
+    <div id="importModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl flex items-center justify-center p-4 transition-all duration-300 hidden">
+        <div class="glass-card max-w-lg w-full p-6 rounded-3xl border border-white/15 relative overflow-hidden shadow-2xl">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-plus text-blue-400"></i> Yangi So'z Qo'shish
+                </h3>
+                <button onclick="closeImportModal()" class="w-8 h-8 rounded-xl glass-button text-zinc-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="flex rounded-xl bg-white/[0.06] p-1 mb-4 border border-white/10">
+                <button type="button" onclick="switchAddTab('single')" id="addTabSingle" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/15 text-white">Bittalab kiritish</button>
+                <button type="button" onclick="switchAddTab('bulk')" id="addTabBulk" class="flex-1 py-1.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-white">Matndan yuklash (Ko'p so'z)</button>
+            </div>
+
+            <div id="addSingleView" class="space-y-3">
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Inglizcha so'z *</label>
+                    <input type="text" id="singleEn" placeholder="masalan: Incredible" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 mb-1">O'zbekcha tarjimasi *</label>
+                    <input type="text" id="singleUz" placeholder="masalan: Aqlbovar qilmas" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Misol gap (ixtiyoriy)</label>
+                    <input type="text" id="singleEx" placeholder="masalan: It was an incredible journey." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <button type="button" onclick="addSingleWord()" class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/30 transition-all active:scale-98 mt-2">
+                    Lug'atga qo'shish ✨
+                </button>
+            </div>
+
+            <div id="addBulkView" class="space-y-3 hidden">
+                <p class="text-xs text-zinc-400">Har bir qatorga: <code>English - Uzbek</code> yoki <code>English : Uzbek</code> ko'rinishida yozing:</p>
+                <textarea id="bulkTextarea" rows="6" placeholder="Apple - Olma&#10;Book - Kitob&#10;Sky - Osmon" class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-xs text-white font-mono placeholder-zinc-600 focus:outline-none focus:border-blue-500"></textarea>
+                <button type="button" onclick="addBulkWords()" class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/30 transition-all active:scale-98">
+                    Barchasini saqlash 📥
+                </button>
             </div>
         </div>
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" style="display: none;" class="fixed bottom-6 right-6 z-50 glass-card border border-white/20 text-white text-xs font-medium px-4 py-3 rounded-2xl shadow-2xl transition-all duration-300 flex items-center gap-2.5">
-        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
-        <span id="toastMessage">Xabar</span>
-    </div>
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- Footer -->
-    <footer class="max-w-6xl mx-auto w-full px-4 py-6 text-center text-xs text-zinc-500 border-t border-white/[0.05] mt-auto">
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-2">
-            <p>Vocab 3X — Minimalist Apple & Linear Style Vocabulary Learning</p>
-            <div class="flex items-center gap-3 text-[11px] text-zinc-500">
-                <span><kbd class="kbd-key">Space</kbd> Flip</span>
-                <span><kbd class="kbd-key">1-4</kbd> Variantlar</span>
-                <span><kbd class="kbd-key">⌘K</kbd> Qidiruv</span>
-            </div>
-        </div>
-    </footer>
-
-    <!-- JavaScript Logic -->
+    <!-- ================= JAVASCRIPT APPLICATION LOGIC ================= -->
     <script>
-        // Preset Decks Database
+        // Preset Decks Data
         const PRESET_DECKS = {
             a1: [
-                { en: "Apple", uz: "Olma", phonetic: "/ˈæp.əl/", example: "She is eating a fresh apple." },
-                { en: "Book", uz: "Kitob", phonetic: "/bʊk/", example: "I love reading interesting books." },
-                { en: "Water", uz: "Suv", phonetic: "/ˈwɔː.tər/", example: "Drink plenty of fresh water." },
-                { en: "Sun", uz: "Quyosh", phonetic: "/sʌn/", example: "The sun rises in the east." },
-                { en: "Friend", uz: "Do'st", phonetic: "/frend/", example: "A true friend is always there." },
-                { en: "House", uz: "Uy", phonetic: "/haʊs/", example: "They built a new modern house." },
-                { en: "Tree", uz: "Daraxt", phonetic: "/triː/", example: "Birds are singing in the tree." },
-                { en: "City", uz: "Shahar", phonetic: "/ˈsɪt.i/", example: "Tashkent is a beautiful city." },
-                { en: "Time", uz: "Vaqt", phonetic: "/taɪm/", example: "Time is our most valuable asset." },
-                { en: "Money", uz: "Pul", phonetic: "/ˈmʌn.i/", example: "Save money for future projects." },
-                { en: "Freedom", uz: "Ozodlik", phonetic: "/ˈfriː.dəm/", example: "Freedom of speech is important." },
-                { en: "Journey", uz: "Sayohat", phonetic: "/ˈdʒɜː.ni/", example: "Life is an exciting journey." },
-                { en: "Happiness", uz: "Baxt", phonetic: "/ˈhæp.i.nəs/", example: "Happiness comes from inside." },
-                { en: "Success", uz: "Muvaffaqiyat", phonetic: "/səkˈses/", example: "Hard work brings great success." },
-                { en: "Dream", uz: "Orzu", phonetic: "/driːm/", example: "Never give up on your dreams." },
-                { en: "Knowledge", uz: "Bilim", phonetic: "/ˈnɒl.ɪdʒ/", example: "Knowledge is true power." },
+                { en: "Always", uz: "Doimo", phonetic: "/ˈɔːl.weɪz/", example: "I always study English." },
+                { en: "Because", uz: "Chunki", phonetic: "/bɪˈkəz/", example: "I learn because it is useful." },
+                { en: "Between", uz: "Orasida", phonetic: "/bɪˈtwiːn/", example: "Between you and me." },
+                { en: "Different", uz: "Har xil / Boshqacha", phonetic: "/ˈdɪf.ər.ənt/", example: "We have different ideas." },
+                { en: "Important", uz: "Muhim", phonetic: "/ɪmˈpɔː.tənt/", example: "Practice is important." },
+                { en: "Knowledge", uz: "Bilim", phonetic: "/ˈnɒl.ɪdʒ/", example: "Knowledge is power." },
                 { en: "Language", uz: "Til", phonetic: "/ˈlæŋ.ɡwɪdʒ/", example: "English is a global language." },
-                { en: "Challenge", uz: "Sinov", phonetic: "/ˈtʃæl.ɪndʒ/", example: "Every challenge brings growth." },
-                { en: "Future", uz: "Kelajak", phonetic: "/ˈfjuː.tʃər/", example: "Build a bright future today." },
-                { en: "Opportunity", uz: "Imkoniyat", phonetic: "/ˌɒp.əˈtʃuː.nə.ti/", example: "Grab every good opportunity." }
+                { en: "Remember", uz: "Eslab qolmoq", phonetic: "/rɪˈmem.bər/", example: "Remember new words daily." },
+                { en: "Success", uz: "Muvaffaqiyat", phonetic: "/səkˈses/", example: "Hard work brings success." },
+                { en: "Understand", uz: "Tushunmoq", phonetic: "/ˌʌn.dəˈstænd/", example: "I understand this topic." }
             ],
             it: [
-                { en: "Algorithm", uz: "Algoritm", phonetic: "/ˈæl.ɡə.rɪ.ðəm/", example: "Efficient algorithms run fast." },
-                { en: "Database", uz: "Ma'lumotlar bazasi", phonetic: "/ˈdeɪ.tə.beɪs/", example: "Store data in SQL database." },
-                { en: "Software", uz: "Dasturiy ta'minot", phonetic: "/ˈsɒft.weər/", example: "Software engineering is rewarding." },
-                { en: "Security", uz: "Xavfsizlik", phonetic: "/sɪˈkjʊə.rə.ti/", example: "Cybersecurity protects user data." },
-                { en: "Network", uz: "Tarmoq", phonetic: "/ˈnet.wɜːk/", example: "The network connection is stable." },
-                { en: "Framework", uz: "Freymvork", phonetic: "/ˈfreɪm.wɜːk/", example: "React is a UI framework." },
-                { en: "Interface", uz: "Interfeys", phonetic: "/ˈɪn.tə.feɪs/", example: "Clean interface improves UX." },
-                { en: "Variable", uz: "O'zgaruvchi", phonetic: "/ˈveə.ri.ə.bəl/", example: "Declare variables with const." },
-                { en: "Function", uz: "Funksiya", phonetic: "/ˈfʌŋk.ʃən/", example: "Call the helper function." },
-                { en: "Deployment", uz: "Serverga joylash", phonetic: "/dɪˈplɔɪ.mənt/", example: "Automate cloud deployment." }
+                { en: "Algorithm", uz: "Algoritm", phonetic: "/ˈæl.ɡə.rɪ.ðəm/", example: "Efficient algorithm." },
+                { en: "Database", uz: "Ma'lumotlar bazasi", phonetic: "/ˈdeɪ.tə.beɪs/", example: "SQL database storage." },
+                { en: "Deployment", uz: "Serverga joylash", phonetic: "/dɪˈplɔɪ.mənt/", example: "Continuous deployment." },
+                { en: "Security", uz: "Xavfsizlik", phonetic: "/sɪˈkjʊə.rə.ti/", example: "High system security." },
+                { en: "Framework", uz: "Freymvork", phonetic: "/ˈfreɪm.wɜːk/", example: "Fast web framework." }
             ],
             business: [
-                { en: "Negotiation", uz: "Muzokara", phonetic: "/nəˌɡəʊ.ʃiˈeɪ.ʃən/", example: "Win-win negotiation strategy." },
-                { en: "Revenue", uz: "Daromad", phonetic: "/ˈrev.ən.juː/", example: "Monthly revenue grew steadily." },
-                { en: "Investment", uz: "Investitsiya", phonetic: "/ɪnˈvest.mənt/", example: "Smart investment in technology." },
-                { en: "Strategy", uz: "Strategiya", phonetic: "/ˈstræt.ə.dʒi/", example: "Long-term business strategy." },
-                { en: "Partnership", uz: "Hamkorlik", phonetic: "/ˈpɑːt.nə.ʃɪp/", example: "Strong strategic partnership." }
+                { en: "Revenue", uz: "Daromad / Tushum", phonetic: "/ˈrev.ən.juː/", example: "Monthly revenue growth." },
+                { en: "Investment", uz: "Investitsiya", phonetic: "/ɪnˈvest.mənt/", example: "Smart tech investment." },
+                { en: "Strategy", uz: "Strategiya", phonetic: "/ˈstræt.ə.dʒi/", example: "Long-term growth strategy." },
+                { en: "Negotiation", uz: "Muzokara", phonetic: "/nəˌɡəʊ.ʃiˈeɪ.ʃən/", example: "Business negotiation." }
             ]
         };
 
-        // Sound Synthesizer (Web Audio API)
+        // Audio Effects Synthesizer
         const SoundFX = {
             ctx: null,
             init() {
                 try {
-                    if (!this.ctx) {
-                        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                    }
+                    if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
                 } catch(e) {}
             },
             playChime() {
                 try {
-                    this.init();
-                    if (!this.ctx) return;
+                    this.init(); if (!this.ctx) return;
                     const now = this.ctx.currentTime;
                     const osc = this.ctx.createOscillator();
                     const gain = this.ctx.createGain();
@@ -642,16 +702,13 @@
                     osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
                     gain.gain.setValueAtTime(0.12, now);
                     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-                    osc.connect(gain);
-                    gain.connect(this.ctx.destination);
-                    osc.start(now);
-                    osc.stop(now + 0.3);
+                    osc.connect(gain); gain.connect(this.ctx.destination);
+                    osc.start(now); osc.stop(now + 0.3);
                 } catch(e) {}
             },
             playFlip() {
                 try {
-                    this.init();
-                    if (!this.ctx) return;
+                    this.init(); if (!this.ctx) return;
                     const now = this.ctx.currentTime;
                     const osc = this.ctx.createOscillator();
                     const gain = this.ctx.createGain();
@@ -660,16 +717,13 @@
                     osc.frequency.exponentialRampToValueAtTime(440, now + 0.08);
                     gain.gain.setValueAtTime(0.08, now);
                     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
-                    osc.connect(gain);
-                    gain.connect(this.ctx.destination);
-                    osc.start(now);
-                    osc.stop(now + 0.1);
+                    osc.connect(gain); gain.connect(this.ctx.destination);
+                    osc.start(now); osc.stop(now + 0.1);
                 } catch(e) {}
             },
             playWrong() {
                 try {
-                    this.init();
-                    if (!this.ctx) return;
+                    this.init(); if (!this.ctx) return;
                     const now = this.ctx.currentTime;
                     const osc = this.ctx.createOscillator();
                     const gain = this.ctx.createGain();
@@ -678,217 +732,563 @@
                     osc.frequency.linearRampToValueAtTime(100, now + 0.2);
                     gain.gain.setValueAtTime(0.1, now);
                     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-                    osc.connect(gain);
-                    gain.connect(this.ctx.destination);
-                    osc.start(now);
-                    osc.stop(now + 0.25);
+                    osc.connect(gain); gain.connect(this.ctx.destination);
+                    osc.start(now); osc.stop(now + 0.25);
                 } catch(e) {}
             }
         };
 
-        // Application State
+        // App State
+        let currentUser = null;
+        let sessionToken = localStorage.getItem('vocab_token') || '';
         let words = [];
         let activeTab = 'dashboard';
         let currentFilter = 'all';
         let currentFlashIndex = 0;
         let isCardFlipped = false;
-        
-        // Match game state
+        let selectedReceiptBase64 = '';
+        let pollTimer = null;
+
+        // Game states
         let matchSelected = [];
         let matchTimerInterval = null;
         let matchSeconds = 0;
-
-        // Quiz state
         let quizIndex = 0;
         let quizScore = 0;
         let quizTimerInterval = null;
         let currentQuizQuestions = [];
-        let currentQuizChoices = [];
-
-        // Spelling state
         let spellingIndex = 0;
 
-        // Initialize App
-        
-        // ================= TELEGRAM & AUTHENTICATION MODULE =================
-        let currentUser = null;
-        let isSubscriptionActive = false;
-        let isTelegramEnv = false;
+        // Admin state
+        let adminUsersList = [];
+        let adminReceiptsList = [];
 
-        function initTelegramAndAuth() {
+        // App Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            initAuth();
+            setupKeyboardShortcuts();
+        });
+
+        // ================= AUTHENTICATION & SUBSCRIPTION =================
+        async function initAuth() {
+            sessionToken = localStorage.getItem('vocab_token') || '';
+            if (!sessionToken) {
+                showAuthRequiredState();
+                return;
+            }
+
             try {
-                if (window.Telegram && window.Telegram.WebApp) {
-                    const tg = window.Telegram.WebApp;
-                    tg.ready();
-                    tg.expand();
-                    
-                    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                        isTelegramEnv = true;
-                        currentUser = tg.initDataUnsafe.user;
-                    }
+                const res = await fetch('/api/me', {
+                    headers: { 'X-Session-Token': sessionToken }
+                });
+                const data = await res.json();
+                if (data.ok && data.user) {
+                    currentUser = data.user;
+                    handleAuthSuccess(currentUser);
+                } else {
+                    localStorage.removeItem('vocab_token');
+                    sessionToken = '';
+                    showAuthRequiredState();
                 }
             } catch(e) {
-                console.warn('Telegram WebApp init error:', e);
+                console.error('Auth verification error:', e);
+                showAuthRequiredState();
             }
-
-            verifySubscription();
         }
 
-        async function verifySubscription(isManualCheck = false) {
-            const lockOverlay = document.getElementById('lockOverlay');
-            const lockTelegramId = document.getElementById('lockTelegramId');
-            const lockSubStatus = document.getElementById('lockSubStatus');
-            const lockTitle = document.getElementById('lockTitle');
-            const lockDesc = document.getElementById('lockDescription');
+        function handleAuthSuccess(user) {
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('loginTriggerBtn').classList.add('hidden');
+            document.getElementById('logoutBtn').classList.remove('hidden');
+            document.getElementById('userProfileBadge').classList.remove('hidden');
+            
+            document.getElementById('userNameDisplay').innerText = user.fullName || user.username;
+            const daysText = user.role === 'admin' ? '👑 Cheksiz (Admin)' : (user.isSubscribed ? `${user.daysLeft} kun qoldi` : 'Obuna faol emas');
+            document.getElementById('userDaysLeft').innerText = daysText;
+            document.getElementById('userDaysLeft').className = user.isSubscribed ? 'text-emerald-400' : 'text-red-400';
 
-            if (isManualCheck) {
-                showToast("Obuna holati tekshirilmoqda...");
+            // Show Admin Panel Button if admin
+            if (user.role === 'admin') {
+                document.getElementById('adminPanelBtn').classList.remove('hidden');
+            } else {
+                document.getElementById('adminPanelBtn').classList.add('hidden');
             }
 
-            if (!currentUser || !currentUser.id) {
-                if (window.Telegram?.WebApp?.initDataUnsafe?.user) {
-                    currentUser = window.Telegram.WebApp.initDataUnsafe.user;
-                }
+            // Paywall logic
+            if (user.isSubscribed) {
+                document.getElementById('paywallOverlay').classList.add('hidden');
+                clearInterval(pollTimer);
+                loadUserWords();
+            } else {
+                document.getElementById('paywallOverlay').classList.remove('hidden');
+                checkPendingReceiptStatus(user);
+                startSubStatusPolling();
             }
+        }
 
-            // Check URL param ?id= for testing
-            if (!currentUser || !currentUser.id) {
-                const urlParams = new URLSearchParams(window.location.search);
-                const testId = urlParams.get('id');
-
-                if (testId) {
-                    currentUser = { id: testId, first_name: 'Foydalanuvchi' };
-                } else {
-                    if (lockOverlay) lockOverlay.style.display = 'flex';
-                    if (lockTelegramId) lockTelegramId.innerText = "Aniqlanmadi";
-                    if (lockTitle) lockTitle.innerText = "Telegram orqali kiring";
-                    if (lockDesc) lockDesc.innerText = "Ushbu platforma himoyalangan va faqat @Bm_vocab_bot orqali ochiladi.";
-                    return;
-                }
+        function checkPendingReceiptStatus(user) {
+            const pendingBox = document.getElementById('pendingAlertBox');
+            if (user.receiptStatus === 'pending') {
+                pendingBox.classList.remove('hidden');
+            } else {
+                pendingBox.classList.add('hidden');
             }
+        }
 
-            if (lockTelegramId && currentUser) lockTelegramId.innerText = currentUser.id;
+        function startSubStatusPolling() {
+            clearInterval(pollTimer);
+            pollTimer = setInterval(async () => {
+                if (!sessionToken) return;
+                try {
+                    const res = await fetch('/api/me', { headers: { 'X-Session-Token': sessionToken } });
+                    const data = await res.json();
+                    if (data.ok && data.user) {
+                        currentUser = data.user;
+                        if (currentUser.isSubscribed) {
+                            clearInterval(pollTimer);
+                            document.getElementById('paywallOverlay').classList.add('hidden');
+                            document.getElementById('userDaysLeft').innerText = `${currentUser.daysLeft} kun qoldi`;
+                            document.getElementById('userDaysLeft').className = 'text-emerald-400';
+                            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                            showToast('🎉 Obunangiz faollashtirildi! Xush kelibsiz!');
+                            loadUserWords();
+                        } else {
+                            checkPendingReceiptStatus(currentUser);
+                        }
+                    }
+                } catch(e) {}
+            }, 4000);
+        }
+
+        function showAuthRequiredState() {
+            document.getElementById('userProfileBadge').classList.add('hidden');
+            document.getElementById('adminPanelBtn').classList.add('hidden');
+            document.getElementById('logoutBtn').classList.add('hidden');
+            document.getElementById('loginTriggerBtn').classList.remove('hidden');
+            openAuthModal('login');
+        }
+
+        function openAuthModal(tab = 'login') {
+            document.getElementById('authModal').classList.remove('hidden');
+            switchAuthTab(tab);
+        }
+
+        function closeAuthModal() {
+            if (currentUser && currentUser.isSubscribed) {
+                document.getElementById('authModal').classList.add('hidden');
+            }
+        }
+
+        function switchAuthTab(tab) {
+            const isLogin = tab === 'login';
+            document.getElementById('loginForm').classList.toggle('hidden', !isLogin);
+            document.getElementById('registerForm').classList.toggle('hidden', isLogin);
+            document.getElementById('authTabLogin').className = isLogin ? 'flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all' : 'flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all';
+            document.getElementById('authTabRegister').className = !isLogin ? 'flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all' : 'flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all';
+            document.getElementById('authErrorMsg').classList.add('hidden');
+        }
+
+        async function handleLoginSubmit(e) {
+            e.preventDefault();
+            const query = document.getElementById('loginQuery').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const errBox = document.getElementById('authErrorMsg');
 
             try {
-                const response = await fetch('/api/check-auth', {
+                const res = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        telegramId: currentUser ? currentUser.id : '',
-                        initData: window.Telegram?.WebApp?.initData || ''
-                    })
+                    body: JSON.stringify({ login: query, password })
                 });
-
-                const result = await response.json();
-
-                if (result.ok && result.isSubscribed) {
-                    isSubscriptionActive = true;
-                    if (lockOverlay) lockOverlay.style.display = 'none';
-
-                    const userBadge = document.getElementById('userProfileBadge');
-                    const nameDisp = document.getElementById('userNameDisplay');
-                    const daysDisp = document.getElementById('userDaysLeft');
-
-                    if (userBadge) userBadge.classList.remove('hidden');
-                    if (nameDisp) nameDisp.innerText = (currentUser && currentUser.first_name) ? currentUser.first_name : "O'quvchi";
-                    if (daysDisp) daysDisp.innerText = result.daysLeft > 1000 ? "Cheksiz (Admin)" : (result.daysLeft + " kun");
-
-                    loadWordsFromStorage();
-                    fetchUserWordsFromServer();
-
-                    if (isManualCheck) showToast("Obunangiz faol! Xush kelibsiz 🎉");
+                const data = await res.json();
+                if (data.ok) {
+                    sessionToken = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('vocab_token', sessionToken);
+                    showToast('Xush kelibsiz, ' + (currentUser.fullName || currentUser.username) + '! 👋');
+                    handleAuthSuccess(currentUser);
                 } else {
-                    isSubscriptionActive = false;
-                    if (lockOverlay) lockOverlay.style.display = 'flex';
-                    if (lockSubStatus) {
-                        lockSubStatus.innerText = "To'lov qilinmagan";
-                        lockSubStatus.className = "text-red-400 font-semibold text-[11px]";
-                    }
-                    if (lockTitle) lockTitle.innerText = "Obuna talab qilinadi";
-                    if (lockDesc) lockDesc.innerText = "Platformadan foydalanish uchun 50 000 so'm to'lov qiling va chekni botga yuboring.";
-                    if (isManualCheck) showToast("Obuna topilmadi. Iltimos to'lov qiling.");
+                    errBox.innerText = data.error || 'Login yoki parol noto\'g\'ri!';
+                    errBox.classList.remove('hidden');
                 }
-            } catch (err) {
-                console.error("Auth check failed:", err);
-                if (lockOverlay) lockOverlay.style.display = 'flex';
-                if (isManualCheck) showToast("Server bilan bog'lanishda xatolik.");
+            } catch(err) {
+                errBox.innerText = 'Server bilan bog\'lanishda xatolik yuz berdi.';
+                errBox.classList.remove('hidden');
             }
         }
 
-        async function fetchUserWordsFromServer() {
-            if (!currentUser || !currentUser.id) return;
+        async function handleRegisterSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('regEmail').value.trim();
+            const username = document.getElementById('regUsername').value.trim();
+            const fullName = document.getElementById('regFullName').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            const errBox = document.getElementById('authErrorMsg');
+
             try {
-                const res = await fetch('/api/get-words?telegramId=' + currentUser.id);
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, username, fullName, password })
+                });
                 const data = await res.json();
-                if (data.ok && Array.isArray(data.words) && data.words.length > 0) {
+                if (data.ok) {
+                    sessionToken = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('vocab_token', sessionToken);
+                    showToast('🎉 Akkauntingiz muvaffaqiyatli yaratildi!');
+                    handleAuthSuccess(currentUser);
+                } else {
+                    errBox.innerText = data.error || 'Ro\'yxatdan o\'tishda xatolik!';
+                    errBox.classList.remove('hidden');
+                }
+            } catch(err) {
+                errBox.innerText = 'Server bilan bog\'lanishda xatolik yuz berdi.';
+                errBox.classList.remove('hidden');
+            }
+        }
+
+        async function handleLogout() {
+            if (sessionToken) {
+                fetch('/api/logout', { method: 'POST', headers: { 'X-Session-Token': sessionToken } }).catch(() => {});
+            }
+            localStorage.removeItem('vocab_token');
+            sessionToken = '';
+            currentUser = null;
+            words = [];
+            renderWordList();
+            updateDashboardStats();
+            showToast('Tizimdan chiqildi.');
+            showAuthRequiredState();
+        }
+
+        // ================= RECEIPT UPLOAD & COPY CARD =================
+        function copyCardNumber() {
+            navigator.clipboard.writeText('5614682050967480').then(() => {
+                showToast('✅ Karta raqami nusxalandi: 5614 6820 5096 7480');
+            });
+        }
+
+        function handleReceiptFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            document.getElementById('receiptFileName').innerText = file.name;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                selectedReceiptBase64 = evt.target.result;
+                document.getElementById('receiptPreviewImg').src = selectedReceiptBase64;
+                document.getElementById('receiptPreviewWrapper').classList.remove('hidden');
+                document.getElementById('receiptUploadBtn').removeAttribute('disabled');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function uploadReceipt() {
+            if (!selectedReceiptBase64 || !sessionToken) return;
+            const uploadBtn = document.getElementById('receiptUploadBtn');
+            uploadBtn.innerText = 'Yuklanmoqda...';
+            uploadBtn.setAttribute('disabled', 'true');
+
+            try {
+                const res = await fetch('/api/submit-receipt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ image: selectedReceiptBase64 })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('✅ Chek adminga muvaffaqiyatli yuborildi!');
+                    document.getElementById('pendingAlertBox').classList.remove('hidden');
+                    document.getElementById('receiptPreviewWrapper').classList.add('hidden');
+                    document.getElementById('receiptFileName').innerText = 'Rasm tanlash...';
+                    selectedReceiptBase64 = '';
+                    uploadBtn.innerText = 'Yuborish 📤';
+                    startSubStatusPolling();
+                } else {
+                    showToast('❌ Xatolik: ' + (data.error || 'Yuklab bo\'lmadi'));
+                    uploadBtn.innerText = 'Yuborish 📤';
+                    uploadBtn.removeAttribute('disabled');
+                }
+            } catch(e) {
+                showToast('❌ Serverga yuklashda xatolik yuz berdi');
+                uploadBtn.innerText = 'Yuborish 📤';
+                uploadBtn.removeAttribute('disabled');
+            }
+        }
+
+        // ================= 👑 ADMIN MODAL LOGIC =================
+        function openAdminModal() {
+            document.getElementById('adminModal').classList.remove('hidden');
+            loadAdminData();
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        function switchAdminTab(tab) {
+            document.getElementById('admViewReceipts').classList.toggle('hidden', tab !== 'receipts');
+            document.getElementById('admViewUsers').classList.toggle('hidden', tab !== 'users');
+            document.getElementById('admViewManual').classList.toggle('hidden', tab !== 'manual');
+
+            document.getElementById('admTabReceipts').className = tab === 'receipts' ? 'flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all' : 'flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all';
+            document.getElementById('admTabUsers').className = tab === 'users' ? 'flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all' : 'flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all';
+            document.getElementById('admTabManual').className = tab === 'manual' ? 'flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all' : 'flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all';
+        }
+
+        async function loadAdminData() {
+            if (!sessionToken || !currentUser || currentUser.role !== 'admin') return;
+
+            try {
+                // Fetch Stats
+                const statsRes = await fetch('/api/admin/stats', { headers: { 'X-Session-Token': sessionToken } });
+                const statsData = await statsRes.json();
+                if (statsData.ok) {
+                    const s = statsData.stats;
+                    document.getElementById('admStatTotal').innerText = s.totalUsers + ' ta';
+                    document.getElementById('admStatActive').innerText = s.activeCount + ' ta';
+                    document.getElementById('admStatPending').innerText = s.pendingReceipts + ' ta';
+                    document.getElementById('admStatRevenue').innerText = Number(s.totalRevenue).toLocaleString() + " so'm";
+                    document.getElementById('admPendingCountBadge').innerText = s.pendingReceipts;
+                }
+
+                // Fetch Receipts
+                const rcptRes = await fetch('/api/admin/receipts', { headers: { 'X-Session-Token': sessionToken } });
+                const rcptData = await rcptRes.json();
+                if (rcptData.ok) {
+                    adminReceiptsList = rcptData.receipts;
+                    renderAdminReceipts();
+                }
+
+                // Fetch Users
+                const usersRes = await fetch('/api/admin/users', { headers: { 'X-Session-Token': sessionToken } });
+                const usersData = await usersRes.json();
+                if (usersData.ok) {
+                    adminUsersList = usersData.users;
+                    renderAdminUsers();
+                }
+            } catch(e) {
+                console.error('Admin data load error:', e);
+            }
+        }
+
+        function renderAdminReceipts() {
+            const container = document.getElementById('admReceiptsList');
+            if (!adminReceiptsList || adminReceiptsList.length === 0) {
+                container.innerHTML = '<div class="p-8 text-center text-zinc-500 text-xs font-medium"><i class="fa-solid fa-check-circle text-2xl text-emerald-500/40 mb-2 block"></i>Hozircha yangi kutilayotgan cheklar yo\'q. Barchasi ko\'rib chiqilgan!</div>';
+                return;
+            }
+
+            container.innerHTML = adminReceiptsList.map(r => {
+                const dateStr = new Date(r.submittedAt).toLocaleString('uz-UZ');
+                return `
+                <div class="glass-card p-4 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-white/10">
+                    <div class="flex items-center gap-3.5">
+                        <img src="${r.image}" alt="Chek" onclick="window.open('${r.image}')" class="w-16 h-16 rounded-xl object-cover border border-white/20 cursor-pointer hover:scale-105 transition-transform flex-shrink-0">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="text-xs font-bold text-white">${r.fullName || r.username}</h4>
+                                <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-mono">@${r.username}</span>
+                            </div>
+                            <p class="text-[11px] text-zinc-400 mt-0.5">📧 ${r.email}</p>
+                            <p class="text-[10px] text-zinc-500 mt-0.5 font-mono"><i class="fa-regular fa-clock mr-1"></i>${dateStr}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                        <button onclick="adminApproveReceipt('${r.id}')" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition-all active:scale-95">
+                            ✅ Tasdiqlash (30 kun)
+                        </button>
+                        <button onclick="adminRejectReceipt('${r.id}')" class="px-3 py-2 rounded-xl bg-red-500/15 hover:bg-red-500/25 text-red-400 font-semibold text-xs border border-red-500/20 transition-all active:scale-95">
+                            ❌ Rad etish
+                        </button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        async function adminApproveReceipt(receiptId) {
+            try {
+                const res = await fetch('/api/admin/approve-receipt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ receiptId, days: 30 })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('✅ To\'lov tasdiqlandi va 30 kunlik obuna berildi!');
+                    loadAdminData();
+                }
+            } catch(e) { showToast('Xatolik yuz berdi'); }
+        }
+
+        async function adminRejectReceipt(receiptId) {
+            try {
+                const res = await fetch('/api/admin/reject-receipt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ receiptId })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('❌ Chek rad etildi');
+                    loadAdminData();
+                }
+            } catch(e) { showToast('Xatolik yuz berdi'); }
+        }
+
+        function renderAdminUsers() {
+            const query = (document.getElementById('admUserSearch').value || '').toLowerCase().trim();
+            const tbody = document.getElementById('admUsersTableBody');
+            const filtered = adminUsersList.filter(u => 
+                (u.username || '').toLowerCase().includes(query) ||
+                (u.email || '').toLowerCase().includes(query) ||
+                (u.fullName || '').toLowerCase().includes(query)
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-zinc-500">Foydalanuvchilar topilmadi</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(u => `
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                    <td class="p-3">
+                        <div class="font-bold text-white text-xs">${u.fullName || u.username} ${u.role === 'admin' ? '👑' : ''}</div>
+                        <div class="text-[10px] text-zinc-400 font-mono">@${u.username}</div>
+                    </td>
+                    <td class="p-3 font-mono text-[11px] text-zinc-300">${u.email}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${u.isActive ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}">
+                            ${u.isActive ? '🟢 Faol' : '🔴 Tugagan'}
+                        </span>
+                    </td>
+                    <td class="p-3 font-bold text-xs ${u.isActive ? 'text-emerald-300' : 'text-zinc-500'}">
+                        ${u.role === 'admin' ? 'Cheksiz' : u.daysLeft + ' kun'}
+                    </td>
+                    <td class="p-3 text-right space-x-1">
+                        <button onclick="adminGrantSubDirect('${u.id}', 30)" class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 text-[11px] font-semibold transition-all" title="+30 kun">+30 kun</button>
+                        ${u.role !== 'admin' ? `
+                            <button onclick="adminRevokeSubDirect('${u.id}')" class="px-2 py-1 rounded-lg bg-amber-500/15 text-amber-300 hover:bg-amber-500/25 text-[11px] font-semibold transition-all" title="Obunani bekor qilish">⛔</button>
+                            <button onclick="adminDeleteUserDirect('${u.id}')" class="px-2 py-1 rounded-lg bg-red-500/15 text-red-400 hover:bg-red-500/25 text-[11px] font-semibold transition-all" title="O'chirish">🗑</button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function adminGrantSubDirect(targetId, days = 30) {
+            try {
+                const res = await fetch('/api/admin/grant-sub', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ target: targetId, days })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('✅ Obuna faollashtirildi!');
+                    loadAdminData();
+                }
+            } catch(e) {}
+        }
+
+        async function adminRevokeSubDirect(targetId) {
+            if (!confirm('Ushbu foydalanuvchining obunasini to\'xtatmoqchimisiz?')) return;
+            try {
+                const res = await fetch('/api/admin/revoke-sub', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ target: targetId })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('⛔ Obuna to\'xtatildi');
+                    loadAdminData();
+                }
+            } catch(e) {}
+        }
+
+        async function adminDeleteUserDirect(targetId) {
+            if (!confirm('Rostdan ham ushbu hisobni butunlay o\'chirmoqchimisiz?')) return;
+            try {
+                const res = await fetch('/api/admin/delete-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ target: targetId })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('🗑 Foydalanuvchi o\'chirildi');
+                    loadAdminData();
+                }
+            } catch(e) {}
+        }
+
+        async function handleAdminGrantSub() {
+            const target = document.getElementById('admManualTarget').value.trim();
+            const days = parseInt(document.getElementById('admManualDays').value) || 30;
+            if (!target) { showToast('Foydalanuvchi username yoki emaili kerak'); return; }
+
+            try {
+                const res = await fetch('/api/admin/grant-sub', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ target, days })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast(`✅ ${target} ga ${days} kunlik obuna berildi!`);
+                    document.getElementById('admManualTarget').value = '';
+                    loadAdminData();
+                    switchAdminTab('users');
+                } else {
+                    showToast('❌ Xatolik: ' + (data.error || 'Topilmadi'));
+                }
+            } catch(e) { showToast('Xatolik yuz berdi'); }
+        }
+
+        // ================= VOCABULARY & WORDS STORAGE =================
+        async function loadUserWords() {
+            if (!currentUser || !sessionToken) return;
+            try {
+                const res = await fetch('/api/get-words', { headers: { 'X-Session-Token': sessionToken } });
+                const data = await res.json();
+                if (data.ok && Array.isArray(data.words)) {
                     words = data.words;
-                    saveWordsToStorage(false);
+                    if (words.length === 0) {
+                        loadPresetDeck('a1', false);
+                    }
                     updateDashboardStats();
                     renderWordList();
                 }
-            } catch(e) {}
-        }
-
-        function openPaymentFlow() {
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.close();
-            } else {
-                showToast("Iltimos, Telegram bot orqali chek yuboring");
+            } catch(e) {
+                console.error('Load words error:', e);
             }
         }
 
-        function getStorageKey() {
-            return (currentUser && currentUser.id) ? 'vocab3x_words_' + currentUser.id : 'vocab3x_words_v3';
-        }
-
-        function saveWordsToStorage(syncWithServer = true) {
-            try {
-                localStorage.setItem(getStorageKey(), JSON.stringify(words));
-            } catch(e) {}
+        function saveWords(syncWithServer = true) {
             updateDashboardStats();
+            renderWordList();
 
-            if (syncWithServer && isSubscriptionActive && currentUser && currentUser.id) {
+            if (syncWithServer && sessionToken && currentUser && currentUser.isSubscribed) {
                 fetch('/api/save-words', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        telegramId: currentUser.id,
-                        words: words
-                    })
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ words })
                 }).catch(() => {});
             }
         }
 
-        function loadWordsFromStorage() {
-            try {
-                const key = getStorageKey();
-                const saved = localStorage.getItem(key) || localStorage.getItem('vocab3x_words_v3') || localStorage.getItem('vocab3x_words_v2');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        words = parsed;
-                    }
-                }
-            } catch(e) {
-                words = [];
-            }
-        }
-
-        function initApp() {
-            initTelegramAndAuth();
-            setupGlobalKeyboardShortcuts();
-        }
-
-        function loadPresetDeck(deckKey) {
+        function loadPresetDeck(deckKey, showFeedback = true) {
             const deck = PRESET_DECKS[deckKey];
             if (!deck) return;
 
-            let addedCount = 0;
+            let added = 0;
             deck.forEach(item => {
-                const exists = words.some(w => w.en.toLowerCase() === item.en.toLowerCase());
-                if (!exists) {
+                if (!words.some(w => w.en.toLowerCase() === item.en.toLowerCase())) {
                     words.push({
-                        id: Date.now() + Math.floor(Math.random() * 100000),
+                        id: Date.now() + Math.floor(Math.random() * 10000),
                         en: item.en,
                         uz: item.uz,
                         phonetic: item.phonetic || '',
@@ -896,765 +1296,447 @@
                         box: 1,
                         mistakes: 0
                     });
-                    addedCount++;
+                    added++;
                 }
             });
 
-            saveWordsToStorage();
-            renderWordList();
-            SoundFX.playChime();
-            showToast(`${addedCount > 0 ? addedCount + ' ta yangi' : 'Barcha'} so'zlar yuklandi! 🎉`);
-        }
-
-        // Tab Switching
-        function switchTab(tabName) {
-            activeTab = tabName;
-            const tabs = ['dashboard', 'flashcard', 'match', 'quiz', 'spelling'];
-            
-            tabs.forEach(t => {
-                const view = document.getElementById('view-' + t);
-                const btn = document.getElementById('tab-' + t);
-                
-                if (view) {
-                    view.style.display = (t === tabName) ? 'block' : 'none';
-                }
-                if (btn) {
-                    if (t === tabName) {
-                        btn.className = 'nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold bg-white/10 text-white shadow-sm transition-all whitespace-nowrap cursor-pointer';
-                    } else {
-                        btn.className = 'nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] transition-all whitespace-nowrap cursor-pointer';
-                    }
-                }
-            });
-
-            if (tabName === 'flashcard') initFlashcardMode();
-            if (tabName === 'match') startMatchGame();
-            if (tabName === 'quiz') startQuizMode();
-            if (tabName === 'spelling') initSpellingMode();
-        }
-
-        function updateDashboardStats() {
-            const total = words.length;
-            const mastered = words.filter(w => w.box >= 5).length;
-            const learning = total - mastered;
-            const rate = total > 0 ? Math.round((mastered / total) * 100) : 0;
-
-            const statTotal = document.getElementById('statTotal');
-            const statMastered = document.getElementById('statMastered');
-            const statLearning = document.getElementById('statLearning');
-            const statRate = document.getElementById('statRate');
-            const progressBar = document.getElementById('statProgressBar');
-            const headerTotal = document.getElementById('headerTotalCount');
-            const headerMastered = document.getElementById('headerMasteredCount');
-
-            if (statTotal) statTotal.innerText = total;
-            if (statMastered) statMastered.innerText = mastered;
-            if (statLearning) statLearning.innerText = learning;
-            if (statRate) statRate.innerText = `${rate}%`;
-            if (progressBar) progressBar.style.width = `${rate}%`;
-            if (headerTotal) headerTotal.innerText = total;
-            if (headerMastered) headerMastered.innerText = mastered;
-        }
-
-        function filterCategory(cat, btn) {
-            currentFilter = cat;
-            document.querySelectorAll('.category-chip').forEach(el => {
-                el.className = 'category-chip px-3 py-1.5 rounded-lg glass-button text-zinc-400 font-medium transition-all cursor-pointer';
-            });
-            if (btn) {
-                btn.className = 'category-chip px-3 py-1.5 rounded-lg bg-white/10 text-white font-medium border border-white/10 transition-all cursor-pointer';
-            }
-            renderWordList();
-        }
-
-        function renderWordList() {
-            const container = document.getElementById('wordListContainer');
-            if (!container) return;
-
-            const searchInput = document.getElementById('searchInput');
-            const search = searchInput ? searchInput.value.toLowerCase() : '';
-
-            let filtered = words.filter(w => 
-                w.en.toLowerCase().includes(search) || w.uz.toLowerCase().includes(search)
-            );
-
-            if (currentFilter === 'box1') filtered = filtered.filter(w => w.box === 1);
-            if (currentFilter === 'box5') filtered = filtered.filter(w => w.box >= 5);
-
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-12 text-zinc-500 text-xs glass-card rounded-2xl p-6">
-                        <i class="fa-solid fa-magnifying-glass text-xl mb-2 opacity-40"></i>
-                        <p class="font-medium text-zinc-400">Hech qanday so'z topilmadi.</p>
-                        <button type="button" onclick="loadPresetDeck('a1')" class="mt-3 px-4 py-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/20 font-semibold text-xs transition-all cursor-pointer">
-                            Top 25 so'zni yuklash
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = filtered.map(w => {
-                const safeEn = w.en.replace(/'/g, "\\'");
-                return `
-                <div class="flex items-center justify-between p-3.5 rounded-2xl glass-card hover:bg-white/[0.04] group transition-all">
-                    <div class="flex items-center gap-3">
-                        <button type="button" onclick="speakWord('${safeEn}')" class="w-9 h-9 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs transition-all active:scale-95 cursor-pointer" title="Tinglash">
-                            <i class="fa-solid fa-volume-high"></i>
-                        </button>
-                        <div>
-                            <div class="flex items-center gap-2">
-                                <h4 class="font-bold text-white text-sm tracking-tight">${w.en}</h4>
-                                ${w.phonetic ? `<span class="text-[10px] text-zinc-500 font-mono">${w.phonetic}</span>` : ''}
-                            </div>
-                            <p class="text-xs text-zinc-400 mt-0.5">${w.uz}</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <div class="hidden sm:flex items-center gap-1" title="Xotira qutisi: ${w.box}/5">
-                            ${[1, 2, 3, 4, 5].map(i => `
-                                <div class="w-1.5 h-3 rounded-full ${i <= w.box ? (w.box >= 5 ? 'bg-emerald-400' : 'bg-blue-400') : 'bg-white/10'}"></div>
-                            `).join('')}
-                        </div>
-
-                        <span class="text-[10px] font-bold px-2.5 py-1 rounded-full ${getBoxBadgeColor(w.box)}">
-                            Quti ${w.box}/5
-                        </span>
-                        
-                        <button type="button" onclick="deleteWord(${w.id})" class="text-zinc-500 hover:text-red-400 text-xs px-2 py-1 transition-colors cursor-pointer" title="O'chirish">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>
-                </div>
-            `}).join('');
-        }
-
-        function getBoxBadgeColor(box) {
-            if (box >= 5) return 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
-            if (box >= 3) return 'bg-blue-500/10 text-blue-400 border border-blue-500/20';
-            return 'bg-amber-500/10 text-amber-400 border border-amber-500/20';
-        }
-
-        function deleteWord(id) {
-            words = words.filter(w => String(w.id) !== String(id));
-            saveWordsToStorage();
-            renderWordList();
-            showToast("So'z o'chirildi");
-        }
-
-        function clearAllWords() {
-            if (words.length === 0) return;
-            if (confirm("Rostdan ham barcha so'zlarni tozalab tashlamoqchimisiz?")) {
-                words = [];
-                saveWordsToStorage();
-                renderWordList();
-                showToast("Lug'at tozalandi");
-            }
-        }
-
-        // ================= WORD ADD MODAL & MODES =================
-        function switchAddMode(mode) {
-            const singleForm = document.getElementById('singleAddForm');
-            const bulkSection = document.getElementById('bulkAddSection');
-            const tabSingleBtn = document.getElementById('tabSingleBtn');
-            const tabBulkBtn = document.getElementById('tabBulkBtn');
-
-            if (mode === 'single') {
-                if (singleForm) singleForm.style.display = 'block';
-                if (bulkSection) bulkSection.style.display = 'none';
-                if (tabSingleBtn) tabSingleBtn.className = 'flex-1 py-2 rounded-lg font-bold bg-blue-600 text-white transition-all';
-                if (tabBulkBtn) tabBulkBtn.className = 'flex-1 py-2 rounded-lg font-semibold text-zinc-400 hover:text-white transition-all';
-                const singleEn = document.getElementById('singleEnInput');
-                if (singleEn) singleEn.focus();
-            } else {
-                if (singleForm) singleForm.style.display = 'none';
-                if (bulkSection) bulkSection.style.display = 'block';
-                if (tabSingleBtn) tabSingleBtn.className = 'flex-1 py-2 rounded-lg font-semibold text-zinc-400 hover:text-white transition-all';
-                if (tabBulkBtn) tabBulkBtn.className = 'flex-1 py-2 rounded-lg font-bold bg-blue-600 text-white transition-all';
-                const bulk = document.getElementById('bulkInput');
-                if (bulk) bulk.focus();
-            }
+            saveWords(true);
+            if (showFeedback) showToast(`🌟 ${added} ta yangi so'z qo'shildi!`);
         }
 
         function openImportModal() {
-            const modal = document.getElementById('importModal');
-            if (modal) {
-                modal.style.display = 'flex';
-                switchAddMode('single');
-                const singleEn = document.getElementById('singleEnInput');
-                if (singleEn) {
-                    singleEn.value = '';
-                    const singleUz = document.getElementById('singleUzInput');
-                    const singleEx = document.getElementById('singleExampleInput');
-                    if (singleUz) singleUz.value = '';
-                    if (singleEx) singleEx.value = '';
-                    setTimeout(() => singleEn.focus(), 120);
-                }
-            }
+            document.getElementById('importModal').classList.remove('hidden');
         }
 
         function closeImportModal() {
-            const modal = document.getElementById('importModal');
-            if (modal) modal.style.display = 'none';
+            document.getElementById('importModal').classList.add('hidden');
         }
 
-        function saveSingleWord(e) {
-            e.preventDefault();
-            const enInput = document.getElementById('singleEnInput');
-            const uzInput = document.getElementById('singleUzInput');
-            const exInput = document.getElementById('singleExampleInput');
+        function switchAddTab(tab) {
+            document.getElementById('addSingleView').classList.toggle('hidden', tab !== 'single');
+            document.getElementById('addBulkView').classList.toggle('hidden', tab !== 'bulk');
+            document.getElementById('addTabSingle').className = tab === 'single' ? 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/15 text-white' : 'flex-1 py-1.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-white';
+            document.getElementById('addTabBulk').className = tab === 'bulk' ? 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/15 text-white' : 'flex-1 py-1.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-white';
+        }
 
-            if (!enInput || !uzInput) return;
-            const en = enInput.value.trim();
-            const uz = uzInput.value.trim();
-            const example = exInput ? exInput.value.trim() : '';
+        function addSingleWord() {
+            const en = document.getElementById('singleEn').value.trim();
+            const uz = document.getElementById('singleUz').value.trim();
+            const ex = document.getElementById('singleEx').value.trim();
 
             if (!en || !uz) {
-                showToast("Iltimos, so'z va tarjimasini kiriting");
-                return;
-            }
-
-            const exists = words.some(w => w.en.toLowerCase() === en.toLowerCase());
-            if (exists) {
-                showToast("Bu so'z allaqachon lug'atingizda bor!");
+                showToast('Inglizcha va O\'zbekcha maydonlarini to\'ldiring');
                 return;
             }
 
             words.unshift({
                 id: Date.now(),
-                en: en,
-                uz: uz,
-                phonetic: '',
-                example: example,
-                box: 1,
-                mistakes: 0
+                en, uz, phonetic: '', example: ex, box: 1, mistakes: 0
             });
 
-            saveWordsToStorage();
-            renderWordList();
+            document.getElementById('singleEn').value = '';
+            document.getElementById('singleUz').value = '';
+            document.getElementById('singleEx').value = '';
             closeImportModal();
-            SoundFX.playChime();
-            showToast(`"${en}" so'zi qo'shildi! 🎉`);
+            saveWords(true);
+            showToast('✅ So\'z muvaffaqiyatli qo\'shildi!');
         }
 
-        function saveBulkWords() {
-            const input = document.getElementById('bulkInput');
-            if (!input) return;
-            const text = input.value.trim();
-            if (!text) {
-                showToast("Iltimos, so'z va tarjimasini kiriting");
-                return;
-            }
+        function addBulkWords() {
+            const text = document.getElementById('bulkTextarea').value.trim();
+            if (!text) return;
 
             const lines = text.split('\n');
-            let added = 0;
+            let count = 0;
 
             lines.forEach(line => {
-                const parts = line.split(/[-–=:]/);
+                line = line.trim();
+                if (!line) return;
+                let parts = line.split(/[-–—:]/);
                 if (parts.length >= 2) {
                     const en = parts[0].trim();
-                    const uz = parts[1].trim();
-
-                    if (en && uz) {
-                        const exists = words.some(w => w.en.toLowerCase() === en.toLowerCase());
-                        if (!exists) {
-                            words.unshift({
-                                id: Date.now() + Math.floor(Math.random() * 100000),
-                                en: en,
-                                uz: uz,
-                                phonetic: '',
-                                example: '',
-                                box: 1,
-                                mistakes: 0
-                            });
-                            added++;
-                        }
+                    const uz = parts.slice(1).join(' ').trim();
+                    if (en && uz && !words.some(w => w.en.toLowerCase() === en.toLowerCase())) {
+                        words.push({ id: Date.now() + Math.random(), en, uz, phonetic: '', example: '', box: 1, mistakes: 0 });
+                        count++;
                     }
                 }
             });
 
-            if (added > 0) {
-                saveWordsToStorage();
-                renderWordList();
-                closeImportModal();
-                SoundFX.playChime();
-                showToast(`${added} ta yangi so'z saqlandi! 🎉`);
-            } else {
-                showToast("Format noto'g'ri yoki bu so'zlar allaqachon mavjud");
+            document.getElementById('bulkTextarea').value = '';
+            closeImportModal();
+            saveWords(true);
+            showToast(`📥 ${count} ta so'z yuklandi!`);
+        }
+
+        function clearAllWords() {
+            if (confirm('Rostdan ham barcha so\'zlaringizni o\'chirmoqchimisiz?')) {
+                words = [];
+                saveWords(true);
+                showToast('Lug\'at tozalandi');
             }
         }
 
-        // ================= FLASHCARD LOGIC =================
-        function initFlashcardMode() {
-            if (words.length === 0) return;
-            currentFlashIndex = 0;
-            isCardFlipped = false;
-            updateFlashcardUI();
+        function deleteWord(id) {
+            words = words.filter(w => w.id !== id);
+            saveWords(true);
+            showToast('So\'z o\'chirildi');
         }
 
-        function updateFlashcardUI() {
-            if (words.length === 0) return;
-            const cardInner = document.getElementById('cardInner');
-            if (cardInner) cardInner.classList.remove('rotate-y-180');
+        function filterCategory(cat, btn) {
+            currentFilter = cat;
+            document.querySelectorAll('.category-chip').forEach(c => {
+                c.className = 'category-chip px-3 py-1.5 rounded-lg glass-button text-zinc-400 font-medium transition-all cursor-pointer';
+            });
+            if (btn) btn.className = 'category-chip px-3 py-1.5 rounded-lg bg-white/10 text-white font-medium border border-white/10 transition-all cursor-pointer';
+            renderWordList();
+        }
+
+        function renderWordList() {
+            const query = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+            const container = document.getElementById('wordListContainer');
+
+            let list = words.filter(w => 
+                w.en.toLowerCase().includes(query) || w.uz.toLowerCase().includes(query)
+            );
+
+            if (currentFilter === 'box1') list = list.filter(w => w.box === 1);
+            if (currentFilter === 'box5') list = list.filter(w => w.box === 5);
+
+            if (list.length === 0) {
+                container.innerHTML = '<div class="p-8 text-center text-zinc-500 text-xs">Hech qanday so\'z topilmadi</div>';
+                return;
+            }
+
+            container.innerHTML = list.map(w => `
+                <div class="glass-card p-3 sm:p-4 rounded-xl flex items-center justify-between gap-3 group">
+                    <div class="flex items-center gap-3">
+                        <button onclick="speakWord('${w.en}')" class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center hover:bg-blue-500/20 text-xs transition-all">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="text-sm font-bold text-white">${w.en}</h4>
+                                <span class="text-[10px] px-2 py-0.5 rounded-md bg-white/[0.06] text-zinc-400 font-mono">Quti ${w.box}</span>
+                            </div>
+                            <p class="text-xs text-zinc-300 mt-0.5">${w.uz}</p>
+                            ${w.example ? `<p class="text-[11px] text-zinc-500 italic mt-0.5">"${w.example}"</p>` : ''}
+                        </div>
+                    </div>
+                    <button onclick="deleteWord(${w.id})" class="w-8 h-8 rounded-lg glass-button text-zinc-500 hover:text-red-400 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <i class="fa-solid fa-trash text-xs"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function updateDashboardStats() {
+            const total = words.length;
+            const mastered = words.filter(w => w.box === 5).length;
+            const learning = words.filter(w => w.box < 5).length;
+            const rate = total > 0 ? Math.round((mastered / total) * 100) : 0;
+
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statMastered').innerText = mastered;
+            document.getElementById('statLearning').innerText = learning;
+            document.getElementById('statRate').innerText = rate + '%';
+            document.getElementById('statProgressBar').style.width = rate + '%';
+        }
+
+        // ================= TAB SWITCHING =================
+        function switchTab(tabId) {
+            activeTab = tabId;
+            document.querySelectorAll('.tab-content').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.nav-tab').forEach(b => {
+                b.className = 'nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] transition-all whitespace-nowrap cursor-pointer';
+            });
+
+            const targetSection = document.getElementById('view-' + tabId);
+            const targetBtn = document.getElementById('tab-' + tabId);
+
+            if (targetSection) targetSection.style.display = 'block';
+            if (targetBtn) targetBtn.className = 'nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold bg-white/10 text-white shadow-sm transition-all whitespace-nowrap cursor-pointer';
+
+            if (tabId === 'flashcard') startFlashcards();
+            if (tabId === 'match') startMatchGame();
+            if (tabId === 'quiz') startSpeedQuiz();
+            if (tabId === 'spelling') startSpellingMode();
+        }
+
+        // ================= FLASHCARDS LOGIC =================
+        function startFlashcards() {
+            if (words.length === 0) {
+                showToast('Flesh-karta uchun avval so\'z qo\'shing');
+                switchTab('dashboard');
+                return;
+            }
+            currentFlashIndex = 0;
             isCardFlipped = false;
+            renderFlashcard();
+        }
 
-            const word = words[currentFlashIndex % words.length];
-            const fcEn = document.getElementById('fcEnglish');
-            const fcPhonetic = document.getElementById('fcPhonetic');
-            const fcUz = document.getElementById('fcUzbek');
-            const fcEx = document.getElementById('fcExample');
-            const fcBox = document.getElementById('fcBoxTag');
-            const fcProg = document.getElementById('fcProgress');
+        function renderFlashcard() {
+            const w = words[currentFlashIndex];
+            if (!w) return;
 
-            if (fcEn) fcEn.innerText = word.en;
-            if (fcPhonetic) fcPhonetic.innerText = word.phonetic || '/.../';
-            if (fcUz) fcUz.innerText = word.uz;
-            if (fcEx) fcEx.innerText = word.example ? `"${word.example}"` : '—';
-            if (fcBox) fcBox.innerText = `Quti: ${word.box}/5`;
-            if (fcProg) fcProg.innerText = `${(currentFlashIndex % words.length) + 1} / ${words.length}`;
+            document.getElementById('fcEnglish').innerText = w.en;
+            document.getElementById('fcPhonetic').innerText = w.phonetic || '';
+            document.getElementById('fcUzbek').innerText = w.uz;
+            document.getElementById('fcExample').innerText = w.example ? `"${w.example}"` : '';
+            document.getElementById('fcBoxTag').innerText = `Quti: ${w.box}/5`;
+            document.getElementById('fcProgress').innerText = `${currentFlashIndex + 1} / ${words.length}`;
+
+            isCardFlipped = false;
+            document.getElementById('cardInner').classList.remove('rotate-y-180');
         }
 
         function flipCard() {
-            SoundFX.playFlip();
-            const cardInner = document.getElementById('cardInner');
-            if (!cardInner) return;
             isCardFlipped = !isCardFlipped;
-            if (isCardFlipped) {
-                cardInner.classList.add('rotate-y-180');
-            } else {
-                cardInner.classList.remove('rotate-y-180');
-            }
+            SoundFX.playFlip();
+            document.getElementById('cardInner').classList.toggle('rotate-y-180', isCardFlipped);
         }
 
-        function handleCardReview(remembered) {
-            if (words.length === 0) return;
-            const word = words[currentFlashIndex % words.length];
+        function handleCardReview(known) {
+            const w = words[currentFlashIndex];
+            if (!w) return;
 
-            if (remembered) {
+            if (known) {
+                w.box = Math.min(5, (w.box || 1) + 1);
                 SoundFX.playChime();
-                word.box = Math.min(5, word.box + 1);
             } else {
+                w.box = 1;
+                w.mistakes = (w.mistakes || 0) + 1;
                 SoundFX.playWrong();
-                word.box = Math.max(1, word.box - 1);
             }
 
-            saveWordsToStorage();
+            saveWords(true);
             currentFlashIndex = (currentFlashIndex + 1) % words.length;
-            updateFlashcardUI();
+            renderFlashcard();
         }
 
         function speakCurrentWord() {
-            if (words.length > 0) {
-                speakWord(words[currentFlashIndex % words.length].en);
+            const w = words[currentFlashIndex];
+            if (w) speakWord(w.en);
+        }
+
+        function speakWord(text) {
+            if ('speechSynthesis' in window) {
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'en-US';
+                window.speechSynthesis.speak(u);
             }
         }
 
         // ================= MATCH PAIRS GAME =================
         function startMatchGame() {
-            const grid = document.getElementById('matchGrid');
-            if (!grid) return;
-
             if (words.length < 4) {
-                grid.innerHTML = `
-                    <div class="col-span-full text-center py-12 text-zinc-500 text-xs glass-card rounded-2xl p-6">
-                        O'yin boshlash uchun lug'atda kamida 4 ta so'z bo'lishi kerak.
-                    </div>
-                `;
+                showToast('Juftlik o\'yini uchun kamida 4 ta so\'z kerak');
                 return;
             }
 
-            const count = Math.min(6, words.length);
-            const shuffledWords = [...words].sort(() => 0.5 - Math.random()).slice(0, count);
-
-            let cards = [];
-            shuffledWords.forEach(w => {
-                cards.push({ id: w.id, text: w.en, type: 'en' });
-                cards.push({ id: w.id, text: w.uz, type: 'uz' });
-            });
-
-            cards.sort(() => 0.5 - Math.random());
-
-            matchSelected = [];
-            grid.innerHTML = cards.map((c) => `
-                <div onclick="selectMatchCard(this, ${c.id}, '${c.type}')" 
-                     data-id="${c.id}" data-type="${c.type}" 
-                     class="match-tile glass-card p-5 rounded-2xl cursor-pointer text-center text-sm font-bold text-white flex items-center justify-center min-h-[95px] select-none hover:border-white/25 active:scale-95 transition-all">
-                    ${c.text}
-                </div>
-            `).join('');
-
             clearInterval(matchTimerInterval);
             matchSeconds = 0;
-            const timerEl = document.getElementById('matchTimer');
-            if (timerEl) timerEl.innerText = "00:00";
+            document.getElementById('matchTimer').innerText = '00:00';
             matchTimerInterval = setInterval(() => {
                 matchSeconds++;
                 const mins = String(Math.floor(matchSeconds / 60)).padStart(2, '0');
                 const secs = String(matchSeconds % 60).padStart(2, '0');
-                if (timerEl) timerEl.innerText = `${mins}:${secs}`;
+                document.getElementById('matchTimer').innerText = `${mins}:${secs}`;
             }, 1000);
+
+            const pool = [...words].sort(() => 0.5 - Math.random()).slice(0, 6);
+            let cards = [];
+            pool.forEach(w => {
+                cards.push({ id: w.id, text: w.en, type: 'en' });
+                cards.push({ id: w.id, text: w.uz, type: 'uz' });
+            });
+            cards.sort(() => 0.5 - Math.random());
+
+            matchSelected = [];
+            const grid = document.getElementById('matchGrid');
+            grid.innerHTML = cards.map((c, i) => `
+                <div onclick="handleMatchCardClick(${c.id}, '${c.type}', this)" data-id="${c.id}" data-type="${c.type}" 
+                    class="match-card glass-card p-4 sm:p-5 rounded-2xl flex items-center justify-center text-center font-bold text-xs sm:text-sm text-white cursor-pointer select-none transition-all hover:scale-102 active:scale-95 h-24 border border-white/10">
+                    ${c.text}
+                </div>
+            `).join('');
         }
 
-        function selectMatchCard(el, id, type) {
-            if (el.classList.contains('matched') || el.classList.contains('bg-blue-600')) return;
+        function handleMatchCardClick(id, type, elem) {
+            if (elem.classList.contains('matched') || elem.classList.contains('selected')) return;
+            if (matchSelected.length === 2) return;
 
-            SoundFX.playFlip();
-            el.classList.add('bg-blue-600', 'border-blue-400', 'shadow-lg', 'shadow-blue-500/25');
-            matchSelected.push({ element: el, id: id, type: type });
+            elem.classList.add('selected', '!border-blue-500', 'bg-blue-500/20');
+            matchSelected.push({ id, type, elem });
 
             if (matchSelected.length === 2) {
                 const [first, second] = matchSelected;
-
-                if (String(first.id) === String(second.id) && first.type !== second.type) {
+                if (first.id === second.id && first.type !== second.type) {
                     SoundFX.playChime();
-                    setTimeout(() => {
-                        first.element.classList.remove('bg-blue-600', 'border-blue-400', 'shadow-blue-500/25');
-                        second.element.classList.remove('bg-blue-600', 'border-blue-400', 'shadow-blue-500/25');
+                    first.elem.classList.remove('selected', '!border-blue-500', 'bg-blue-500/20');
+                    second.elem.classList.remove('selected', '!border-blue-500', 'bg-blue-500/20');
+                    first.elem.classList.add('matched', 'opacity-0', 'pointer-events-none');
+                    second.elem.classList.add('matched', 'opacity-0', 'pointer-events-none');
+                    matchSelected = [];
 
-                        first.element.classList.add('bg-emerald-500/20', 'border-emerald-500/40', 'text-emerald-300', 'matched', 'pointer-events-none');
-                        second.element.classList.add('bg-emerald-500/20', 'border-emerald-500/40', 'text-emerald-300', 'matched', 'pointer-events-none');
-
-                        const wordObj = words.find(w => String(w.id) === String(id));
-                        if (wordObj) wordObj.box = Math.min(5, wordObj.box + 1);
-                        saveWordsToStorage();
-
-                        checkMatchGameWin();
-                    }, 180);
+                    const remaining = document.querySelectorAll('.match-card:not(.matched)').length;
+                    if (remaining === 0) {
+                        clearInterval(matchTimerInterval);
+                        confetti({ particleCount: 100, spread: 70 });
+                        showToast(`🏆 Ajoyib! Vaqt: ${document.getElementById('matchTimer').innerText}`);
+                    }
                 } else {
                     SoundFX.playWrong();
+                    first.elem.classList.add('!border-red-500', 'bg-red-500/20');
+                    second.elem.classList.add('!border-red-500', 'bg-red-500/20');
                     setTimeout(() => {
-                        first.element.classList.remove('bg-blue-600', 'border-blue-400', 'shadow-blue-500/25');
-                        second.element.classList.remove('bg-blue-600', 'border-blue-400', 'shadow-blue-500/25');
-
-                        first.element.classList.add('bg-red-500/25', 'border-red-500/40');
-                        second.element.classList.add('bg-red-500/25', 'border-red-500/40');
-
-                        setTimeout(() => {
-                            first.element.classList.remove('bg-red-500/25', 'border-red-500/40');
-                            second.element.classList.remove('bg-red-500/25', 'border-red-500/40');
-                        }, 350);
-                    }, 220);
+                        first.elem.classList.remove('selected', '!border-blue-500', 'bg-blue-500/20', '!border-red-500', 'bg-red-500/20');
+                        second.elem.classList.remove('selected', '!border-blue-500', 'bg-blue-500/20', '!border-red-500', 'bg-red-500/20');
+                        matchSelected = [];
+                    }, 600);
                 }
-
-                matchSelected = [];
             }
         }
 
-        function checkMatchGameWin() {
-            const remaining = document.querySelectorAll('.match-tile:not(.matched)');
-            if (remaining.length === 0) {
-                clearInterval(matchTimerInterval);
-                if (window.confetti) confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
-                SoundFX.playChime();
-                showToast(`Ajoyib! O'yinni ${matchSeconds} soniyada yakunladingiz! 🎉`);
-            }
-        }
-
-        // ================= SPEED QUIZ LOGIC =================
-        function startQuizMode() {
-            const optionsContainer = document.getElementById('quizOptions');
-            if (!optionsContainer) return;
-
+        // ================= SPEED QUIZ MODE =================
+        function startSpeedQuiz() {
             if (words.length < 4) {
-                optionsContainer.innerHTML = `
-                    <div class="col-span-full text-center py-6 text-zinc-500 text-xs">
-                        Test uchun kamida 4 ta so'z bo'lishi kerak.
-                    </div>
-                `;
+                showToast('Test rejimi uchun kamida 4 ta so\'z kerak');
                 return;
             }
-
+            currentQuizQuestions = [...words].sort(() => 0.5 - Math.random());
             quizIndex = 0;
             quizScore = 0;
-            currentQuizQuestions = [...words].sort(() => 0.5 - Math.random());
-            const totalNum = document.getElementById('quizTotalNum');
-            if (totalNum) totalNum.innerText = currentQuizQuestions.length;
+            document.getElementById('quizTotalNum').innerText = currentQuizQuestions.length;
             renderQuizQuestion();
         }
 
         function renderQuizQuestion() {
-            if (quizIndex >= currentQuizQuestions.length) {
-                if (window.confetti) confetti({ particleCount: 150, spread: 90 });
-                SoundFX.playChime();
-                showToast(`Test yakunlandi! Umumiy ball: ${quizScore} 🏆`);
-                startQuizMode();
+            const current = currentQuizQuestions[quizIndex];
+            if (!current) {
+                confetti({ particleCount: 100 });
+                showToast(`🎉 Test tugadi! Natija: ${quizScore} ball`);
+                switchTab('dashboard');
                 return;
             }
 
-            const current = currentQuizQuestions[quizIndex];
-            const currentNum = document.getElementById('quizCurrentNum');
-            const scoreEl = document.getElementById('quizScore');
-            const questionWord = document.getElementById('quizQuestionWord');
+            document.getElementById('quizCurrentNum').innerText = quizIndex + 1;
+            document.getElementById('quizScore').innerText = quizScore;
+            document.getElementById('quizQuestionWord').innerText = current.en;
 
-            if (currentNum) currentNum.innerText = quizIndex + 1;
-            if (scoreEl) scoreEl.innerText = quizScore;
-            if (questionWord) questionWord.innerText = current.en;
+            let choices = [current.uz];
+            const others = words.filter(w => w.id !== current.id).sort(() => 0.5 - Math.random()).slice(0, 3);
+            others.forEach(o => choices.push(o.uz));
+            choices.sort(() => 0.5 - Math.random());
 
-            const wrongOptions = words.filter(w => String(w.id) !== String(current.id)).sort(() => 0.5 - Math.random()).slice(0, 3);
-            currentQuizChoices = [current, ...wrongOptions].sort(() => 0.5 - Math.random());
-
-            const optionsContainer = document.getElementById('quizOptions');
-            if (!optionsContainer) return;
-            optionsContainer.innerHTML = currentQuizChoices.map((choice, i) => `
-                <button type="button" onclick="handleQuizAnswer(this, ${String(choice.id) === String(current.id)})" 
-                        class="p-4 rounded-2xl glass-button text-white font-semibold text-sm text-left flex items-center justify-between group active:scale-98 cursor-pointer">
-                    <div class="flex items-center gap-3">
-                        <span class="kbd-key">${i + 1}</span>
-                        <span>${choice.uz}</span>
-                    </div>
-                    <i class="fa-regular fa-circle text-zinc-600 text-xs group-hover:text-zinc-400"></i>
+            document.getElementById('quizOptions').innerHTML = choices.map(opt => `
+                <button type="button" onclick="handleQuizChoice('${opt.replace(/'/g, "\\'")}', this)" 
+                    class="py-3.5 px-4 rounded-2xl glass-card hover:bg-white/10 text-white font-semibold text-xs sm:text-sm text-left border border-white/10 transition-all flex items-center justify-between cursor-pointer active:scale-98">
+                    <span>${opt}</span>
+                    <i class="fa-solid fa-chevron-right text-xs text-zinc-500"></i>
                 </button>
             `).join('');
-
-            clearInterval(quizTimerInterval);
-            const timerBar = document.getElementById('quizTimerBar');
-            if (timerBar) timerBar.style.width = '100%';
-
-            let timeLeft = 100;
-            quizTimerInterval = setInterval(() => {
-                timeLeft -= 2;
-                if (timerBar) timerBar.style.width = `${timeLeft}%`;
-                if (timeLeft <= 0) {
-                    clearInterval(quizTimerInterval);
-                    SoundFX.playWrong();
-                    quizIndex++;
-                    renderQuizQuestion();
-                }
-            }, 100);
         }
 
-        function handleQuizAnswer(btn, isCorrect) {
-            clearInterval(quizTimerInterval);
+        function handleQuizChoice(selected, btn) {
+            const current = currentQuizQuestions[quizIndex];
+            if (!current) return;
 
-            if (isCorrect) {
+            if (selected.toLowerCase() === current.uz.toLowerCase()) {
                 SoundFX.playChime();
-                btn.classList.add('bg-emerald-500/25', 'border-emerald-500/50', 'text-emerald-300');
+                btn.className = 'py-3.5 px-4 rounded-2xl bg-emerald-500/20 border border-emerald-500 text-emerald-300 font-bold text-xs sm:text-sm text-left';
                 quizScore += 10;
-                
-                const word = currentQuizQuestions[quizIndex];
-                if (word) word.box = Math.min(5, word.box + 1);
-                saveWordsToStorage();
             } else {
                 SoundFX.playWrong();
-                btn.classList.add('bg-red-500/25', 'border-red-500/50', 'text-red-300');
+                btn.className = 'py-3.5 px-4 rounded-2xl bg-red-500/20 border border-red-500 text-red-300 font-bold text-xs sm:text-sm text-left';
             }
 
             setTimeout(() => {
                 quizIndex++;
                 renderQuizQuestion();
-            }, 450);
+            }, 600);
         }
 
-        function speakQuizWord() {
-            if (currentQuizQuestions[quizIndex]) {
-                speakWord(currentQuizQuestions[quizIndex].en);
-            }
-        }
-
-        // ================= SPELLING PRACTICE LOGIC =================
-        function initSpellingMode() {
+        // ================= SPELLING MODE =================
+        function startSpellingMode() {
             if (words.length === 0) return;
             spellingIndex = 0;
-            renderSpellingCard();
+            renderSpelling();
         }
 
-        function renderSpellingCard() {
-            if (words.length === 0) return;
-            const current = words[spellingIndex % words.length];
+        function renderSpelling() {
+            const w = words[spellingIndex];
+            if (!w) return;
 
-            const targetUz = document.getElementById('spellingTargetUz');
-            if (targetUz) targetUz.innerText = current.uz;
-
-            const input = document.getElementById('spellingInput');
-            if (input) {
-                input.value = '';
-                setTimeout(() => input.focus(), 100);
-            }
-            const feedback = document.getElementById('spellingFeedback');
-            if (feedback) feedback.innerText = '';
-            const hintBox = document.getElementById('spellingHintBox');
-            if (hintBox) hintBox.classList.add('hidden');
-
-            const en = current.en;
-            let hintText = en[0] + ' ' + '_ '.repeat(Math.max(1, en.length - 2)) + en[en.length - 1];
-            if (hintBox) hintBox.innerText = hintText.toUpperCase();
+            document.getElementById('spellPrompt').innerText = w.uz;
+            const input = document.getElementById('spellInput');
+            input.value = '';
+            input.className = 'w-full bg-black/60 border border-white/15 rounded-2xl px-5 py-4 text-center text-lg sm:text-xl font-bold tracking-wider text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500 transition-all font-mono';
+            document.getElementById('spellFeedback').innerText = '';
+            input.focus();
         }
 
-        function showSpellingHint() {
-            const hintBox = document.getElementById('spellingHintBox');
-            if (hintBox) hintBox.classList.remove('hidden');
-        }
-
-        function speakSpellingWord() {
-            if (words.length > 0) {
-                speakWord(words[spellingIndex % words.length].en);
-            }
-        }
-
-        function checkSpellingAnswer(e) {
-            e.preventDefault();
-            if (words.length === 0) return;
-
-            const current = words[spellingIndex % words.length];
-            const input = document.getElementById('spellingInput');
-            if (!input) return;
-            const userText = input.value.trim().toLowerCase();
-            const feedback = document.getElementById('spellingFeedback');
-
-            if (userText === current.en.toLowerCase()) {
+        function checkSpellingRealtime() {
+            const w = words[spellingIndex];
+            if (!w) return;
+            const val = document.getElementById('spellInput').value.trim();
+            if (val.toLowerCase() === w.en.toLowerCase()) {
                 SoundFX.playChime();
-                if (feedback) {
-                    feedback.className = "text-xs font-bold text-emerald-400";
-                    feedback.innerText = "To'g'ri! Barakalla 🎉";
-                }
-                speakWord(current.en);
-
-                current.box = Math.min(5, current.box + 1);
-                saveWordsToStorage();
-
+                document.getElementById('spellInput').className = 'w-full bg-emerald-950/40 border border-emerald-500 rounded-2xl px-5 py-4 text-center text-lg sm:text-xl font-bold tracking-wider text-emerald-300 font-mono';
+                document.getElementById('spellFeedback').innerText = '✅ To\'g\'ri!';
+                document.getElementById('spellFeedback').className = 'text-xs font-bold text-emerald-400 h-4';
                 setTimeout(() => {
-                    spellingIndex++;
-                    renderSpellingCard();
-                }, 900);
+                    spellingIndex = (spellingIndex + 1) % words.length;
+                    renderSpelling();
+                }, 700);
+            }
+        }
+
+        function submitSpelling() {
+            const w = words[spellingIndex];
+            if (!w) return;
+            const val = document.getElementById('spellInput').value.trim();
+            if (val.toLowerCase() === w.en.toLowerCase()) {
+                checkSpellingRealtime();
             } else {
                 SoundFX.playWrong();
-                if (feedback) {
-                    feedback.className = "text-xs font-bold text-red-400";
-                    feedback.innerText = `Xato! To'g'ri javob: "${current.en}"`;
-                }
+                document.getElementById('spellInput').className = 'w-full bg-red-950/40 border border-red-500 rounded-2xl px-5 py-4 text-center text-lg sm:text-xl font-bold tracking-wider text-red-300 font-mono';
+                document.getElementById('spellFeedback').innerText = `❌ To'g'ri javob: ${w.en}`;
+                document.getElementById('spellFeedback').className = 'text-xs font-bold text-red-400 h-4';
             }
         }
 
-        // ================= SPEECH ENGINE =================
-        function speakWord(text) {
-            if ('speechSynthesis' in window) {
-                try {
-                    window.speechSynthesis.cancel();
-                    const utterance = new SpeechSynthesisUtterance(text);
-                    utterance.lang = 'en-US';
-                    utterance.rate = 0.9;
-                    window.speechSynthesis.speak(utterance);
-                } catch(e) {}
-            }
+        function skipSpelling() {
+            spellingIndex = (spellingIndex + 1) % words.length;
+            renderSpelling();
         }
 
-        // ================= GLOBAL KEYBOARD SHORTCUTS =================
-        function setupGlobalKeyboardShortcuts() {
-            document.addEventListener('keydown', (e) => {
-                if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
-                    if (e.key === 'Escape') {
-                        document.activeElement.blur();
-                        closeImportModal();
-                    }
-                    return;
-                }
-
-                if ((e.ctrlKey || e.metaKey) && e.key === 'k' || e.key === '/') {
-                    e.preventDefault();
-                    switchTab('dashboard');
-                    const searchInput = document.getElementById('searchInput');
-                    if (searchInput) searchInput.focus();
-                    return;
-                }
+        // ================= GLOBAL HELPERS & KEYBOARD SHORTCUTS =================
+        function setupKeyboardShortcuts() {
+            window.addEventListener('keydown', (e) => {
+                if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
 
                 if (activeTab === 'flashcard') {
-                    if (e.code === 'Space') {
-                        e.preventDefault();
-                        flipCard();
-                    } else if (e.key === '1') {
-                        handleCardReview(false);
-                    } else if (e.key === '2') {
-                        handleCardReview(true);
-                    }
-                } else if (activeTab === 'quiz') {
-                    const num = parseInt(e.key);
-                    if (num >= 1 && num <= 4 && currentQuizChoices[num - 1]) {
-                        const buttons = document.querySelectorAll('#quizOptions button');
-                        if (buttons[num - 1]) buttons[num - 1].click();
-                    }
+                    if (e.code === 'Space') { e.preventDefault(); flipCard(); }
+                    if (e.key === '1') { e.preventDefault(); handleCardReview(false); }
+                    if (e.key === '2') { e.preventDefault(); handleCardReview(true); }
                 }
             });
         }
 
-        // ================= TOAST NOTIFICATIONS =================
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toastMessage');
-            if (toast && toastMessage) {
-                toastMessage.innerText = message;
-                toast.style.display = 'flex';
-                clearTimeout(toast._timeout);
-                toast._timeout = setTimeout(() => {
-                    toast.style.display = 'none';
-                }, 2600);
-            }
+        function showToast(msg) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'glass-card px-4 py-3 rounded-xl border border-white/20 text-xs font-bold text-white shadow-2xl flex items-center gap-2 transform transition-all duration-300 translate-y-5 opacity-0';
+            toast.innerHTML = `<i class="fa-solid fa-bell text-blue-400"></i><span>${msg}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => { toast.classList.remove('translate-y-5', 'opacity-0'); }, 10);
+            setTimeout(() => {
+                toast.classList.add('translate-y-5', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
         }
-
-        // Boot
-        window.addEventListener('DOMContentLoaded', initApp);
-        initApp();
     </script>
-
-    <!-- ================= AUTH & SUBSCRIPTION LOCK OVERLAY ================= -->
-    <div id="lockOverlay" class="fixed inset-0 z-50 bg-[#070709]/95 backdrop-blur-2xl flex items-center justify-center p-4 transition-all duration-300">
-        <div class="glass-card max-w-md w-full p-6 sm:p-8 rounded-3xl border border-white/15 text-center relative overflow-hidden shadow-2xl">
-            <div class="absolute -top-24 -left-24 w-48 h-48 bg-blue-600/30 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-purple-600/30 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center text-white text-2xl mx-auto mb-4 shadow-lg shadow-amber-500/25">
-                <i class="fa-solid fa-lock" id="lockIcon"></i>
-            </div>
-
-            <h3 class="text-xl font-bold text-white mb-1.5 tracking-tight" id="lockTitle">Obuna talab qilinadi</h3>
-            <p class="text-xs text-zinc-400 leading-relaxed mb-5" id="lockDescription">
-                Vocab 3X Pro — o'quvchilar uchun shaxsiy so'z yodlash tizimi bo'lib, oylik to'lov orqali ishlaydi.
-            </p>
-
-            <div class="glass-card p-4 rounded-2xl mb-4 text-left border border-white/10 bg-white/[0.03]">
-                <div class="flex justify-between items-center mb-3">
-                    <span class="text-xs font-semibold text-zinc-300">Vocab 3X Pro Oylik Obuna</span>
-                    <span class="text-sm font-extrabold text-blue-400">50 000 so'm / oy</span>
-                </div>
-                
-                <div class="bg-black/50 p-3 rounded-xl border border-white/10 mb-3 space-y-1 text-center">
-                    <span class="text-[10px] text-zinc-400 uppercase font-semibold">To'lov uchun karta raqami:</span>
-                    <p class="text-sm font-mono font-bold text-blue-300 select-all tracking-wider">5614 6820 5096 7480</p>
-                </div>
-
-                <div class="text-[11px] text-zinc-400 space-y-1.5">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-check text-emerald-400 text-[10px]"></i>
-                        <span>O'z shaxsiy so'zlaringizni qo'shish va cheksiz saqlash</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-check text-emerald-400 text-[10px]"></i>
-                        <span>Leitner 5-qutilli aqlli eslab qolish tizimi</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-check text-emerald-400 text-[10px]"></i>
-                        <span>Flesh-karta, Viktorina, Juftlik va Yozish mashqlari</span>
-                    </div>
-                </div>
-            </div>
-
-            <div id="lockUserInfo" class="text-xs text-zinc-400 mb-5 bg-zinc-900/60 p-3 rounded-xl border border-white/5 flex items-center justify-between">
-                <span>Telegram ID: <code id="lockTelegramId" class="text-blue-400 font-mono">Aniqlanmoqda...</code></span>
-                <span id="lockSubStatus" class="text-amber-400 font-semibold text-[11px]">Faol emas</span>
-            </div>
-
-            <div class="space-y-2.5">
-                <button type="button" onclick="openPaymentFlow()" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all active:scale-98 cursor-pointer flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-receipt"></i>
-                    <span id="lockActionBtnText">To'lov chekini botga yuborish</span>
-                </button>
-                <button type="button" onclick="verifySubscription(true)" class="w-full py-2.5 px-4 rounded-xl glass-button text-zinc-300 hover:text-white font-medium text-xs transition-all active:scale-98 cursor-pointer flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-arrows-rotate text-xs"></i>
-                    <span>To'lovni tekshirish</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
 </body>
 </html>
