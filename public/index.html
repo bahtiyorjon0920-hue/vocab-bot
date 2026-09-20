@@ -104,7 +104,7 @@
 <body class="min-h-screen flex flex-col justify-between selection:bg-blue-600 selection:text-white">
 
     <!-- Top Sticky Navigation Bar -->
-    <header class="sticky top-0 z-40 glass-nav px-4 lg:px-8 py-3.5">
+    <header class="sticky top-0 z-50 glass-nav px-4 lg:px-8 py-3.5">
         <div class="max-w-6xl mx-auto flex items-center justify-between">
             <!-- Brand Logo -->
             <div class="flex items-center gap-3 cursor-pointer group" onclick="switchTab('dashboard')">
@@ -272,7 +272,13 @@
                     <span class="text-[11px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">Flesh-Karta Rejimi</span>
                     <span id="fcBoxTag" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-white/[0.06] text-zinc-400 border border-white/[0.08]">Quti: 1/5</span>
                 </div>
-                <div id="fcProgress" class="text-xs font-mono font-semibold text-zinc-400">1 / 10</div>
+                <div class="flex items-center gap-2.5">
+                    <div class="flex rounded-xl bg-white/[0.06] p-0.5 border border-white/10 text-[11px] font-bold">
+                        <button type="button" onclick="setAccent('us')" id="accentBtnUS" class="px-2.5 py-1 rounded-lg bg-blue-600 text-white transition-all cursor-pointer">🇺🇸 US</button>
+                        <button type="button" onclick="setAccent('uk')" id="accentBtnUK" class="px-2.5 py-1 rounded-lg text-zinc-400 hover:text-white transition-all cursor-pointer">🇬🇧 UK</button>
+                    </div>
+                    <div id="fcProgress" class="text-xs font-mono font-semibold text-zinc-400">1 / 10</div>
+                </div>
             </div>
 
             <div id="cardFlipWrapper" onclick="flipCard()" class="perspective-1200 w-full h-88 sm:h-96 cursor-pointer group select-none">
@@ -379,10 +385,13 @@
     <!-- ================= AUTHENTICATION MODAL (LOGIN & REGISTER) ================= -->
     <div id="authModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl flex items-center justify-center p-4 transition-all duration-300 hidden">
         <div class="glass-card max-w-md w-full p-6 sm:p-8 rounded-3xl border border-white/15 relative overflow-hidden shadow-2xl">
-            <div class="flex items-center justify-center mb-6">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-xl shadow-lg shadow-blue-500/30">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-lg shadow-lg shadow-blue-500/30">
                     <i class="fa-solid fa-lock"></i>
                 </div>
+                <button type="button" onclick="closeAuthModal()" class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-zinc-400 hover:text-white flex items-center justify-center text-sm transition-all cursor-pointer" title="Yopish">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
 
             <!-- Auth Tabs -->
@@ -437,6 +446,17 @@
     <!-- ================= SUBSCRIPTION PAYWALL OVERLAY ================= -->
     <div id="paywallOverlay" class="fixed inset-0 z-40 bg-[#070709]/95 backdrop-blur-2xl flex items-center justify-center p-4 transition-all duration-300 hidden">
         <div class="glass-card max-w-lg w-full p-6 sm:p-8 rounded-3xl border border-white/15 text-center relative overflow-hidden shadow-2xl">
+            
+            <!-- Top Controls: Back and Close -->
+            <div class="flex items-center justify-between mb-2">
+                <button type="button" onclick="closePaywallModal()" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-zinc-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
+                    <i class="fa-solid fa-arrow-left"></i> Ortga
+                </button>
+                <button type="button" onclick="closePaywallModal()" class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-zinc-400 hover:text-white flex items-center justify-center text-sm transition-all cursor-pointer" title="Yopish">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
             <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center text-white text-2xl mx-auto mb-4 shadow-lg shadow-amber-500/25">
                 <i class="fa-solid fa-lock"></i>
             </div>
@@ -498,6 +518,16 @@
                     <img id="receiptPreviewImg" src="" alt="Chek" class="max-h-32 mx-auto rounded-xl border border-white/20 shadow-md">
                 </div>
             </div>
+
+            <!-- Paywall Actions / Exit -->
+            <div class="mt-5 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+                <button type="button" onclick="handleLogout()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white font-semibold text-xs border border-white/10 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-right-from-bracket"></i> Chiqish (Logout)
+                </button>
+                <button type="button" onclick="switchToAdminLogin()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs border border-amber-500/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-crown"></i> Admin (BM_visual) kirish
+                </button>
+            </div>
         </div>
     </div>
 
@@ -545,15 +575,18 @@
             </div>
 
             <!-- Admin Tabs Navigation -->
-            <div class="flex rounded-xl bg-white/[0.04] p-1 mb-3 border border-white/10 flex-shrink-0">
-                <button type="button" id="admTabReceipts" onclick="switchAdminTab('receipts')" class="flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all">
-                    🔔 Cheklarni Tasdiqlash (<span id="admPendingCountBadge">0</span>)
+            <div class="flex rounded-xl bg-white/[0.04] p-1 mb-3 border border-white/10 flex-shrink-0 gap-1 overflow-x-auto">
+                <button type="button" id="admTabReceipts" onclick="switchAdminTab('receipts')" class="flex-1 py-2 px-2.5 rounded-lg text-xs font-bold bg-white/15 text-white transition-all whitespace-nowrap">
+                    🔔 Cheklar (<span id="admPendingCountBadge">0</span>)
                 </button>
-                <button type="button" id="admTabUsers" onclick="switchAdminTab('users')" class="flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all">
+                <button type="button" id="admTabUsers" onclick="switchAdminTab('users')" class="flex-1 py-2 px-2.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all whitespace-nowrap">
                     👥 O'quvchilar Ro'yxati
                 </button>
-                <button type="button" id="admTabManual" onclick="switchAdminTab('manual')" class="flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all">
-                    ➕ Qo'lda Obuna Berish
+                <button type="button" id="admTabCreate" onclick="switchAdminTab('create')" class="flex-1 py-2 px-2.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all whitespace-nowrap">
+                    ➕ Yangi O'quvchi Qo'shish
+                </button>
+                <button type="button" id="admTabManual" onclick="switchAdminTab('manual')" class="flex-1 py-2 px-2.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all whitespace-nowrap">
+                    ⚡ Obuna Berish
                 </button>
             </div>
 
@@ -583,7 +616,39 @@
                 </div>
             </div>
 
-            <!-- Admin Tab 3: Manual Grant -->
+            <!-- Admin Tab 3: Create New User -->
+            <div id="admViewCreate" class="flex-grow overflow-y-auto pr-1 hidden">
+                <div class="glass-card p-6 rounded-2xl max-w-md mx-auto space-y-3.5 my-auto">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-user-plus text-blue-400"></i> Yangi O'quvchi / Foydalanuvchi Yaratish
+                    </h3>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Gmail / Email *</label>
+                        <input type="email" id="admNewEmail" placeholder="masalan: ali@gmail.com" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Username (login uchun) *</label>
+                        <input type="text" id="admNewUsername" placeholder="masalan: alisher_01" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Ism va Familiya</label>
+                        <input type="text" id="admNewFullName" placeholder="Alisher Qodirov" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Parol *</label>
+                        <input type="password" id="admNewPassword" value="123456" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Dastlabki obuna muddati (kun)</label>
+                        <input type="number" id="admNewDays" value="30" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                    </div>
+                    <button type="button" onclick="handleAdminCreateUser()" class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/30 transition-all active:scale-98 cursor-pointer mt-2">
+                        Foydalanuvchini Saqlash ✨
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Tab 4: Manual Grant -->
             <div id="admViewManual" class="flex-grow overflow-y-auto pr-1 hidden">
                 <div class="glass-card p-6 rounded-2xl max-w-md mx-auto space-y-4 my-auto">
                     <h3 class="text-sm font-bold text-white">Istalgan hisobga obuna qo'shish</h3>
@@ -865,7 +930,31 @@
             document.getElementById('adminPanelBtn').classList.add('hidden');
             document.getElementById('logoutBtn').classList.add('hidden');
             document.getElementById('loginTriggerBtn').classList.remove('hidden');
+            document.getElementById('paywallOverlay').classList.add('hidden');
             openAuthModal('login');
+        }
+
+        function switchToAdminLogin() {
+            if (sessionToken) {
+                fetch('/api/logout', { method: 'POST', headers: { 'X-Session-Token': sessionToken } }).catch(() => {});
+            }
+            localStorage.removeItem('vocab_token');
+            sessionToken = '';
+            currentUser = null;
+            document.getElementById('paywallOverlay').classList.add('hidden');
+            openAuthModal('login');
+            setTimeout(() => {
+                const q = document.getElementById('loginQuery');
+                if (q) {
+                    q.value = 'BM_visual';
+                    const p = document.getElementById('loginPassword');
+                    if (p) { p.value = ''; p.focus(); }
+                }
+            }, 100);
+        }
+
+        function closePaywallModal() {
+            document.getElementById('paywallOverlay').classList.add('hidden');
         }
 
         function openAuthModal(tab = 'login') {
@@ -874,9 +963,7 @@
         }
 
         function closeAuthModal() {
-            if (currentUser && currentUser.isSubscribed) {
-                document.getElementById('authModal').classList.add('hidden');
-            }
+            document.getElementById('authModal').classList.add('hidden');
         }
 
         function switchAuthTab(tab) {
@@ -1030,11 +1117,48 @@
         function switchAdminTab(tab) {
             document.getElementById('admViewReceipts').classList.toggle('hidden', tab !== 'receipts');
             document.getElementById('admViewUsers').classList.toggle('hidden', tab !== 'users');
+            document.getElementById('admViewCreate').classList.toggle('hidden', tab !== 'create');
             document.getElementById('admViewManual').classList.toggle('hidden', tab !== 'manual');
 
-            document.getElementById('admTabReceipts').className = tab === 'receipts' ? 'flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all' : 'flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all';
-            document.getElementById('admTabUsers').className = tab === 'users' ? 'flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all' : 'flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all';
-            document.getElementById('admTabManual').className = tab === 'manual' ? 'flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all' : 'flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all';
+            document.getElementById('admTabReceipts').className = tab === 'receipts' ? 'flex-1 py-2 px-2.5 rounded-lg text-xs font-bold bg-white/15 text-white transition-all whitespace-nowrap' : 'flex-1 py-2 px-2.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all whitespace-nowrap';
+            document.getElementById('admTabUsers').className = tab === 'users' ? 'flex-1 py-2 px-2.5 rounded-lg text-xs font-bold bg-white/15 text-white transition-all whitespace-nowrap' : 'flex-1 py-2 px-2.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all whitespace-nowrap';
+            document.getElementById('admTabCreate').className = tab === 'create' ? 'flex-1 py-2 px-2.5 rounded-lg text-xs font-bold bg-white/15 text-white transition-all whitespace-nowrap' : 'flex-1 py-2 px-2.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all whitespace-nowrap';
+            document.getElementById('admTabManual').className = tab === 'manual' ? 'flex-1 py-2 px-2.5 rounded-lg text-xs font-bold bg-white/15 text-white transition-all whitespace-nowrap' : 'flex-1 py-2 px-2.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all whitespace-nowrap';
+        }
+
+        async function handleAdminCreateUser() {
+            const email = document.getElementById('admNewEmail').value.trim();
+            const username = document.getElementById('admNewUsername').value.trim();
+            const fullName = document.getElementById('admNewFullName').value.trim();
+            const password = document.getElementById('admNewPassword').value.trim();
+            const days = parseInt(document.getElementById('admNewDays').value) || 30;
+
+            if (!email || !username || !password) {
+                showToast('❌ Gmail, username va parol kiritilishi shart!');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/admin/create-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ email, username, fullName, password, days })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('🎉 Yangi foydalanuvchi muvaffaqiyatli qo\'shildi!');
+                    document.getElementById('admNewEmail').value = '';
+                    document.getElementById('admNewUsername').value = '';
+                    document.getElementById('admNewFullName').value = '';
+                    document.getElementById('admNewPassword').value = '123456';
+                    loadAdminData();
+                    switchAdminTab('users');
+                } else {
+                    showToast('❌ Xatolik: ' + (data.error || 'Qo\'shib bo\'lmadi'));
+                }
+            } catch(e) {
+                showToast('❌ Server bilan bog\'lanishda xatolik yuz berdi');
+            }
         }
 
         async function loadAdminData() {
@@ -1514,17 +1638,62 @@
             renderFlashcard();
         }
 
+        let currentAccent = 'us'; // 'us' or 'uk'
+
+        function setAccent(accent) {
+            currentAccent = accent;
+            const btnUS = document.getElementById('accentBtnUS');
+            const btnUK = document.getElementById('accentBtnUK');
+            if (btnUS && btnUK) {
+                btnUS.className = accent === 'us' ? 'px-2.5 py-1 rounded-lg bg-blue-600 text-white transition-all cursor-pointer' : 'px-2.5 py-1 rounded-lg text-zinc-400 hover:text-white transition-all cursor-pointer';
+                btnUK.className = accent === 'uk' ? 'px-2.5 py-1 rounded-lg bg-blue-600 text-white transition-all cursor-pointer' : 'px-2.5 py-1 rounded-lg text-zinc-400 hover:text-white transition-all cursor-pointer';
+            }
+            showToast(accent === 'us' ? '🇺🇸 Amerika (US) talaffuzi tanlandi' : '🇬🇧 Britaniya (UK) talaffuzi tanlandi');
+        }
+
         function speakCurrentWord() {
             const w = words[currentFlashIndex];
             if (w) speakWord(w.en);
         }
 
         function speakWord(text) {
-            if ('speechSynthesis' in window) {
-                const u = new SpeechSynthesisUtterance(text);
-                u.lang = 'en-US';
-                window.speechSynthesis.speak(u);
+            if (!text) return;
+            const clean = encodeURIComponent(text.trim());
+            const type = currentAccent === 'uk' ? '1' : '2'; // 1 = UK, 2 = US
+
+            // 1. Try High-Quality Native Oxford/Cambridge dictionary human voice stream
+            const audioUrl = `https://dict.youdao.com/dictvoice?audio=${clean}&type=${type}`;
+            const audio = new Audio(audioUrl);
+            
+            audio.play().catch(() => {
+                // 2. Try Google Translate TTS Audio stream
+                const gUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=${clean}`;
+                const gAudio = new Audio(gUrl);
+                gAudio.play().catch(() => {
+                    // 3. Fallback to Browser Native Speech Synthesis with enhanced English voices
+                    fallbackSpeech(text);
+                });
+            });
+        }
+
+        function fallbackSpeech(text) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = currentAccent === 'uk' ? 'en-GB' : 'en-US';
+            u.rate = 0.88; // clear natural pace
+            u.pitch = 1.0;
+
+            const voices = window.speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                const targetLang = currentAccent === 'uk' ? 'en-GB' : 'en-US';
+                const premiumVoice = voices.find(v => 
+                    v.lang === targetLang && 
+                    (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Jenny') || v.name.includes('David') || v.name.includes('Arthur'))
+                ) || voices.find(v => v.lang.startsWith('en'));
+                if (premiumVoice) u.voice = premiumVoice;
             }
+            window.speechSynthesis.speak(u);
         }
 
         // ================= MATCH PAIRS GAME =================

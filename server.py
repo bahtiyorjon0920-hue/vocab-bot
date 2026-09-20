@@ -415,6 +415,26 @@ class VocabHTTPHandler(BaseHTTPRequestHandler):
             res = Database.add_subscription(target, days=days)
             return self.send_json(200, res)
 
+        elif self.path == '/api/admin/create-user':
+            admin = self.get_auth_user(body=body)
+            if not admin or admin.get('role') != 'admin':
+                return self.send_json(403, {'ok': False, 'error': 'Ruxsat berilmagan'})
+            email = body.get('email', '').strip()
+            username = body.get('username', '').strip()
+            password = body.get('password', '123456').strip()
+            full_name = body.get('fullName', '').strip()
+            days = int(body.get('days', 30))
+
+            if not email or not username or not password:
+                return self.send_json(400, {'ok': False, 'error': 'Email, username va parol kiritilishi shart!'})
+            res = Database.register_user(email, username, password, full_name)
+            if not res['ok']:
+                return self.send_json(400, res)
+            u = res['user']
+            if days > 0:
+                Database.add_subscription(u['id'], days=days)
+            return self.send_json(200, {'ok': True, 'user': u, 'message': 'Yangi o\'quvchi muvaffaqiyatli qo\'shildi!'})
+
         elif self.path == '/api/admin/revoke-sub':
             admin = self.get_auth_user(body=body)
             if not admin or admin.get('role') != 'admin':
