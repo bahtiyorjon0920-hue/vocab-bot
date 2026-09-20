@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="uz" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocab 3X — Super Admin Boshqaruv Markazi</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            bg: '#090a0f',
+                            card: '#12141c',
+                            border: 'rgba(255, 255, 255, 0.08)',
+                            hover: 'rgba(255, 255, 255, 0.04)'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome & Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        body { background-color: #08090d; color: #f1f5f9; }
+        .glass-panel {
+            background: rgba(18, 20, 28, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        .glass-card {
+            background: rgba(22, 25, 37, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 9999px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="px-5 py-3 rounded-2xl glass-panel border border-white/20 text-white font-semibold text-xs sm:text-sm shadow-2xl flex items-center gap-3">
+            <i class="fa-solid fa-bell text-amber-400"></i>
+            <span id="toastMsg">Xabar</span>
+        </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div id="imageModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-2xl flex items-center justify-center p-4 hidden" onclick="closeImageModal()">
+        <div class="relative max-w-2xl w-full text-center" onclick="event.stopPropagation()">
+            <img id="modalImg" src="" alt="Chek" class="max-h-[80vh] mx-auto rounded-2xl border border-white/20 shadow-2xl">
+            <button onclick="closeImageModal()" class="mt-4 px-5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all">
+                <i class="fa-solid fa-xmark mr-1.5"></i> Yopish
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= 🔐 SUPER ADMIN LOGIN GATEWAY ================= -->
+    <div id="loginGateway" class="fixed inset-0 z-40 bg-[#08090d] flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full p-8 rounded-3xl border border-white/10 text-center shadow-2xl relative">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center text-white text-2xl mx-auto mb-5 shadow-lg shadow-amber-500/25">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h2 class="text-2xl font-black text-white tracking-tight">Super Admin Markazi</h2>
+            <p class="text-xs text-zinc-400 mt-1 mb-6">Loyiha boshqaruvi va foydalanuvchilar nazorati</p>
+
+            <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" class="space-y-4 text-left">
+                <div id="loginErr" class="hidden p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs text-center font-medium"></div>
+                <div>
+                    <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Admin Login / Gmail</label>
+                    <input type="text" id="adminLoginInput" value="BM_visual" required class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-amber-500 transition-colors font-mono">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Admin Paroli</label>
+                    <input type="password" id="adminPassInput" placeholder="••••••••" required class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-amber-500 transition-colors">
+                </div>
+                <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-black font-extrabold text-xs shadow-lg shadow-amber-500/25 transition-all active:scale-98 cursor-pointer mt-2">
+                    Boshqaruv Markaziga Kirish 👑
+                </button>
+            </form>
+            <div class="mt-6 pt-4 border-t border-white/5 text-center">
+                <a href="/" class="text-xs text-zinc-500 hover:text-zinc-300 transition-colors inline-flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-left"></i> Asosiy o'quv saytiga qaytish
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 📊 SUPER ADMIN MAIN DASHBOARD ================= -->
+    <div id="adminApp" class="min-h-screen flex flex-col hidden">
+        
+        <!-- Top Navbar -->
+        <header class="sticky top-0 z-30 glass-panel border-b border-white/10 px-4 lg:px-8 py-3.5">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center text-black font-extrabold text-base shadow-lg shadow-amber-500/20">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-black tracking-tight text-white flex items-center gap-2">
+                            <span>Super Admin Platformasi</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 font-mono font-bold">PRO</span>
+                        </h1>
+                        <p class="text-[10px] text-zinc-400 font-medium">Barcha foydalanuvchilar va to'lovlar boshqaruvi</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <a href="/" target="_blank" class="hidden sm:flex px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white font-semibold text-xs border border-white/10 items-center gap-1.5 transition-all">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        <span>O'quv Sayti</span>
+                    </a>
+
+                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/90 border border-white/10 text-xs">
+                        <i class="fa-solid fa-circle-user text-amber-400"></i>
+                        <span id="currentAdminName" class="font-bold text-white">BM_visual</span>
+                    </div>
+
+                    <button onclick="handleAdminLogout()" class="px-3 py-2 rounded-xl bg-red-500/15 hover:bg-red-500/25 text-red-400 text-xs font-semibold border border-red-500/30 transition-all flex items-center gap-1.5 cursor-pointer" title="Chiqish">
+                        <i class="fa-solid fa-power-off"></i>
+                        <span class="hidden sm:inline">Chiqish</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Body Layout -->
+        <main class="max-w-7xl mx-auto w-full px-4 lg:px-8 py-6 flex-grow flex flex-col md:flex-row gap-6">
+            
+            <!-- Left Sidebar Navigation -->
+            <aside class="w-full md:w-64 flex-shrink-0 space-y-1.5">
+                <div class="glass-panel p-2.5 rounded-2xl border border-white/10 space-y-1">
+                    <button onclick="switchTab('overview')" id="nav-overview" class="admin-nav-btn w-full px-4 py-3 rounded-xl flex items-center gap-3 text-xs font-bold text-left transition-all bg-amber-500/20 text-amber-300 border border-amber-500/30 shadow-sm">
+                        <i class="fa-solid fa-chart-pie text-sm"></i>
+                        <span>Umumiy Ko'rsatkichlar</span>
+                    </button>
+
+                    <button onclick="switchTab('users')" id="nav-users" class="admin-nav-btn w-full px-4 py-3 rounded-xl flex items-center justify-between text-xs font-bold text-left transition-all text-zinc-400 hover:text-white hover:bg-white/[0.04]">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-users text-sm"></i>
+                            <span>O'quvchilar Ro'yxati</span>
+                        </div>
+                        <span id="badgeTotalUsers" class="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-zinc-300 font-mono">0</span>
+                    </button>
+
+                    <button onclick="switchTab('receipts')" id="nav-receipts" class="admin-nav-btn w-full px-4 py-3 rounded-xl flex items-center justify-between text-xs font-bold text-left transition-all text-zinc-400 hover:text-white hover:bg-white/[0.04]">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-receipt text-sm"></i>
+                            <span>To'lov Cheklari</span>
+                        </div>
+                        <span id="badgePendingReceipts" class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 font-mono font-bold">0</span>
+                    </button>
+
+                    <button onclick="switchTab('admins')" id="nav-admins" class="admin-nav-btn w-full px-4 py-3 rounded-xl flex items-center justify-between text-xs font-bold text-left transition-all text-zinc-400 hover:text-white hover:bg-white/[0.04]">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-user-shield text-sm"></i>
+                            <span>Adminlar Nazorati</span>
+                        </div>
+                        <span id="badgeAdminsCount" class="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-mono">1</span>
+                    </button>
+
+                    <button onclick="switchTab('addUser')" id="nav-addUser" class="admin-nav-btn w-full px-4 py-3 rounded-xl flex items-center gap-3 text-xs font-bold text-left transition-all text-zinc-400 hover:text-white hover:bg-white/[0.04]">
+                        <i class="fa-solid fa-user-plus text-sm"></i>
+                        <span>Yangi O'quvchi Qo'shish</span>
+                    </button>
+
+                    <button onclick="switchTab('addAdmin')" id="nav-addAdmin" class="admin-nav-btn w-full px-4 py-3 rounded-xl flex items-center gap-3 text-xs font-bold text-left transition-all text-zinc-400 hover:text-white hover:bg-white/[0.04]">
+                        <i class="fa-solid fa-shield-plus text-sm text-purple-400"></i>
+                        <span>Yangi Admin Qo'shish</span>
+                    </button>
+                </div>
+
+                <!-- Quick Help Box -->
+                <div class="glass-card p-4 rounded-2xl border border-white/5 text-[11px] text-zinc-400 space-y-2">
+                    <p class="font-bold text-white flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-info text-amber-400"></i> Super Admin Eslatmasi:
+                    </p>
+                    <p class="leading-relaxed">
+                        Foydalanuvchini <strong>🚫 Chiqarib yuborish (Kick)</strong> tugmasi bilan platformadan butunlay o'chirib, sessiyalarini darhol bekor qila olasiz.
+                    </p>
+                </div>
+            </aside>
+
+            <!-- Main Content Panels -->
+            <section class="flex-grow space-y-6">
+
+                <!-- 1. OVERVIEW TAB -->
+                <div id="tab-overview-view" class="admin-tab-view space-y-6">
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="glass-panel p-5 rounded-2xl border border-white/10">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Jami O'quvchilar</span>
+                            <h3 id="statTotalUsers" class="text-2xl sm:text-3xl font-black text-white mt-1">0 ta</h3>
+                            <p class="text-[11px] text-zinc-500 mt-1">Ro'yxatdan o'tganlar</p>
+                        </div>
+                        <div class="glass-panel p-5 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03]">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Faol Obunachilar</span>
+                            <h3 id="statActiveUsers" class="text-2xl sm:text-3xl font-black text-emerald-400 mt-1">0 ta</h3>
+                            <p class="text-[11px] text-emerald-500/70 mt-1">Ruxsat berilganlar</p>
+                        </div>
+                        <div class="glass-panel p-5 rounded-2xl border border-amber-500/20 bg-amber-500/[0.03]">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400">Kutilayotgan Cheklar</span>
+                            <h3 id="statPendingReceipts" class="text-2xl sm:text-3xl font-black text-amber-400 mt-1">0 ta</h3>
+                            <p class="text-[11px] text-amber-500/70 mt-1">Tekshirilishi zarur</p>
+                        </div>
+                        <div class="glass-panel p-5 rounded-2xl border border-blue-500/20 bg-blue-500/[0.03]">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-400">Jami Tushum</span>
+                            <h3 id="statRevenue" class="text-2xl sm:text-3xl font-black text-blue-400 mt-1">0 so'm</h3>
+                            <p class="text-[11px] text-blue-500/70 mt-1">50 000 so'm / oy</p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Action Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div onclick="switchTab('receipts')" class="glass-card p-5 rounded-2xl border border-white/10 hover:border-amber-500/40 cursor-pointer transition-all group">
+                            <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-receipt"></i>
+                            </div>
+                            <h4 class="text-sm font-bold text-white">Cheklarni Tasdiqlash</h4>
+                            <p class="text-xs text-zinc-400 mt-1">O'quvchilar yuborgan to'lov cheklarini ko'rish</p>
+                        </div>
+                        <div onclick="switchTab('addUser')" class="glass-card p-5 rounded-2xl border border-white/10 hover:border-blue-500/40 cursor-pointer transition-all group">
+                            <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-user-plus"></i>
+                            </div>
+                            <h4 class="text-sm font-bold text-white">Yangi O'quvchi Ochish</h4>
+                            <p class="text-xs text-zinc-400 mt-1">Qo'lda hisob ochib obuna berish</p>
+                        </div>
+                        <div onclick="switchTab('admins')" class="glass-card p-5 rounded-2xl border border-white/10 hover:border-purple-500/40 cursor-pointer transition-all group">
+                            <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-user-shield"></i>
+                            </div>
+                            <h4 class="text-sm font-bold text-white">Adminlar Nazorati</h4>
+                            <p class="text-xs text-zinc-400 mt-1">Yordamchi adminlarni boshqarish</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. USERS MANAGEMENT TAB -->
+                <div id="tab-users-view" class="admin-tab-view space-y-4 hidden">
+                    <div class="glass-panel p-5 rounded-2xl border border-white/10 space-y-4">
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                            <div>
+                                <h3 class="text-base font-extrabold text-white">O'quvchilar va Foydalanuvchilar Ro'yxati</h3>
+                                <p class="text-xs text-zinc-400">Platformaga a'zo bo'lgan barcha hisoblar</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="text" id="userSearchInput" oninput="renderUsersTable()" placeholder="Username, Gmail yoki Ism..." class="w-full sm:w-64 bg-black/50 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500">
+                                <button onclick="loadAllData()" class="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs transition-all" title="Yangilash">
+                                    <i class="fa-solid fa-arrows-rotate"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Filter Chips -->
+                        <div class="flex items-center gap-1.5 overflow-x-auto text-xs pb-1">
+                            <button onclick="setUserFilter('all', this)" class="user-filter-btn px-3 py-1.5 rounded-lg bg-white/15 text-white font-bold transition-all">Barchasi</button>
+                            <button onclick="setUserFilter('active', this)" class="user-filter-btn px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white bg-white/5 font-semibold transition-all">🟢 Faol Obunachilar</button>
+                            <button onclick="setUserFilter('expired', this)" class="user-filter-btn px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white bg-white/5 font-semibold transition-all">🔴 Tugaganlar</button>
+                            <button onclick="setUserFilter('admins', this)" class="user-filter-btn px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white bg-white/5 font-semibold transition-all">👑 Adminlar</button>
+                        </div>
+
+                        <!-- Users Table -->
+                        <div class="overflow-x-auto rounded-xl border border-white/10">
+                            <table class="w-full text-left text-xs text-zinc-300">
+                                <thead class="bg-white/[0.04] text-zinc-400 uppercase text-[10px] font-bold border-b border-white/10">
+                                    <tr>
+                                        <th class="p-3.5">Foydalanuvchi</th>
+                                        <th class="p-3.5">Gmail</th>
+                                        <th class="p-3.5">Holati</th>
+                                        <th class="p-3.5">Qolgan Muddat</th>
+                                        <th class="p-3.5 text-right">Boshqaruv Amallari</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody" class="divide-y divide-white/5"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. RECEIPTS REVIEW TAB -->
+                <div id="tab-receipts-view" class="admin-tab-view space-y-4 hidden">
+                    <div class="glass-panel p-5 rounded-2xl border border-white/10 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-base font-extrabold text-white">Kutilayotgan To'lov Cheklari</h3>
+                                <p class="text-xs text-zinc-400">Foydalanuvchilar yuklagan to'lov rasmlarini tasdiqlash</p>
+                            </div>
+                            <button onclick="loadAllData()" class="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-semibold">
+                                <i class="fa-solid fa-arrows-rotate mr-1"></i> Yangilash
+                            </button>
+                        </div>
+                        <div id="receiptsListContainer" class="space-y-3"></div>
+                    </div>
+                </div>
+
+                <!-- 4. ADMINS MANAGEMENT TAB -->
+                <div id="tab-admins-view" class="admin-tab-view space-y-4 hidden">
+                    <div class="glass-panel p-5 rounded-2xl border border-white/10 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-base font-extrabold text-white">Adminlar Tizimi</h3>
+                                <p class="text-xs text-zinc-400">Platformaga boshqaruv huquqiga ega bo'lgan mas'ul shaxslar</p>
+                            </div>
+                            <button onclick="switchTab('addAdmin')" class="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-all shadow-md shadow-purple-600/30 flex items-center gap-1.5">
+                                <i class="fa-solid fa-plus"></i> Yangi Admin Qo'shish
+                            </button>
+                        </div>
+
+                        <div class="overflow-x-auto rounded-xl border border-white/10">
+                            <table class="w-full text-left text-xs text-zinc-300">
+                                <thead class="bg-white/[0.04] text-zinc-400 uppercase text-[10px] font-bold border-b border-white/10">
+                                    <tr>
+                                        <th class="p-3.5">Admin</th>
+                                        <th class="p-3.5">Gmail</th>
+                                        <th class="p-3.5">Darajasi</th>
+                                        <th class="p-3.5 text-right">Amallar</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminsTableBody" class="divide-y divide-white/5"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. ADD STUDENT TAB -->
+                <div id="tab-addUser-view" class="admin-tab-view space-y-4 hidden">
+                    <div class="glass-panel p-6 sm:p-8 rounded-2xl border border-white/10 max-w-lg mx-auto space-y-4">
+                        <div class="text-center pb-2 border-b border-white/5">
+                            <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl mx-auto mb-2">
+                                <i class="fa-solid fa-user-plus"></i>
+                            </div>
+                            <h3 class="text-base font-extrabold text-white">Yangi O'quvchi Hisobini Yaratish</h3>
+                            <p class="text-xs text-zinc-400">Foydalanuvchi ma'lumotlarini kiriting va obuna muddatini belgilang</p>
+                        </div>
+
+                        <form onsubmit="handleCreateStudent(event)" class="space-y-3.5">
+                            <div>
+                                <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Gmail / Email *</label>
+                                <input type="email" id="newStudentEmail" required placeholder="masalan: oquvchi@gmail.com" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Username (login uchun) *</label>
+                                <input type="text" id="newStudentUsername" required placeholder="masalan: jasur_99" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500 font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Ism va Familiya</label>
+                                <input type="text" id="newStudentFullName" placeholder="Jasur Rahimov" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Parol *</label>
+                                <input type="password" id="newStudentPassword" value="123456" required class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Dastlabki Obuna Muddati (Kun)</label>
+                                <input type="number" id="newStudentDays" value="30" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                            </div>
+                            <button type="submit" class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all active:scale-98 cursor-pointer mt-2">
+                                O'quvchini Saqlash va Obuna Berish ✨
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 6. ADD ADMIN TAB -->
+                <div id="tab-addAdmin-view" class="admin-tab-view space-y-4 hidden">
+                    <div class="glass-panel p-6 sm:p-8 rounded-2xl border border-purple-500/20 max-w-lg mx-auto space-y-4">
+                        <div class="text-center pb-2 border-b border-white/5">
+                            <div class="w-12 h-12 rounded-2xl bg-purple-500/15 text-purple-400 flex items-center justify-center text-xl mx-auto mb-2">
+                                <i class="fa-solid fa-shield-plus"></i>
+                            </div>
+                            <h3 class="text-base font-extrabold text-white">Yangi Yordamchi Admin Yaratish</h3>
+                            <p class="text-xs text-zinc-400">Yangi adminga to'liq boshqaruv huquqlari beriladi</p>
+                        </div>
+
+                        <form onsubmit="handleCreateAdmin(event)" class="space-y-3.5">
+                            <div>
+                                <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Admin Gmail *</label>
+                                <input type="email" id="newAdminEmail" required placeholder="masalan: yordamchi_admin@gmail.com" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Admin Username *</label>
+                                <input type="text" id="newAdminUsername" required placeholder="masalan: admin_sherzod" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-purple-500 font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Admin Ismi</label>
+                                <input type="text" id="newAdminFullName" placeholder="Sherzodbek (Admin)" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Xavfsiz Parol *</label>
+                                <input type="password" id="newAdminPassword" placeholder="Kamida 6 ta belgi" required class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
+                            </div>
+                            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-purple-600/30 transition-all active:scale-98 cursor-pointer mt-2">
+                                Yangi Adminni Tayinlash 👑
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        let adminToken = localStorage.getItem('vocab_token') || '';
+        let currentAdmin = null;
+        let allUsers = [];
+        let allReceipts = [];
+        let allAdmins = [];
+        let activeUserFilter = 'all';
+
+        // Toast Helper
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            t.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => t.classList.add('translate-y-24', 'opacity-0'), 3200);
+        }
+
+        // Image Zoom Modal
+        function openImageModal(src) {
+            document.getElementById('modalImg').src = src;
+            document.getElementById('imageModal').classList.remove('hidden');
+        }
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.add('hidden');
+        }
+
+        // Tab Switcher
+        function switchTab(tabId) {
+            document.querySelectorAll('.admin-tab-view').forEach(v => v.classList.add('hidden'));
+            document.querySelectorAll('.admin-nav-btn').forEach(b => {
+                b.className = 'admin-nav-btn w-full px-4 py-3 rounded-xl flex items-center justify-between text-xs font-bold text-left transition-all text-zinc-400 hover:text-white hover:bg-white/[0.04]';
+            });
+
+            const targetView = document.getElementById(`tab-${tabId}-view`);
+            const targetBtn = document.getElementById(`nav-${tabId}`);
+            if (targetView) targetView.classList.remove('hidden');
+            if (targetBtn) {
+                targetBtn.className = 'admin-nav-btn w-full px-4 py-3 rounded-xl flex items-center justify-between text-xs font-bold text-left transition-all bg-amber-500/20 text-amber-300 border border-amber-500/30 shadow-sm';
+            }
+        }
+
+        // Init Auth Check
+        async function initAdminAuth() {
+            if (!adminToken) {
+                showLoginGateway();
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/me', { headers: { 'X-Session-Token': adminToken } });
+                const data = await res.json();
+                if (data.ok && data.user && data.user.role === 'admin') {
+                    currentAdmin = data.user;
+                    showAdminApp();
+                } else {
+                    localStorage.removeItem('vocab_token');
+                    adminToken = '';
+                    showLoginGateway();
+                }
+            } catch(e) {
+                showLoginGateway();
+            }
+        }
+
+        function showLoginGateway() {
+            document.getElementById('loginGateway').classList.remove('hidden');
+            document.getElementById('adminApp').classList.add('hidden');
+        }
+
+        function showAdminApp() {
+            document.getElementById('loginGateway').classList.add('hidden');
+            document.getElementById('adminApp').classList.remove('hidden');
+            document.getElementById('currentAdminName').innerText = currentAdmin.fullName || currentAdmin.username;
+            loadAllData();
+        }
+
+        async function handleAdminLogin(e) {
+            e.preventDefault();
+            const login = document.getElementById('adminLoginInput').value.trim();
+            const password = document.getElementById('adminPassInput').value.trim();
+            const errBox = document.getElementById('loginErr');
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ login, password })
+                });
+                const data = await res.json();
+                if (data.ok && data.user && data.user.role === 'admin') {
+                    adminToken = data.token;
+                    currentAdmin = data.user;
+                    localStorage.setItem('vocab_token', adminToken);
+                    errBox.classList.add('hidden');
+                    showToast('Xush kelibsiz, Boshqaruv Markazi ochildi! 👑');
+                    showAdminApp();
+                } else {
+                    errBox.innerText = data.error || 'Admin hisobi topilmadi yoki parol xato!';
+                    errBox.classList.remove('hidden');
+                }
+            } catch(e) {
+                errBox.innerText = 'Server bilan bog\'lanishda xatolik yuz berdi.';
+                errBox.classList.remove('hidden');
+            }
+        }
+
+        async function handleAdminLogout() {
+            if (adminToken) {
+                fetch('/api/logout', { method: 'POST', headers: { 'X-Session-Token': adminToken } }).catch(() => {});
+            }
+            localStorage.removeItem('vocab_token');
+            adminToken = '';
+            currentAdmin = null;
+            showLoginGateway();
+            showToast('Boshqaruv markazidan chiqildi.');
+        }
+
+        // Data Loading
+        async function loadAllData() {
+            if (!adminToken) return;
+
+            try {
+                // 1. Stats
+                const sRes = await fetch('/api/admin/stats', { headers: { 'X-Session-Token': adminToken } });
+                const sData = await sRes.json();
+                if (sData.ok) {
+                    const s = sData.stats;
+                    document.getElementById('statTotalUsers').innerText = s.totalUsers + ' ta';
+                    document.getElementById('statActiveUsers').innerText = s.activeCount + ' ta';
+                    document.getElementById('statPendingReceipts').innerText = s.pendingReceipts + ' ta';
+                    document.getElementById('statRevenue').innerText = Number(s.totalRevenue).toLocaleString() + " so'm";
+                    
+                    document.getElementById('badgeTotalUsers').innerText = s.totalUsers;
+                    document.getElementById('badgePendingReceipts').innerText = s.pendingReceipts;
+                }
+
+                // 2. Users
+                const uRes = await fetch('/api/admin/users', { headers: { 'X-Session-Token': adminToken } });
+                const uData = await uRes.json();
+                if (uData.ok) {
+                    allUsers = uData.users;
+                    renderUsersTable();
+                }
+
+                // 3. Receipts
+                const rRes = await fetch('/api/admin/receipts', { headers: { 'X-Session-Token': adminToken } });
+                const rData = await rRes.json();
+                if (rData.ok) {
+                    allReceipts = rData.receipts;
+                    renderReceipts();
+                }
+
+                // 4. Admins
+                const aRes = await fetch('/api/admin/admins-list', { headers: { 'X-Session-Token': adminToken } });
+                const aData = await aRes.json();
+                if (aData.ok) {
+                    allAdmins = aData.admins;
+                    document.getElementById('badgeAdminsCount').innerText = allAdmins.length;
+                    renderAdminsTable();
+                }
+            } catch(e) {
+                console.error('Data load error:', e);
+            }
+        }
+
+        // Filter Users
+        function setUserFilter(filter, btn) {
+            activeUserFilter = filter;
+            document.querySelectorAll('.user-filter-btn').forEach(b => {
+                b.className = 'user-filter-btn px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white bg-white/5 font-semibold transition-all';
+            });
+            if (btn) btn.className = 'user-filter-btn px-3 py-1.5 rounded-lg bg-white/15 text-white font-bold transition-all';
+            renderUsersTable();
+        }
+
+        // Render Users Table
+        function renderUsersTable() {
+            const query = (document.getElementById('userSearchInput').value || '').toLowerCase().trim();
+            const tbody = document.getElementById('usersTableBody');
+
+            let filtered = allUsers.filter(u => 
+                (u.username || '').toLowerCase().includes(query) ||
+                (u.email || '').toLowerCase().includes(query) ||
+                (u.fullName || '').toLowerCase().includes(query)
+            );
+
+            if (activeUserFilter === 'active') filtered = filtered.filter(u => u.isActive && u.role !== 'admin');
+            if (activeUserFilter === 'expired') filtered = filtered.filter(u => !u.isActive && u.role !== 'admin');
+            if (activeUserFilter === 'admins') filtered = filtered.filter(u => u.role === 'admin');
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-zinc-500 font-medium">Foydalanuvchilar topilmadi</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(u => {
+                const isSuper = (u.username === 'BM_visual' || u.id === 'admin_bm');
+                return `
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                    <td class="p-3.5">
+                        <div class="font-bold text-white text-xs flex items-center gap-1.5">
+                            <span>${u.fullName || u.username}</span>
+                            ${u.role === 'admin' ? '<span class="text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono">ADMIN</span>' : ''}
+                        </div>
+                        <div class="text-[10px] text-zinc-400 font-mono">@${u.username}</div>
+                    </td>
+                    <td class="p-3.5 font-mono text-[11px] text-zinc-300">${u.email}</td>
+                    <td class="p-3.5">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${u.isActive ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}">
+                            ${u.isActive ? '🟢 Faol' : '🔴 Tugagan'}
+                        </span>
+                    </td>
+                    <td class="p-3.5 font-bold text-xs ${u.isActive ? 'text-emerald-300' : 'text-zinc-500'}">
+                        ${u.role === 'admin' ? 'Cheksiz' : u.daysLeft + ' kun'}
+                    </td>
+                    <td class="p-3.5 text-right space-x-1.5">
+                        <button onclick="adminGrantDays('${u.id}', 30)" class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 text-[11px] font-semibold transition-all" title="30 kun qo'shish">+30 kun</button>
+                        
+                        ${u.role !== 'admin' ? `
+                            <button onclick="adminPromoteUser('${u.id}')" class="px-2 py-1 rounded-lg bg-purple-500/15 text-purple-300 hover:bg-purple-500/25 text-[11px] font-semibold transition-all" title="Admin qilish">👑 Admin</button>
+                            <button onclick="adminRevokeSub('${u.id}')" class="px-2 py-1 rounded-lg bg-amber-500/15 text-amber-300 hover:bg-amber-500/25 text-[11px] font-semibold transition-all" title="Obunani to'xtatish">⛔ To'xtatish</button>
+                            <button onclick="adminKickUser('${u.id}', '${u.username}')" class="px-2.5 py-1 rounded-lg bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[11px] font-bold transition-all" title="Platformadan chiqarib yuborish">🚫 Chiqarish</button>
+                        ` : (!isSuper ? `
+                            <button onclick="adminDemoteUser('${u.id}')" class="px-2 py-1 rounded-lg bg-orange-500/15 text-orange-300 hover:bg-orange-500/25 text-[11px] font-semibold transition-all" title="Adminlikni bekor qilish">🔻 Oddiy qilish</button>
+                            <button onclick="adminKickUser('${u.id}', '${u.username}')" class="px-2.5 py-1 rounded-lg bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[11px] font-bold transition-all" title="O'chirish">🚫 Chiqarish</button>
+                        ` : '<span class="text-[10px] text-amber-400/80 font-mono font-bold">Bosh Admin</span>')}
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        // Render Receipts
+        function renderReceipts() {
+            const container = document.getElementById('receiptsListContainer');
+            if (!allReceipts || allReceipts.length === 0) {
+                container.innerHTML = '<div class="glass-card p-10 text-center text-zinc-500 text-xs rounded-2xl"><i class="fa-solid fa-check-circle text-3xl text-emerald-500/30 mb-3 block"></i>Hozircha tekshirilishi kerak bo\'lgan yangi to\'lov cheklari yo\'q. Barchasi tasdiqlangan!</div>';
+                return;
+            }
+
+            container.innerHTML = allReceipts.map(r => {
+                const dateStr = new Date(r.submittedAt).toLocaleString('uz-UZ');
+                return `
+                <div class="glass-card p-4 sm:p-5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-white/10">
+                    <div class="flex items-center gap-4">
+                        <img src="${r.image}" alt="Chek" onclick="openImageModal('${r.image}')" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-white/20 cursor-pointer hover:scale-105 transition-transform flex-shrink-0 shadow-md">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="text-sm font-bold text-white">${r.fullName || r.username}</h4>
+                                <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-mono">@${r.username}</span>
+                            </div>
+                            <p class="text-xs text-zinc-400 mt-0.5">📧 ${r.email}</p>
+                            <p class="text-[11px] text-zinc-500 mt-1 font-mono"><i class="fa-regular fa-clock mr-1"></i>${dateStr}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                        <button onclick="adminApproveReceipt('${r.id}')" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/30 transition-all active:scale-95 cursor-pointer">
+                            <i class="fa-solid fa-check mr-1.5"></i> Tasdiqlash (30 kun)
+                        </button>
+                        <button onclick="adminRejectReceipt('${r.id}')" class="px-3.5 py-2.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 font-bold text-xs transition-all active:scale-95 cursor-pointer">
+                            <i class="fa-solid fa-xmark mr-1"></i> Rad etish
+                        </button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // Render Admins Table
+        function renderAdminsTable() {
+            const tbody = document.getElementById('adminsTableBody');
+            tbody.innerHTML = allAdmins.map(a => `
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                    <td class="p-3.5">
+                        <div class="font-bold text-white text-xs flex items-center gap-2">
+                            <span>${a.fullName || a.username}</span>
+                            ${a.isSuperAdmin ? '<span class="text-[9px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold">SUPER ADMIN</span>' : '<span class="text-[9px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">YORDAMCHI ADMIN</span>'}
+                        </div>
+                        <div class="text-[10px] text-zinc-400 font-mono">@${a.username}</div>
+                    </td>
+                    <td class="p-3.5 font-mono text-[11px] text-zinc-300">${a.email}</td>
+                    <td class="p-3.5">
+                        <span class="text-xs font-bold ${a.isSuperAdmin ? 'text-amber-400' : 'text-purple-400'}">
+                            ${a.isSuperAdmin ? '👑 Bosh Boshqaruvchi' : '🛡️ Nazoratchi Admin'}
+                        </span>
+                    </td>
+                    <td class="p-3.5 text-right">
+                        ${!a.isSuperAdmin ? `
+                            <button onclick="adminDemoteUser('${a.id}')" class="px-3 py-1.5 rounded-xl bg-red-500/20 text-red-300 hover:bg-red-500/30 text-xs font-semibold transition-all">
+                                Adminlikni Olib Tashlash
+                            </button>
+                        ` : '<span class="text-xs text-zinc-500 italic">O\'zgarmas</span>'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ================= ADMIN ACTIONS =================
+        async function adminGrantDays(userId, days = 30) {
+            try {
+                const res = await fetch('/api/admin/grant-sub', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': adminToken },
+                    body: JSON.stringify({ target: userId, days })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('✅ 30 kunlik obuna muvaffaqiyatli qo\'shildi!');
+                    loadAllData();
+                }
+            } catch(e) { showToast('Xatolik yuz berdi'); }
+        }
+
+        async function adminRevokeSub(userId) {
+            if (!confirm('Rostdan ham ushbu foydalanuvchining obunasini to\'xtatmoqchimisiz?')) return;
+            try {
+                const res = await fetch('/api/admin/revoke-sub', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': adminToken },
+                    body: JSON.stringify({ target: userId })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('⛔ Obuna to\'xtatildi');
+                    loadAllData();
+                }
+            } catch(e) { showToast('Xatolik yuz berdi'); }
+        }
+
+        async function adminKickUser(userId, username) {
+            if (!confirm(`DIQQAT: @${username} ni platformadan butunlay chiqarib yuborishni (kick qilishni) xohlaysizmi? Uning barcha sessiyalari darhol o'chiriladi.`)) return;
+            try {
+                const res = await fetch('/api/admin/kick-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': adminToken },
+                    body: JSON.stringify({ target: userId })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast(data.message || 'Foydalanuvchi platformadan chiqarib yuborildi!');
+                    loadAllData();
+                } else {
+                    showToast('❌ Xatolik: ' + (data.error || 'Amal bajarilmadi'));
+                }
+            } catch(e) { showToast('Xatolik yuz berdi'); }
+        }
+
+        async function adminPromoteUser(userId) {
+            if (!confirm('Ushbu foydalanuvchiga ADMIN huquqini bermoqchimisiz?')) return;
+            try {
+                const res = await fetch('/api/admin/promote-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': adminToken },
+                    body: JSON.stringify({ target: userId })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast(data.message || 'Foydalanuvchi Admin etib tayinlandi! 👑');
+                    loadAllData();
+                } else {
+                    showToast('❌ Xatolik: ' + (data.error || 'Amal bajarilmadi'));
+                }
+            } catch(e) { showToast('Xatolik yuz berdi'); }
+        }
+
+        async function adminDemoteUser(userId) {
+            if (!confirm('Adminlik huquqini olib tashlamoqchimisiz?')) return;
+            try {
+                const res = await fetch('/api/admin/demote-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': adminToken },
+                    body: JSON.stringify({ target: userId })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast(data.message || 'Adminlik huquqi olib tashlandi');
+                    loadAllData();
+                } else {
+                    showToast('❌ Xatolik: ' + (data.error || 'Amal bajarilmadi'));
+                }
+            } catch(e) { showToast('Xatolik yuz berdi'); }
+        }
+
+        async function adminApproveReceipt(receiptId) {
+            try {
+                const res = await fetch('/api/admin/approve-receipt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': adminToken },
+                    body: JSON.stringify({ receiptId, days: 30 })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    confetti({ particleCount: 80, spread: 60 });
+                    showToast('✅ Chek tasdiqlandi va 30 kunlik obuna yoqildi!');
+                    loadAllData();
+                }
+            } catch(e) { showToast('Xatolik yuz berdi'); }
+        }
+
+        async function adminRejectReceipt(receiptId) {
+            if (!confirm('Ushbu chekni rad etmoqchimisiz?')) return;
+            try {
+                const res = await fetch('/api/admin/reject-receipt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': adminToken },
+                    body: JSON.stringify({ receiptId })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('❌ Chek rad etildi');
+                    loadAllData();
+                }
+            } catch(e) { showToast('Xatolik yuz berdi'); }
+        }
+
+        // Handle Forms
+        async function handleCreateStudent(e) {
+            e.preventDefault();
+            const email = document.getElementById('newStudentEmail').value.trim();
+            const username = document.getElementById('newStudentUsername').value.trim();
+            const fullName = document.getElementById('newStudentFullName').value.trim();
+            const password = document.getElementById('newStudentPassword').value.trim();
+            const days = parseInt(document.getElementById('newStudentDays').value) || 30;
+
+            try {
+                const res = await fetch('/api/admin/create-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': adminToken },
+                    body: JSON.stringify({ email, username, fullName, password, days })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    confetti({ particleCount: 90, spread: 70 });
+                    showToast('🎉 Yangi o\'quvchi muvaffaqiyatli qo\'shildi!');
+                    document.getElementById('newStudentEmail').value = '';
+                    document.getElementById('newStudentUsername').value = '';
+                    document.getElementById('newStudentFullName').value = '';
+                    document.getElementById('newStudentPassword').value = '123456';
+                    loadAllData();
+                    switchTab('users');
+                } else {
+                    showToast('❌ Xatolik: ' + (data.error || 'Qo\'shib bo\'lmadi'));
+                }
+            } catch(e) { showToast('Server xatoligi'); }
+        }
+
+        async function handleCreateAdmin(e) {
+            e.preventDefault();
+            const email = document.getElementById('newAdminEmail').value.trim();
+            const username = document.getElementById('newAdminUsername').value.trim();
+            const fullName = document.getElementById('newAdminFullName').value.trim();
+            const password = document.getElementById('newAdminPassword').value.trim();
+
+            try {
+                const res = await fetch('/api/admin/create-admin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': adminToken },
+                    body: JSON.stringify({ email, username, fullName, password })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    confetti({ particleCount: 100, spread: 80 });
+                    showToast('👑 Yangi Admin muvaffaqiyatli yaratildi!');
+                    document.getElementById('newAdminEmail').value = '';
+                    document.getElementById('newAdminUsername').value = '';
+                    document.getElementById('newAdminFullName').value = '';
+                    document.getElementById('newAdminPassword').value = '';
+                    loadAllData();
+                    switchTab('admins');
+                } else {
+                    showToast('❌ Xatolik: ' + (data.error || 'Admin yaratib bo\'lmadi'));
+                }
+            } catch(e) { showToast('Server xatoligi'); }
+        }
+
+        // On Load
+        window.addEventListener('DOMContentLoaded', () => {
+            initAdminAuth();
+        });
+    </script>
+</body>
+</html>

@@ -86,6 +86,89 @@
         .backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
         .rotate-y-180 { transform: rotateY(180deg); }
 
+        /* Apple Spring Bounce Keyframes */
+        @keyframes appleSpringUp {
+            0% {
+                opacity: 0;
+                transform: translateY(45px) scale(0.95);
+            }
+            50% {
+                opacity: 0.9;
+                transform: translateY(-8px) scale(1.015);
+            }
+            75% {
+                transform: translateY(3px) scale(0.995);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .apple-bounce {
+            animation: appleSpringUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .delay-1 { animation-delay: 0.08s; }
+        .delay-2 { animation-delay: 0.16s; }
+        .delay-3 { animation-delay: 0.24s; }
+        .delay-4 { animation-delay: 0.32s; }
+        .delay-5 { animation-delay: 0.40s; }
+
+        /* Light Mode Styles */
+        html.light body {
+            background-color: #f6f8fb;
+            color: #0f172a;
+            background-image: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.12), transparent 100%),
+                radial-gradient(ellipse 60% 40% at 100% 100%, rgba(99, 102, 241, 0.08), transparent 100%);
+        }
+        html.light .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+        html.light .glass-card {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        html.light .glass-card:hover {
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        html.light .glass-button {
+            background: rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            color: #334155;
+        }
+        html.light .glass-button:hover {
+            background: rgba(0, 0, 0, 0.08);
+            color: #0f172a;
+        }
+        html.light .text-white {
+            color: #0f172a !important;
+        }
+        html.light .text-zinc-400, html.light .text-zinc-300 {
+            color: #475569 !important;
+        }
+        html.light .text-zinc-500 {
+            color: #64748b !important;
+        }
+        html.light nav > div {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border-color: rgba(0, 0, 0, 0.08) !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04) !important;
+        }
+        html.light input, html.light textarea {
+            background: rgba(241, 245, 249, 0.9) !important;
+            color: #0f172a !important;
+            border-color: rgba(0, 0, 0, 0.12) !important;
+        }
+        html.light .kbd-key {
+            background: rgba(0, 0, 0, 0.06);
+            border-color: rgba(0, 0, 0, 0.12);
+            color: #475569;
+        }
+
         .kbd-key {
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
@@ -122,11 +205,22 @@
 
             <!-- User Status & Actions -->
             <div class="flex items-center gap-2.5">
-                <!-- Admin Panel Button (shown for Admin) -->
-                <button id="adminPanelBtn" onclick="openAdminModal()" class="hidden px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 font-bold text-xs flex items-center gap-1.5 transition-all shadow-md shadow-amber-500/10 active:scale-95">
-                    <i class="fa-solid fa-crown text-amber-400"></i>
-                    <span>Admin Panel</span>
+                <!-- Theme Toggle Button (Light/Dark Mode) -->
+                <button type="button" onclick="toggleTheme()" id="themeToggleBtn" class="w-8 h-8 rounded-xl glass-button flex items-center justify-center text-amber-400 hover:text-amber-300 transition-all cursor-pointer active:scale-95" title="Kunduzgi / Qorong'u rejim">
+                    <i id="themeIcon" class="fa-solid fa-sun text-xs"></i>
                 </button>
+
+                <!-- Telegram Admin Contact Button -->
+                <a href="https://t.me/BM_visual" target="_blank" class="px-3 py-1.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/30 text-sky-300 font-semibold text-xs flex items-center gap-1.5 transition-all shadow-md shadow-sky-500/10 active:scale-95 cursor-pointer" title="Telegramda adminga yozish">
+                    <i class="fa-brands fa-telegram text-sky-400 text-sm"></i>
+                    <span class="hidden sm:inline">Admin (Telegram)</span>
+                </a>
+
+                <!-- Super Admin Portal Button -->
+                <a href="/admin" target="_blank" id="adminPanelBtn" class="hidden px-3.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/35 text-amber-300 font-bold text-xs flex items-center gap-1.5 transition-all shadow-md shadow-amber-500/10 active:scale-95">
+                    <i class="fa-solid fa-crown text-amber-400"></i>
+                    <span>👑 Boshqaruv Portali (/admin)</span>
+                </a>
 
                 <!-- User Profile Capsule -->
                 <div id="userProfileBadge" class="hidden flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/80 border border-white/10 text-xs font-semibold text-zinc-300">
@@ -155,7 +249,7 @@
     </header>
 
     <!-- Navigation Tabs -->
-    <nav class="max-w-6xl mx-auto w-full px-4 pt-6">
+    <nav class="max-w-6xl mx-auto w-full px-4 pt-6 apple-bounce">
         <div class="p-1.5 rounded-2xl bg-zinc-900/90 border border-white/[0.08] flex items-center justify-start sm:justify-center gap-1.5 overflow-x-auto scrollbar-none shadow-xl">
             <button type="button" onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold bg-white/10 text-white shadow-sm transition-all whitespace-nowrap cursor-pointer">
                 <i class="fa-solid fa-layer-group text-xs"></i> Lug'at & Boshqaruv
@@ -180,38 +274,43 @@
 
         <!-- ================= TAB 1: DASHBOARD ================= -->
         <section id="view-dashboard" class="tab-content space-y-6">
-            <!-- Hero Banner -->
-            <div class="glass-card rounded-3xl p-6 md:p-8 relative overflow-hidden">
-                <div class="absolute -right-16 -bottom-16 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl pointer-events-none"></div>
+            <!-- Hero Banner Container -->
+            <div class="glass-card rounded-3xl p-6 md:p-8 relative overflow-hidden apple-bounce">
+                <!-- Glowing Apple Gradient Shape with Spring Entrance -->
+                <div class="absolute -right-16 -bottom-16 w-80 h-80 bg-gradient-to-tr from-blue-600/30 to-indigo-600/20 rounded-full blur-3xl pointer-events-none apple-bounce delay-1"></div>
                 <div class="relative z-10 max-w-2xl">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
+                    <!-- Leitner Badge -->
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3 apple-bounce delay-1">
                         <i class="fa-solid fa-brain text-[11px]"></i> 3X Leitner Xotira Tizimi
                     </div>
-                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white leading-tight">
+                    <!-- Main Headline -->
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white leading-tight apple-bounce delay-2">
                         So'zlarni unutilmas qilib xotirangizga muhrlang.
                     </h2>
-                    <p class="text-zinc-400 text-xs sm:text-sm mt-2.5 leading-relaxed">
+                    <!-- Subtext -->
+                    <p class="text-zinc-400 text-xs sm:text-sm mt-2.5 leading-relaxed apple-bounce delay-3">
                         Oraliq takrorlash va interaktiv o'yinlar orqali so'zlarni 3 barobar tezroq o'rganing.
                     </p>
+                    <!-- Action Buttons with Staggered Spring Bounce -->
                     <div class="flex flex-wrap items-center gap-2.5 mt-6">
-                        <button type="button" onclick="openImportModal()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all shadow-lg shadow-blue-600/30 flex items-center gap-2 active:scale-95 cursor-pointer">
+                        <button type="button" onclick="openImportModal()" class="apple-bounce delay-3 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all shadow-lg shadow-blue-600/30 flex items-center gap-2 active:scale-95 cursor-pointer">
                             <i class="fa-solid fa-plus"></i> Yangi so'z kiritish
                         </button>
-                        <button type="button" onclick="loadPresetDeck('a1')" class="px-4 py-2.5 rounded-xl glass-button text-zinc-300 hover:text-white font-medium text-xs flex items-center gap-2">
+                        <button type="button" onclick="loadPresetDeck('a1')" class="apple-bounce delay-4 px-4 py-2.5 rounded-xl glass-button text-zinc-300 hover:text-white font-medium text-xs flex items-center gap-2">
                             <i class="fa-solid fa-bolt text-amber-400"></i> 🌟 Top 25 Asosiy
                         </button>
-                        <button type="button" onclick="loadPresetDeck('it')" class="px-4 py-2.5 rounded-xl glass-button text-zinc-300 hover:text-white font-medium text-xs flex items-center gap-2">
+                        <button type="button" onclick="loadPresetDeck('it')" class="apple-bounce delay-4 px-4 py-2.5 rounded-xl glass-button text-zinc-300 hover:text-white font-medium text-xs flex items-center gap-2">
                             <i class="fa-solid fa-code text-blue-400"></i> 💻 IT & Texnologiya
                         </button>
-                        <button type="button" onclick="loadPresetDeck('business')" class="px-4 py-2.5 rounded-xl glass-button text-zinc-300 hover:text-white font-medium text-xs flex items-center gap-2">
+                        <button type="button" onclick="loadPresetDeck('business')" class="apple-bounce delay-5 px-4 py-2.5 rounded-xl glass-button text-zinc-300 hover:text-white font-medium text-xs flex items-center gap-2">
                             <i class="fa-solid fa-briefcase text-purple-400"></i> 💼 Biznes Lug'ati
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+            <!-- Stats Grid (Apple Bounce Spring) -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5 apple-bounce delay-2">
                 <div class="glass-card p-5 rounded-2xl">
                     <div class="flex items-center justify-between text-zinc-400"><span class="text-xs font-semibold">Jami So'zlar</span><i class="fa-solid fa-book-open text-xs"></i></div>
                     <h3 id="statTotal" class="text-2xl sm:text-3xl font-black text-white mt-2">0</h3>
@@ -236,8 +335,8 @@
                 </div>
             </div>
 
-            <!-- Words List Section -->
-            <div class="glass-card rounded-3xl p-5 md:p-7">
+            <!-- Words List Section (Apple Bounce Spring) -->
+            <div class="glass-card rounded-3xl p-5 md:p-7 apple-bounce delay-3">
                 <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 mb-5">
                     <div>
                         <h3 class="text-lg font-bold text-white tracking-tight">Mening Lug'atim</h3>
@@ -346,17 +445,25 @@
 
         <!-- ================= TAB 4: SPEED QUIZ MODE ================= -->
         <section id="view-quiz" class="tab-content max-w-xl mx-auto py-2" style="display: none;">
-            <div class="glass-card rounded-3xl p-6 sm:p-8 space-y-6">
+            <div class="glass-card rounded-3xl p-6 sm:p-8 space-y-5">
                 <div class="flex items-center justify-between text-xs text-zinc-400 font-medium">
-                    <span>Savol: <strong id="quizCurrentNum" class="text-white font-bold">1</strong> / <span id="quizTotalNum">10</span></span>
-                    <span>Ball: <strong id="quizScore" class="text-blue-400 font-bold text-sm">0</strong></span>
+                    <span class="flex items-center gap-1.5">
+                        <span class="px-2.5 py-1 rounded-lg bg-white/10 text-white font-mono font-bold">#<span id="quizCurrentNum">1</span>/<span id="quizTotalNum">10</span></span>
+                    </span>
+                    <div id="quizTimerText" class="px-3.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-mono font-black text-sm flex items-center gap-1.5 shadow-md">
+                        <i class="fa-solid fa-stopwatch animate-spin"></i> <span id="quizSecondsLeft">6.0s</span>
+                    </div>
+                    <span>Ball: <strong id="quizScore" class="text-blue-400 font-black text-base">0</strong></span>
                 </div>
-                <div class="w-full bg-white/[0.06] h-1.5 rounded-full overflow-hidden">
-                    <div id="quizTimerBar" class="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 h-full w-full transition-all duration-100 ease-linear"></div>
+                <!-- Dynamic High-Precision 6-Second Countdown Bar -->
+                <div class="w-full bg-white/[0.08] h-2 rounded-full overflow-hidden p-0.5 border border-white/10">
+                    <div id="quizTimerBar" class="bg-gradient-to-r from-emerald-400 via-amber-400 to-red-500 h-full w-full rounded-full transition-all duration-75 ease-linear"></div>
                 </div>
-                <div class="text-center py-6 space-y-2">
-                    <span class="text-[11px] text-zinc-400 uppercase tracking-widest font-bold">Ushbu so'zning to'g'ri tarjimasi qaysi?</span>
-                    <h2 id="quizQuestionWord" class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Apple</h2>
+                <div class="text-center py-4 space-y-2">
+                    <span class="text-[11px] text-zinc-400 uppercase tracking-widest font-bold flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-bolt text-amber-400"></i> Tezkor javob bering (6 soniya):
+                    </span>
+                    <h2 id="quizQuestionWord" class="text-3xl sm:text-4xl font-black text-white tracking-tight">Apple</h2>
                 </div>
                 <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
             </div>
@@ -381,6 +488,22 @@
             </div>
         </section>
     </main>
+
+    <!-- Footer with Admin Telegram Link -->
+    <footer class="mt-12 py-6 border-t border-white/[0.06] text-center text-xs text-zinc-500">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p class="text-zinc-500">© 2026 Vocab 3X Pro. Barcha huquqlar himoyalangan.</p>
+            <a href="https://t.me/BM_visual" target="_blank" class="text-sky-400 hover:text-sky-300 font-semibold flex items-center gap-1.5 transition-colors">
+                <i class="fa-brands fa-telegram text-sm"></i> Admin bilan bog'lanish: @BM_visual
+            </a>
+        </div>
+    </footer>
+
+    <!-- Floating Telegram Support Button -->
+    <a href="https://t.me/BM_visual" target="_blank" class="fixed bottom-6 left-6 z-30 px-3.5 py-2.5 rounded-2xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/35 text-sky-300 font-bold text-xs flex items-center gap-2 transition-all shadow-xl backdrop-blur-md active:scale-95 group" title="Admin bilan Telegramda bog'lanish">
+        <i class="fa-brands fa-telegram text-sky-400 text-lg group-hover:scale-110 transition-transform"></i>
+        <span class="hidden sm:inline">Admin bilan bog'lanish</span>
+    </a>
 
     <!-- ================= AUTHENTICATION MODAL (LOGIN & REGISTER) ================= -->
     <div id="authModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl flex items-center justify-center p-4 transition-all duration-300 hidden">
@@ -481,7 +604,7 @@
             </div>
 
             <!-- Click & Payme Buttons -->
-            <div class="grid grid-cols-2 gap-2.5 mb-5">
+            <div class="grid grid-cols-2 gap-2.5 mb-3">
                 <a href="/pay/click" target="_blank" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-emerald-600/20">
                     <i class="fa-solid fa-bolt"></i> Click orqali
                 </a>
@@ -489,6 +612,12 @@
                     <i class="fa-solid fa-credit-card"></i> Payme orqali
                 </a>
             </div>
+
+            <!-- Direct Telegram Support Link -->
+            <a href="https://t.me/BM_visual" target="_blank" class="mb-5 p-2.5 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/25 text-sky-300 text-xs font-semibold flex items-center justify-center gap-2 transition-all">
+                <i class="fa-brands fa-telegram text-sky-400 text-base"></i>
+                <span>Savollar yoki yordam uchun: @BM_visual</span>
+            </a>
 
             <!-- Receipt Upload Box -->
             <div class="border-t border-white/10 pt-4 text-left">
@@ -826,13 +955,40 @@
 
         // Admin state
         let adminUsersList = [];
-        let adminReceiptsList = [];
-
         // App Initialization
         document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
             initAuth();
             setupKeyboardShortcuts();
         });
+
+        // ================= THEME TOGGLE (LIGHT / DARK MODE) =================
+        function initTheme() {
+            const savedTheme = localStorage.getItem('vocab_theme') || 'dark';
+            applyTheme(savedTheme);
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark') || !document.documentElement.classList.contains('light');
+            const newTheme = isDark ? 'light' : 'dark';
+            applyTheme(newTheme);
+            localStorage.setItem('vocab_theme', newTheme);
+            showToast(newTheme === 'dark' ? '🌙 Qorong\'u rejim yoqildi' : '☀️ Kunduzgi rejim yoqildi');
+        }
+
+        function applyTheme(theme) {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (theme === 'light') {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                if (icon) icon.className = 'fa-solid fa-moon text-xs text-indigo-500';
+            } else {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                if (icon) icon.className = 'fa-solid fa-sun text-xs text-amber-400';
+            }
+        }
 
         // ================= AUTHENTICATION & SUBSCRIPTION =================
         async function initAuth() {
@@ -1570,7 +1726,10 @@
         // ================= TAB SWITCHING =================
         function switchTab(tabId) {
             activeTab = tabId;
-            document.querySelectorAll('.tab-content').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.tab-content').forEach(s => {
+                s.style.display = 'none';
+                s.classList.remove('apple-bounce');
+            });
             document.querySelectorAll('.nav-tab').forEach(b => {
                 b.className = 'nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] transition-all whitespace-nowrap cursor-pointer';
             });
@@ -1578,7 +1737,10 @@
             const targetSection = document.getElementById('view-' + tabId);
             const targetBtn = document.getElementById('tab-' + tabId);
 
-            if (targetSection) targetSection.style.display = 'block';
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                targetSection.classList.add('apple-bounce');
+            }
             if (targetBtn) targetBtn.className = 'nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold bg-white/10 text-white shadow-sm transition-all whitespace-nowrap cursor-pointer';
 
             if (tabId === 'flashcard') startFlashcards();
@@ -1767,10 +1929,14 @@
             }
         }
 
-        // ================= SPEED QUIZ MODE =================
+        // ================= SPEED QUIZ MODE (6-SECOND COUNTDOWN) =================
+        const QUIZ_TIME_LIMIT = 6.0;
+        let quizTimeRemaining = 6.0;
+        let isQuestionAnswered = false;
+
         function startSpeedQuiz() {
             if (words.length < 4) {
-                showToast('Test rejimi uchun kamida 4 ta so\'z kerak');
+                showToast('Tezkor test rejimi uchun kamida 4 ta so\'z kerak');
                 return;
             }
             currentQuizQuestions = [...words].sort(() => 0.5 - Math.random());
@@ -1781,17 +1947,28 @@
         }
 
         function renderQuizQuestion() {
+            clearInterval(quizTimerInterval);
             const current = currentQuizQuestions[quizIndex];
             if (!current) {
-                confetti({ particleCount: 100 });
-                showToast(`🎉 Test tugadi! Natija: ${quizScore} ball`);
+                confetti({ particleCount: 100, spread: 70 });
+                showToast(`🎉 Tezkor test yakunlandi! Natija: ${quizScore} ball`);
                 switchTab('dashboard');
                 return;
             }
 
+            isQuestionAnswered = false;
+            quizTimeRemaining = QUIZ_TIME_LIMIT;
             document.getElementById('quizCurrentNum').innerText = quizIndex + 1;
             document.getElementById('quizScore').innerText = quizScore;
             document.getElementById('quizQuestionWord').innerText = current.en;
+            
+            const timerBadge = document.getElementById('quizTimerText');
+            const timerText = document.getElementById('quizSecondsLeft');
+            const bar = document.getElementById('quizTimerBar');
+            
+            bar.style.width = '100%';
+            timerText.innerText = '6.0s';
+            timerBadge.className = 'px-3.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-mono font-black text-sm flex items-center gap-1.5 shadow-md';
 
             let choices = [current.uz];
             const others = words.filter(w => w.id !== current.id).sort(() => 0.5 - Math.random()).slice(0, 3);
@@ -1800,30 +1977,94 @@
 
             document.getElementById('quizOptions').innerHTML = choices.map(opt => `
                 <button type="button" onclick="handleQuizChoice('${opt.replace(/'/g, "\\'")}', this)" 
-                    class="py-3.5 px-4 rounded-2xl glass-card hover:bg-white/10 text-white font-semibold text-xs sm:text-sm text-left border border-white/10 transition-all flex items-center justify-between cursor-pointer active:scale-98">
+                    class="quiz-opt-btn py-3.5 px-4 rounded-2xl glass-card hover:bg-white/10 text-white font-semibold text-xs sm:text-sm text-left border border-white/10 transition-all flex items-center justify-between cursor-pointer active:scale-98">
                     <span>${opt}</span>
                     <i class="fa-solid fa-chevron-right text-xs text-zinc-500"></i>
                 </button>
             `).join('');
+
+            // Start 6-second countdown timer (ticks every 50ms)
+            const startTime = Date.now();
+            quizTimerInterval = setInterval(() => {
+                if (isQuestionAnswered) {
+                    clearInterval(quizTimerInterval);
+                    return;
+                }
+
+                const elapsed = (Date.now() - startTime) / 1000;
+                quizTimeRemaining = Math.max(0, QUIZ_TIME_LIMIT - elapsed);
+                const percent = (quizTimeRemaining / QUIZ_TIME_LIMIT) * 100;
+
+                bar.style.width = percent + '%';
+                timerText.innerText = quizTimeRemaining.toFixed(1) + 's';
+
+                if (quizTimeRemaining <= 2.0) {
+                    timerBadge.className = 'px-3.5 py-1 rounded-full bg-red-500/20 border border-red-500/50 text-red-400 font-mono font-black text-sm flex items-center gap-1.5 animate-bounce';
+                } else if (quizTimeRemaining <= 4.0) {
+                    timerBadge.className = 'px-3.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 font-mono font-black text-sm flex items-center gap-1.5';
+                } else {
+                    timerBadge.className = 'px-3.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-mono font-black text-sm flex items-center gap-1.5 shadow-md';
+                }
+
+                if (quizTimeRemaining <= 0) {
+                    clearInterval(quizTimerInterval);
+                    handleQuizTimeout();
+                }
+            }, 50);
+        }
+
+        function handleQuizTimeout() {
+            if (isQuestionAnswered) return;
+            isQuestionAnswered = true;
+
+            const current = currentQuizQuestions[quizIndex];
+            const buttons = document.querySelectorAll('.quiz-opt-btn');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.innerText.trim().toLowerCase() === current.uz.toLowerCase()) {
+                    btn.className = 'quiz-opt-btn py-3.5 px-4 rounded-2xl bg-emerald-500/25 border border-emerald-500 text-emerald-300 font-bold text-xs sm:text-sm text-left';
+                }
+            });
+
+            showToast('⏰ Vaqt tugadi! (6 soniya o\'tdi)');
+            setTimeout(() => {
+                quizIndex++;
+                renderQuizQuestion();
+            }, 850);
         }
 
         function handleQuizChoice(selected, btn) {
+            if (isQuestionAnswered) return;
+            isQuestionAnswered = true;
+            clearInterval(quizTimerInterval);
+
             const current = currentQuizQuestions[quizIndex];
             if (!current) return;
 
+            const buttons = document.querySelectorAll('.quiz-opt-btn');
+            buttons.forEach(b => b.disabled = true);
+
             if (selected.toLowerCase() === current.uz.toLowerCase()) {
                 SoundFX.playChime();
-                btn.className = 'py-3.5 px-4 rounded-2xl bg-emerald-500/20 border border-emerald-500 text-emerald-300 font-bold text-xs sm:text-sm text-left';
-                quizScore += 10;
+                btn.className = 'quiz-opt-btn py-3.5 px-4 rounded-2xl bg-emerald-500/25 border border-emerald-500 text-emerald-300 font-bold text-xs sm:text-sm text-left';
+                // Speed bonus: up to +12 bonus points based on speed
+                const speedBonus = Math.round(quizTimeRemaining * 2);
+                quizScore += 10 + speedBonus;
+                document.getElementById('quizScore').innerText = quizScore;
             } else {
                 SoundFX.playWrong();
-                btn.className = 'py-3.5 px-4 rounded-2xl bg-red-500/20 border border-red-500 text-red-300 font-bold text-xs sm:text-sm text-left';
+                btn.className = 'quiz-opt-btn py-3.5 px-4 rounded-2xl bg-red-500/25 border border-red-500 text-red-300 font-bold text-xs sm:text-sm text-left';
+                buttons.forEach(b => {
+                    if (b.innerText.trim().toLowerCase() === current.uz.toLowerCase()) {
+                        b.className = 'quiz-opt-btn py-3.5 px-4 rounded-2xl bg-emerald-500/25 border border-emerald-500 text-emerald-300 font-bold text-xs sm:text-sm text-left';
+                    }
+                });
             }
 
             setTimeout(() => {
                 quizIndex++;
                 renderQuizQuestion();
-            }, 600);
+            }, 700);
         }
 
         // ================= SPELLING MODE =================

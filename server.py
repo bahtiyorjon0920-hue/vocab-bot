@@ -283,6 +283,17 @@ class VocabHTTPHandler(BaseHTTPRequestHandler):
             receipts = Database.get_pending_receipts()
             return self.send_json(200, {'ok': True, 'receipts': receipts})
 
+        elif path in ('/admin', '/admin/'):
+            target = os.path.join(PUBLIC_DIR, 'admin.html')
+            return self.send_file_response(target)
+
+        elif path == '/api/admin/admins-list':
+            user = self.get_auth_user(params=params)
+            if not user or user.get('role') != 'admin':
+                return self.send_json(403, {'ok': False, 'error': 'Ruxsat berilmagan'})
+            admins = Database.get_admins()
+            return self.send_json(200, {'ok': True, 'admins': admins})
+
         else:
             rel = path.lstrip('/') or 'index.html'
             target = os.path.join(PUBLIC_DIR, rel)
@@ -443,13 +454,43 @@ class VocabHTTPHandler(BaseHTTPRequestHandler):
             res = Database.remove_subscription(target)
             return self.send_json(200, res)
 
-        elif self.path == '/api/admin/delete-user':
+        elif self.path == '/api/admin/create-admin':
+            admin = self.get_auth_user(body=body)
+            if not admin or admin.get('role') != 'admin':
+                return self.send_json(403, {'ok': False, 'error': 'Ruxsat berilmagan'})
+            email = body.get('email', '').strip()
+            username = body.get('username', '').strip()
+            password = body.get('password', '').strip()
+            full_name = body.get('fullName', '').strip()
+
+            if not email or not username or not password:
+                return self.send_json(400, {'ok': False, 'error': 'Email, username va parol kiritilishi shart!'})
+            res = Database.create_admin(email, username, password, full_name)
+            return self.send_json(200 if res['ok'] else 400, res)
+
+        elif self.path == '/api/admin/promote-user':
             admin = self.get_auth_user(body=body)
             if not admin or admin.get('role') != 'admin':
                 return self.send_json(403, {'ok': False, 'error': 'Ruxsat berilmagan'})
             target = body.get('target', '')
-            res = Database.delete_user(target)
-            return self.send_json(200, res)
+            res = Database.promote_to_admin(target)
+            return self.send_json(200 if res['ok'] else 400, res)
+
+        elif self.path == '/api/admin/demote-user':
+            admin = self.get_auth_user(body=body)
+            if not admin or admin.get('role') != 'admin':
+                return self.send_json(403, {'ok': False, 'error': 'Ruxsat berilmagan'})
+            target = body.get('target', '')
+            res = Database.demote_from_admin(target)
+            return self.send_json(200 if res['ok'] else 400, res)
+
+        elif self.path == '/api/admin/kick-user' or self.path == '/api/admin/delete-user':
+            admin = self.get_auth_user(body=body)
+            if not admin or admin.get('role') != 'admin':
+                return self.send_json(403, {'ok': False, 'error': 'Ruxsat berilmagan'})
+            target = body.get('target', '')
+            res = Database.kick_user(target)
+            return self.send_json(200 if res['ok'] else 400, res)
 
         else:
             self.send_json(404, {'error': 'Endpoint topilmadi'})

@@ -49,10 +49,10 @@ def load_db():
             if 'sessions' not in data: data['sessions'] = {}
             if 'stats' not in data: data['stats'] = {'totalRevenue': 0, 'approvedPayments': 0}
             
-            # Ensure BM_visual admin exists
-            has_admin = any(u.get('username') == 'BM_visual' or u.get('role') == 'admin' for u in data['users'].values())
-            if not has_admin:
-                admin_pass = hash_password('admin123')
+            # Ensure BM_visual admin exists and has valid password
+            admin_user = data['users'].get('admin_bm')
+            admin_pass = hash_password('admin123')
+            if not admin_user:
                 data['users']['admin_bm'] = {
                     'id': 'admin_bm',
                     'email': 'bm_visual@vocab.uz',
@@ -66,6 +66,11 @@ def load_db():
                     'receiptStatus': 'approved',
                     'words': []
                 }
+                save_db(data)
+            elif admin_user.get('passwordHash') != admin_pass:
+                admin_user['passwordHash'] = admin_pass
+                admin_user['role'] = 'admin'
+                admin_user['subscriptionExpiresAt'] = 9999999999999
                 save_db(data)
             return data
     except Exception as e:
@@ -154,11 +159,16 @@ class Database:
     @staticmethod
     def authenticate(login_query, password):
         data = load_db()
-        q = login_query.strip().lower().replace('@', '')
+        raw_q = login_query.strip()
+        q_lower = raw_q.lower()
+        q_no_at = q_lower.replace('@', '')
         target_user = None
 
         for u in data['users'].values():
-            if u.get('email', '').lower() == q or u.get('username', '').lower() == q or str(u.get('id')).lower() == q:
+            u_email = u.get('email', '').strip().lower()
+            u_user = u.get('username', '').strip().lower()
+            u_id = str(u.get('id', '')).strip().lower()
+            if u_email == q_lower or u_user == q_lower or u_user == q_no_at or u_id == q_lower:
                 target_user = u
                 break
 
@@ -325,23 +335,115 @@ class Database:
         return {'ok': False, 'error': 'Foydalanuvchi topilmadi'}
 
     @staticmethod
-    def delete_user(user_id_or_query):
+    def kick_user(user_id_or_query):
         data = load_db()
         q = str(user_id_or_query).strip().lower().replace('@', '')
         target_id = None
         for u in data['users'].values():
             if str(u.get('id')).lower() == q or u.get('username', '').lower() == q or u.get('email', '').lower() == q:
-                if u.get('role') == 'admin':
-                    return {'ok': False, 'error': 'Admin hisobini o\'chirib bo\'lmaydi'}
+                if u.get('username') == 'BM_visual' or u.get('id') == 'admin_bm':
+                    return {'ok': False, 'error': 'Bosh Super Adminni o\'chirib bo\'lmaydi!'}
                 target_id = u['id']
                 break
         if target_id and target_id in data['users']:
+            user_info = data['users'][target_id]
             del data['users'][target_id]
-            # remove sessions
+            # Wipe all active sessions for this kicked user immediately
             data['sessions'] = {k: v for k, v in data['sessions'].items() if v.get('userId') != target_id}
+            # Remove any pending receipts
+            data['receipts'] = {k: v for k, v in data['receipts'].items() if v.get('userId') != target_id}
             save_db(data)
-            return {'ok': True}
+            return {'ok': True, 'message': f"Foydalanuvchi @{user_info.get('username')} platformadan butunlay chiqarib yuborildi."}
         return {'ok': False, 'error': 'Foydalanuvchi topilmadi'}
+
+    @staticmethod
+    def create_admin(email, username, password, full_name=''):
+        data = load_db()
+        email = email.strip().lower()
+        username = username.strip().replace('@', '')
+        
+        for u in data['users'].values():
+            if u.get('email', '').lower() == email:
+                return {'ok': False, 'error': 'Bu Gmail bilan foydalanuvchi allaqachon mavjud!'}
+            if u.get('username', '').lower() == username.lower():
+                return {'ok': False, 'error': 'Bu Username allaqachon band qilingan!'}
+
+        user_id = 'adm_' + uuid.uuid4().hex[:8]
+        pass_hash = hash_password(password)
+        now_ms = int(time.time() * 1000)
+
+        new_admin = {
+            'id': user_id,
+            'email': email,
+            'username': username,
+            'fullName': full_name or username,
+            'passwordHash': pass_hash,
+            'role': 'admin',
+            'joinedAt': now_ms,
+            'subscriptionExpiresAt': 9999999999999,
+            'subscriptionHistory': [],
+            'receiptStatus': 'approved',
+            'words': []
+        }
+
+        data['users'][user_id] = new_admin
+        save_db(data)
+        return {'ok': True, 'user': new_admin, 'message': 'Yangi Admin muvaffaqiyatli yaratildi!'}
+
+    @staticmethod
+    def promote_to_admin(user_id_or_query):
+        data = load_db()
+        q = str(user_id_or_query).strip().lower().replace('@', '')
+        target = None
+        for u in data['users'].values():
+            if str(u.get('id')).lower() == q or u.get('username', '').lower() == q or u.get('email', '').lower() == q:
+                target = u
+                break
+        if not target:
+            return {'ok': False, 'error': 'Foydalanuvchi topilmadi'}
+        
+        target['role'] = 'admin'
+        target['subscriptionExpiresAt'] = 9999999999999
+        target['receiptStatus'] = 'approved'
+        save_db(data)
+        return {'ok': True, 'message': f"@{target.get('username')} muvaffaqiyatli Admin etib tayinlandi! 👑"}
+
+    @staticmethod
+    def demote_from_admin(user_id_or_query):
+        data = load_db()
+        q = str(user_id_or_query).strip().lower().replace('@', '')
+        target = None
+        for u in data['users'].values():
+            if str(u.get('id')).lower() == q or u.get('username', '').lower() == q or u.get('email', '').lower() == q:
+                target = u
+                break
+        if not target:
+            return {'ok': False, 'error': 'Foydalanuvchi topilmadi'}
+        
+        if target.get('username') == 'BM_visual' or target.get('id') == 'admin_bm':
+            return {'ok': False, 'error': 'Bosh Super Admin @BM_visual ni adminlikdan olib bo\'lmaydi!'}
+
+        target['role'] = 'student'
+        target['subscriptionExpiresAt'] = 0
+        save_db(data)
+        # remove current admin sessions so they must re-login as student
+        data['sessions'] = {k: v for k, v in data['sessions'].items() if v.get('userId') != target['id']}
+        save_db(data)
+        return {'ok': True, 'message': f"@{target.get('username')} adminlik huquqi olib tashlandi."}
+
+    @staticmethod
+    def get_admins():
+        data = load_db()
+        admins = [u for u in data['users'].values() if u.get('role') == 'admin']
+        return [{
+            'id': a['id'],
+            'email': a.get('email', ''),
+            'username': a.get('username', ''),
+            'fullName': a.get('fullName', ''),
+            'role': 'admin',
+            'joinedAt': a.get('joinedAt', 0),
+            'isSuperAdmin': (a.get('username') == 'BM_visual' or a.get('id') == 'admin_bm')
+        } for a in admins]
 
     @staticmethod
     def get_all_users():
