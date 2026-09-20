@@ -124,7 +124,7 @@ class Database:
         
         # Check uniqueness
         for u in data['users'].values():
-            if u.get('email', '').lower() == email:
+            if email and u.get('email', '').lower() == email:
                 return {'ok': False, 'error': 'Ushbu Gmail/Email bilan allaqachon ro\'yxatdan o\'tilgan!'}
             if u.get('username', '').lower() == username.lower():
                 return {'ok': False, 'error': 'Ushbu Username allaqachon band qilingan!'}

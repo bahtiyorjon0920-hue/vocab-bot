@@ -308,13 +308,13 @@ class VocabHTTPHandler(BaseHTTPRequestHandler):
             body = {}
 
         if self.path == '/api/register':
-            email = body.get('email', '')
-            username = body.get('username', '')
-            password = body.get('password', '')
-            full_name = body.get('fullName', '')
+            username = body.get('username', '').strip().replace('@', '')
+            password = body.get('password', '').strip()
+            full_name = body.get('fullName', '').strip() or username
+            email = body.get('email', '').strip().lower() or f"{username}@vocab.uz"
 
-            if not email or not username or not password:
-                return self.send_json(400, {'ok': False, 'error': "Email, username va parol kiritilishi shart!"})
+            if not username or not password:
+                return self.send_json(400, {'ok': False, 'error': "Username va parol kiritilishi shart!"})
             if len(password) < 4:
                 return self.send_json(400, {'ok': False, 'error': "Parol kamida 4 ta belgidan iborat bo'lsin!"})
             if len(username) < 3:
@@ -430,14 +430,14 @@ class VocabHTTPHandler(BaseHTTPRequestHandler):
             admin = self.get_auth_user(body=body)
             if not admin or admin.get('role') != 'admin':
                 return self.send_json(403, {'ok': False, 'error': 'Ruxsat berilmagan'})
-            email = body.get('email', '').strip()
-            username = body.get('username', '').strip()
+            username = body.get('username', '').strip().replace('@', '')
             password = body.get('password', '123456').strip()
-            full_name = body.get('fullName', '').strip()
+            full_name = body.get('fullName', '').strip() or username
+            email = body.get('email', '').strip().lower() or f"{username}@vocab.uz"
             days = int(body.get('days', 30))
 
-            if not email or not username or not password:
-                return self.send_json(400, {'ok': False, 'error': 'Email, username va parol kiritilishi shart!'})
+            if not username or not password:
+                return self.send_json(400, {'ok': False, 'error': 'Username va parol kiritilishi shart!'})
             res = Database.register_user(email, username, password, full_name)
             if not res['ok']:
                 return self.send_json(400, res)
@@ -458,13 +458,13 @@ class VocabHTTPHandler(BaseHTTPRequestHandler):
             admin = self.get_auth_user(body=body)
             if not admin or admin.get('role') != 'admin':
                 return self.send_json(403, {'ok': False, 'error': 'Ruxsat berilmagan'})
-            email = body.get('email', '').strip()
-            username = body.get('username', '').strip()
+            username = body.get('username', '').strip().replace('@', '')
             password = body.get('password', '').strip()
-            full_name = body.get('fullName', '').strip()
+            full_name = body.get('fullName', '').strip() or username
+            email = body.get('email', '').strip().lower() or f"{username}@admin.vocab.uz"
 
-            if not email or not username or not password:
-                return self.send_json(400, {'ok': False, 'error': 'Email, username va parol kiritilishi shart!'})
+            if not username or not password:
+                return self.send_json(400, {'ok': False, 'error': 'Admin username va parol kiritilishi shart!'})
             res = Database.create_admin(email, username, password, full_name)
             return self.send_json(200 if res['ok'] else 400, res)
 
