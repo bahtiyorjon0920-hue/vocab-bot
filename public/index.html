@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="uz" class="dark">
+<head>
+    <!-- Telegram WebApp SDK -->
+    <script src=https://telegram.org/js/telegram-web-app.js></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocab 3X — Apple & Linear Pro Vocabulary Learning</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            accent: '#2997ff',
+                        },
+                        dark: {
+                            bg: '#070709',
+                            card: '#121217',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            background-color: #070709;
+            color: #f4f4f6;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(41, 151, 255, 0.12), transparent 100%),
+                radial-gradient(ellipse 60% 40% at 100% 100%, rgba(99, 102, 241, 0.08), transparent 100%);
+            background-attachment: fixed;
+        }
+
+        .glass-nav {
+            background: rgba(13, 13, 18, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: rgba(18, 18, 24, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.16);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(41, 151, 255, 0.08);
+        }
+
+        .glass-button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .glass-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .glass-button:active {
+            transform: translateY(1px) scale(0.97);
+        }
+
+        /* 3D Flip Card Effect */
+        .perspective-1200 {
+            perspective: 1200px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        .kbd-key {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #94a3b8;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.16);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-blue-600 selection:text-white">
+
+    <!-- Top Sticky Navigation Bar -->
+    <header class="sticky top-0 z-40 glass-nav px-4 lg:px-8 py-3.5">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="switchTab('dashboard')">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white font-extrabold text-base shadow-lg shadow-blue-500/30 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold tracking-tight text-white flex items-center gap-1.5">
+                        Vocab<span class="text-blue-400 font-black">3X</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono font-medium">PRO</span>
+                    </h1>
+                    <p class="text-[10px] text-zinc-400 font-medium tracking-wider uppercase">Apple Spaced Repetition</p>
+                </div>
+            </div>
+
+            <!-- Quick Action & Stats in Header -->
+            <div id=userProfileBadge class=hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400>
+                <i class=fa-solid fa-user-check></i>
+                <span id=userNameDisplay>O'quvchi</span>
+                <span class=text-zinc-500>•</span>
+                <span id=userDaysLeft class=text-emerald-300>30 kun</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-400">
+                    <i class="fa-solid fa-fire text-amber-500 animate-pulse"></i>
+                    <span id="streakCount">1 kun</span>
+                </div>
+
+                <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-semibold text-blue-400">
+                    <i class="fa-solid fa-brain"></i>
+                    <span id="headerMasteredCount">0</span>/<span id="headerTotalCount">0</span>
+                    <span class="hidden md:inline font-normal text-zinc-400">Yodlandi</span>
+                </div>
+
+                <button type="button" onclick="openImportModal()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all shadow-md shadow-blue-600/30 flex items-center gap-2 active:scale-95 cursor-pointer">
+                    <i class="fa-solid fa-plus text-[11px]"></i>
+                    <span>Qo'shish</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- iOS / Linear Navigation Tabs -->
+    <nav class="max-w-6xl mx-auto w-full px-4 pt-6">
+        <div class="p-1.5 rounded-2xl bg-zinc-900/90 border border-white/[0.08] flex items-center justify-start sm:justify-center gap-1.5 overflow-x-auto scrollbar-none shadow-xl">
+            <button type="button" onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold bg-white/10 text-white shadow-sm transition-all whitespace-nowrap cursor-pointer">
+                <i class="fa-solid fa-layer-group text-xs"></i> Lug'at & Boshqaruv
+            </button>
+            <button type="button" onclick="switchTab('flashcard')" id="tab-flashcard" class="nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] transition-all whitespace-nowrap cursor-pointer">
+                <i class="fa-solid fa-clone text-xs"></i> Flesh-Karta
+            </button>
+            <button type="button" onclick="switchTab('match')" id="tab-match" class="nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] transition-all whitespace-nowrap cursor-pointer">
+                <i class="fa-solid fa-puzzle-piece text-xs"></i> Juftlik O'yini
+            </button>
+            <button type="button" onclick="switchTab('quiz')" id="tab-quiz" class="nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] transition-all whitespace-nowrap cursor-pointer">
+                <i class="fa-solid fa-bolt text-xs"></i> Tezkor Test
+            </button>
+            <button type="button" onclick="switchTab('spelling')" id="tab-spelling" class="nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] transition-all whitespace-nowrap cursor-pointer">
+                <i class="fa-solid fa-keyboard text-xs"></i> Yozish Mashqi
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="max-w-6xl mx-auto w-full px-4 py-6 flex-grow">
+
+        <!-- ================= TAB 1: DASHBOARD ================= -->
+        <section id="view-dashboard" class="tab-content space-y-6">
+            
+            <!-- Hero Banner -->
+            <div class="glass-card rounded-3xl p-6 md:p-8 relative overflow-hidden">
+                <div class="absolute -right-16 -bottom-16 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-2xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
+                        <i class="fa-solid fa-brain text-[11px]"></i> 3X Leitner Xotira Tizimi
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white leading-tight">
+                        So'zlarni unutilmas qilib xotirangizga muhrlang.
+                    </h2>
+                    <p class="text-zinc-400 text-xs sm:text-sm mt-2.5 leading-relaxed">
+                        Aqlli oraliqli takrorlash usuli orqali unutilish ehtimoli yuqori so'zlar o'yinlarda tez-tez takrorlanadi va yodlash tezligingiz 3 baravarga oshadi.
+                    </p>
+                    
+                    <!-- Preset Decks Buttons -->
+                    <div class="flex flex-wrap items-center gap-2.5 mt-6">
+                        <button type="button" onclick="openImportModal()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all shadow-lg shadow-blue-600/30 flex items-center gap-2 active:scale-95 cursor-pointer">
+                            <i class="fa-solid fa-plus"></i> Yangi so'z kiritish
+                        </button>
+                        <button type="button" onclick="loadPresetDeck('a1')" class="px-4 py-2.5 rounded-xl glass-button text-zinc-300 hover:text-white font-medium text-xs flex items-center gap-2">
+                            <i class="fa-solid fa-bolt text-amber-400"></i> 🌟 Top 25 Asosiy
+                        </button>
+                        <button type="button" onclick="loadPresetDeck('it')" class="px-4 py-2.5 rounded-xl glass-button text-zinc-300 hover:text-white font-medium text-xs flex items-center gap-2">
+                            <i class="fa-solid fa-code text-blue-400"></i> 💻 IT & Texnologiya
+                        </button>
+                        <button type="button" onclick="loadPresetDeck('business')" class="px-4 py-2.5 rounded-xl glass-button text-zinc-300 hover:text-white font-medium text-xs flex items-center gap-2">
+                            <i class="fa-solid fa-briefcase text-purple-400"></i> 💼 Biznes Lug'ati
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+                <div class="glass-card p-5 rounded-2xl">
+                    <div class="flex items-center justify-between text-zinc-400">
+                        <span class="text-xs font-semibold">Jami So'zlar</span>
+                        <i class="fa-solid fa-book-open text-xs"></i>
+                    </div>
+                    <h3 id="statTotal" class="text-2xl sm:text-3xl font-black text-white mt-2">0</h3>
+                    <p class="text-[11px] text-zinc-500 mt-1 font-medium">Lug'atingiz hajmi</p>
+                </div>
+
+                <div class="glass-card p-5 rounded-2xl border-emerald-500/20 bg-emerald-500/[0.03]">
+                    <div class="flex items-center justify-between text-emerald-400">
+                        <span class="text-xs font-semibold">O'zlashtirilgan</span>
+                        <i class="fa-solid fa-check-double text-xs"></i>
+                    </div>
+                    <h3 id="statMastered" class="text-2xl sm:text-3xl font-black text-emerald-400 mt-2">0</h3>
+                    <p class="text-[11px] text-emerald-500/80 mt-1 font-medium">5-qutidagi so'zlar</p>
+                </div>
+
+                <div class="glass-card p-5 rounded-2xl">
+                    <div class="flex items-center justify-between text-blue-400">
+                        <span class="text-xs font-semibold">O'rganilmoqda</span>
+                        <i class="fa-solid fa-arrows-rotate text-xs"></i>
+                    </div>
+                    <h3 id="statLearning" class="text-2xl sm:text-3xl font-black text-blue-400 mt-2">0</h3>
+                    <p class="text-[11px] text-zinc-500 mt-1 font-medium">1-4 qutilarda</p>
+                </div>
+
+                <div class="glass-card p-5 rounded-2xl">
+                    <div class="flex items-center justify-between text-purple-400">
+                        <span class="text-xs font-semibold">O'zlashtirish</span>
+                        <i class="fa-solid fa-chart-pie text-xs"></i>
+                    </div>
+                    <h3 id="statRate" class="text-2xl sm:text-3xl font-black text-purple-400 mt-2">0%</h3>
+                    <div class="w-full bg-white/[0.06] h-1.5 rounded-full overflow-hidden mt-2.5">
+                        <div id="statProgressBar" class="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 h-full w-0 transition-all duration-700"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Words List Section -->
+            <div class="glass-card rounded-3xl p-5 md:p-7">
+                <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 mb-5">
+                    <div>
+                        <h3 class="text-lg font-bold text-white tracking-tight">Mening Lug'atim</h3>
+                        <p class="text-xs text-zinc-400 mt-0.5">Barcha kiritilgan so'zlar ro'yxati</p>
+                    </div>
+
+                    <!-- Search & Action Controls -->
+                    <div class="flex items-center gap-2.5">
+                        <div class="relative flex-grow md:w-72">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-xs"></i>
+                            <input type="text" id="searchInput" oninput="renderWordList()" placeholder="So'zlarni qidirish..." 
+                                class="w-full bg-black/50 border border-white/[0.1] rounded-xl pl-9 pr-12 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
+                            <span class="absolute right-2.5 top-1/2 -translate-y-1/2 kbd-key hidden sm:inline">⌘K</span>
+                        </div>
+
+                        <button type="button" onclick="clearAllWords()" class="px-3 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-semibold border border-red-500/20 transition-all flex items-center gap-1.5 cursor-pointer" title="Lug'atni tozalash">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Word Filter Buttons -->
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-3 mb-2 scrollbar-none text-xs">
+                    <button type="button" onclick="filterCategory('all', this)" class="category-chip px-3 py-1.5 rounded-lg bg-white/10 text-white font-medium border border-white/10 transition-all cursor-pointer">Barchasi</button>
+                    <button type="button" onclick="filterCategory('box1', this)" class="category-chip px-3 py-1.5 rounded-lg glass-button text-zinc-400 font-medium transition-all cursor-pointer">Quti 1 (Yangi)</button>
+                    <button type="button" onclick="filterCategory('box5', this)" class="category-chip px-3 py-1.5 rounded-lg glass-button text-zinc-400 font-medium transition-all cursor-pointer">Quti 5 (Yodlangan)</button>
+                </div>
+
+                <!-- Word List Container -->
+                <div id="wordListContainer" class="space-y-2 max-h-[500px] overflow-y-auto pr-1">
+                    <!-- Loaded dynamically via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: FLASHCARD MODE ================= -->
+        <section id="view-flashcard" class="tab-content max-w-xl mx-auto py-2" style="display: none;">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
+                        Flesh-Karta Rejimi
+                    </span>
+                    <span id="fcBoxTag" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-white/[0.06] text-zinc-400 border border-white/[0.08]">
+                        Quti: 1/5
+                    </span>
+                </div>
+                <div id="fcProgress" class="text-xs font-mono font-semibold text-zinc-400">1 / 10</div>
+            </div>
+
+            <!-- 3D Flip Card Container -->
+            <div id="cardFlipWrapper" onclick="flipCard()" class="perspective-1200 w-full h-88 sm:h-96 cursor-pointer group select-none">
+                <div id="cardInner" class="relative w-full h-full transform-style-3d transition-transform duration-500 glass-card rounded-3xl p-8 flex flex-col justify-between items-center text-center border border-white/10 shadow-2xl">
+                    
+                    <!-- Front Side (English) -->
+                    <div class="absolute inset-0 backface-hidden p-8 flex flex-col justify-between items-center rounded-3xl bg-gradient-to-b from-white/[0.04] to-transparent">
+                        <div class="w-full flex justify-between items-center">
+                            <span class="text-[11px] uppercase tracking-widest text-zinc-500 font-bold">Inglizcha</span>
+                            <button type="button" onclick="event.stopPropagation(); speakCurrentWord();" class="w-10 h-10 rounded-2xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer" title="Talaffuzni eshitish">
+                                <i class="fa-solid fa-volume-high text-sm"></i>
+                            </button>
+                        </div>
+
+                        <div class="my-auto text-center space-y-3">
+                            <h2 id="fcEnglish" class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">Apple</h2>
+                            <p id="fcPhonetic" class="text-xs font-mono text-blue-400/80">/ˈæp.əl/</p>
+                            <div class="pt-2">
+                                <span class="text-xs text-zinc-400 flex items-center justify-center gap-2">
+                                    <span>Aylantirish uchun bosing</span>
+                                    <kbd class="kbd-key">Space</kbd>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="text-[11px] text-zinc-500 font-medium">
+                            <i class="fa-solid fa-rotate text-[10px] mr-1"></i> Orqa tomonida o'zbekcha tarjimasi
+                        </div>
+                    </div>
+
+                    <!-- Back Side (Uzbek) -->
+                    <div class="absolute inset-0 backface-hidden rotate-y-180 p-8 flex flex-col justify-between items-center rounded-3xl bg-gradient-to-b from-blue-950/40 via-zinc-900 to-zinc-950 border border-blue-500/30">
+                        <div class="w-full flex justify-between items-center">
+                            <span class="text-[11px] uppercase tracking-widest text-blue-400 font-bold">O'zbekcha Tarjimasi</span>
+                            <button type="button" onclick="event.stopPropagation(); speakCurrentWord();" class="w-10 h-10 rounded-2xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer">
+                                <i class="fa-solid fa-volume-high text-sm"></i>
+                            </button>
+                        </div>
+
+                        <div class="my-auto text-center space-y-2">
+                            <h2 id="fcUzbek" class="text-3xl sm:text-4xl font-bold text-blue-300 tracking-tight">Olma</h2>
+                            <p id="fcExample" class="text-xs text-zinc-400 italic max-w-sm">"An apple a day keeps the doctor away."</p>
+                        </div>
+
+                        <div class="text-[11px] text-zinc-400 font-medium">
+                            O'zlashtirish holatini belgilang:
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="grid grid-cols-2 gap-3.5 mt-6">
+                <button type="button" onclick="handleCardReview(false)" class="py-3.5 rounded-2xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/25 text-red-400 font-semibold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
+                    <i class="fa-solid fa-xmark text-sm"></i> Qiynaldim <kbd class="kbd-key">1</kbd>
+                </button>
+                <button type="button" onclick="handleCardReview(true)" class="py-3.5 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/25 text-emerald-400 font-semibold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
+                    <i class="fa-solid fa-check text-sm"></i> Bilaman / Oson <kbd class="kbd-key">2</kbd>
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: MATCH PAIRS GAME ================= -->
+        <section id="view-match" class="tab-content max-w-3xl mx-auto py-2" style="display: none;">
+            <div class="flex items-center justify-between mb-6 glass-card p-4 sm:p-5 rounded-2xl">
+                <div>
+                    <h3 class="text-base font-bold text-white tracking-tight">Juftlikni Topish O'yini</h3>
+                    <p class="text-xs text-zinc-400">Inglizcha va O'zbekcha so'zlarni tezlik bilan juftlang</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right">
+                        <p class="text-[10px] uppercase text-zinc-400 font-bold">Vaqt</p>
+                        <p id="matchTimer" class="text-xl font-mono font-black text-blue-400">00:00</p>
+                    </div>
+                    <button type="button" onclick="startMatchGame()" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-all flex items-center gap-1.5 shadow-lg shadow-blue-600/20 active:scale-95 cursor-pointer">
+                        <i class="fa-solid fa-rotate-right"></i> Qayta boshlash
+                    </button>
+                </div>
+            </div>
+
+            <!-- Game Board Grid -->
+            <div id="matchGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <!-- Cards generated dynamically -->
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: SPEED QUIZ MODE ================= -->
+        <section id="view-quiz" class="tab-content max-w-xl mx-auto py-2" style="display: none;">
+            <div class="glass-card rounded-3xl p-6 sm:p-8 space-y-6">
+                <!-- Quiz Progress Bar -->
+                <div class="flex items-center justify-between text-xs text-zinc-400 font-medium">
+                    <span>Savol: <strong id="quizCurrentNum" class="text-white font-bold">1</strong> / <span id="quizTotalNum">10</span></span>
+                    <span>Ball: <strong id="quizScore" class="text-blue-400 font-bold text-sm">0</strong></span>
+                </div>
+                
+                <div class="w-full bg-white/[0.06] h-1.5 rounded-full overflow-hidden">
+                    <div id="quizTimerBar" class="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 h-full w-full transition-all duration-100 ease-linear"></div>
+                </div>
+
+                <!-- Word Question -->
+                <div class="text-center py-6 space-y-2">
+                    <span class="text-[11px] text-zinc-400 uppercase tracking-widest font-bold">Ushbu so'zning to'g'ri tarjimasi qaysi?</span>
+                    <h2 id="quizQuestionWord" class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Apple</h2>
+                    <button type="button" onclick="speakQuizWord()" class="pt-2 text-xs text-blue-400 hover:text-blue-300 inline-flex items-center gap-1.5 transition-colors cursor-pointer">
+                        <i class="fa-solid fa-volume-high"></i> Talaffuzni eshitish
+                    </button>
+                </div>
+
+                <!-- Multiple Choice Options -->
+                <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Dynamic option buttons -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 5: SPELLING PRACTICE ================= -->
+        <section id="view-spelling" class="tab-content max-w-lg mx-auto py-4" style="display: none;">
+            <div class="glass-card rounded-3xl p-6 sm:p-8 text-center space-y-6">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20">
+                    Imlo va Yozish Mashqi
+                </span>
+
+                <div>
+                    <p class="text-xs text-zinc-400 mb-1">Berilgan so'zning inglizcha to'g'ri yozilishini kiriting:</p>
+                    <h2 id="spellingTargetUz" class="text-3xl font-bold text-purple-300 tracking-tight">Olma</h2>
+                </div>
+
+                <!-- Audio & Hint Buttons -->
+                <div class="flex justify-center gap-2.5">
+                    <button type="button" onclick="speakSpellingWord()" class="px-3.5 py-1.5 rounded-xl glass-button text-xs text-zinc-400 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-volume-high text-blue-400"></i> Ovoz
+                    </button>
+                    <button type="button" onclick="showSpellingHint()" class="px-3.5 py-1.5 rounded-xl glass-button text-xs text-zinc-400 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer">
+                        <i class="fa-regular fa-lightbulb text-amber-400"></i> Ishora (Hint)
+                    </button>
+                </div>
+
+                <div id="spellingHintBox" class="hidden text-xs text-amber-400 font-mono tracking-widest bg-amber-500/10 py-2 px-4 rounded-xl border border-amber-500/20">
+                    A _ _ L E
+                </div>
+
+                <!-- Input Form -->
+                <form onsubmit="checkSpellingAnswer(event)" class="space-y-3.5">
+                    <input type="text" id="spellingInput" autocomplete="off" placeholder="Inglizcha so'zni yozing..." 
+                        class="w-full bg-black/60 border border-white/[0.12] rounded-2xl px-4 py-3.5 text-center text-lg text-white placeholder-zinc-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all font-medium">
+                    <button type="submit" class="w-full py-3.5 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs sm:text-sm transition-all shadow-lg shadow-purple-600/30 active:scale-98 cursor-pointer">
+                        Tekshirish <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </form>
+
+                <div id="spellingFeedback" class="text-xs font-semibold h-4"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal: Add / Import Words -->
+    <div id="importModal" style="display: none;" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md items-center justify-center p-4">
+        <div class="glass-card rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-white/[0.15] space-y-5 relative shadow-2xl">
+            <button type="button" onclick="closeImportModal()" class="absolute top-5 right-5 text-zinc-400 hover:text-white text-base cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div>
+                <h3 class="text-lg font-bold text-white tracking-tight">Yangi So'z Qo'shish</h3>
+                <p class="text-xs text-zinc-400 mt-1">O'zingiz yodlamoqchi bo'lgan so'zlarni lug'atingizga kiriting.</p>
+            </div>
+
+            <!-- Tabs: Bittalab / Ko'plab -->
+            <div class="flex rounded-xl bg-black/50 p-1 border border-white/10 gap-1 text-xs">
+                <button type="button" id="tabSingleBtn" onclick="switchAddMode('single')" class="flex-1 py-2 rounded-lg font-bold bg-blue-600 text-white transition-all">
+                    <i class="fa-solid fa-plus mr-1"></i> Bittalab qo'shish
+                </button>
+                <button type="button" id="tabBulkBtn" onclick="switchAddMode('bulk')" class="flex-1 py-2 rounded-lg font-semibold text-zinc-400 hover:text-white transition-all">
+                    <i class="fa-solid fa-list mr-1"></i> Ro'yxat ko'rinishida
+                </button>
+            </div>
+
+            <!-- Mode 1: Single Word Form -->
+            <form id="singleAddForm" onsubmit="saveSingleWord(event)" class="space-y-3.5">
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 mb-1.5">Inglizcha so'z *</label>
+                    <input type="text" id="singleEnInput" required placeholder="Masalan: persistent" 
+                        class="w-full bg-black/70 border border-white/[0.12] rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-medium">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 mb-1.5">O'zbekcha tarjimasi *</label>
+                    <input type="text" id="singleUzInput" required placeholder="Masalan: qat'iyatli, tirishqoq" 
+                        class="w-full bg-black/70 border border-white/[0.12] rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-medium">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 mb-1.5">Misol gap (ixtiyoriy)</label>
+                    <input type="text" id="singleExampleInput" placeholder="Masalan: Be persistent in your goals." 
+                        class="w-full bg-black/70 border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500">
+                </div>
+
+                <div class="flex items-center justify-end gap-2.5 pt-2">
+                    <button type="button" onclick="closeImportModal()" class="px-4 py-2.5 rounded-xl glass-button text-xs font-medium text-zinc-400 hover:text-white cursor-pointer">
+                        Bekor qilish
+                    </button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg shadow-blue-600/30 transition-all active:scale-95 cursor-pointer">
+                        <i class="fa-solid fa-check mr-1"></i> Qo'shish
+                    </button>
+                </div>
+            </form>
+
+            <!-- Mode 2: Bulk Import -->
+            <div id="bulkAddSection" class="space-y-3.5" style="display: none;">
+                <p class="text-[11px] text-zinc-400">Har bir qatorda <code class="text-blue-400 font-mono">so'z - tarjimasi</code> formatida yozing:</p>
+                <textarea id="bulkInput" rows="6" placeholder="apple - olma&#10;book - kitob&#10;beautiful - chiroyli&#10;knowledge - bilim" 
+                    class="w-full bg-black/70 border border-white/[0.12] rounded-2xl p-4 text-xs font-mono text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 leading-relaxed"></textarea>
+                
+                <div class="flex items-center justify-end gap-2.5 pt-1">
+                    <button type="button" onclick="closeImportModal()" class="px-4 py-2.5 rounded-xl glass-button text-xs font-medium text-zinc-400 hover:text-white cursor-pointer">
+                        Bekor qilish
+                    </button>
+                    <button type="button" onclick="saveBulkWords()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-lg shadow-blue-600/30 transition-all active:scale-95 cursor-pointer">
+                        Barchasini saqlash
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" style="display: none;" class="fixed bottom-6 right-6 z-50 glass-card border border-white/20 text-white text-xs font-medium px-4 py-3 rounded-2xl shadow-2xl transition-all duration-300 flex items-center gap-2.5">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+        <span id="toastMessage">Xabar</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto w-full px-4 py-6 text-center text-xs text-zinc-500 border-t border-white/[0.05] mt-auto">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p>Vocab 3X — Minimalist Apple & Linear Style Vocabulary Learning</p>
+            <div class="flex items-center gap-3 text-[11px] text-zinc-500">
+                <span><kbd class="kbd-key">Space</kbd> Flip</span>
+                <span><kbd class="kbd-key">1-4</kbd> Variantlar</span>
+                <span><kbd class="kbd-key">⌘K</kbd> Qidiruv</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Preset Decks Database
+        const PRESET_DECKS = {
+            a1: [
+                { en: "Apple", uz: "Olma", phonetic: "/ˈæp.əl/", example: "She is eating a fresh apple." },
+                { en: "Book", uz: "Kitob", phonetic: "/bʊk/", example: "I love reading interesting books." },
+                { en: "Water", uz: "Suv", phonetic: "/ˈwɔː.tər/", example: "Drink plenty of fresh water." },
+                { en: "Sun", uz: "Quyosh", phonetic: "/sʌn/", example: "The sun rises in the east." },
+                { en: "Friend", uz: "Do'st", phonetic: "/frend/", example: "A true friend is always there." },
+                { en: "House", uz: "Uy", phonetic: "/haʊs/", example: "They built a new modern house." },
+                { en: "Tree", uz: "Daraxt", phonetic: "/triː/", example: "Birds are singing in the tree." },
+                { en: "City", uz: "Shahar", phonetic: "/ˈsɪt.i/", example: "Tashkent is a beautiful city." },
+                { en: "Time", uz: "Vaqt", phonetic: "/taɪm/", example: "Time is our most valuable asset." },
+                { en: "Money", uz: "Pul", phonetic: "/ˈmʌn.i/", example: "Save money for future projects." },
+                { en: "Freedom", uz: "Ozodlik", phonetic: "/ˈfriː.dəm/", example: "Freedom of speech is important." },
+                { en: "Journey", uz: "Sayohat", phonetic: "/ˈdʒɜː.ni/", example: "Life is an exciting journey." },
+                { en: "Happiness", uz: "Baxt", phonetic: "/ˈhæp.i.nəs/", example: "Happiness comes from inside." },
+                { en: "Success", uz: "Muvaffaqiyat", phonetic: "/səkˈses/", example: "Hard work brings great success." },
+                { en: "Dream", uz: "Orzu", phonetic: "/driːm/", example: "Never give up on your dreams." },
+                { en: "Knowledge", uz: "Bilim", phonetic: "/ˈnɒl.ɪdʒ/", example: "Knowledge is true power." },
+                { en: "Language", uz: "Til", phonetic: "/ˈlæŋ.ɡwɪdʒ/", example: "English is a global language." },
+                { en: "Challenge", uz: "Sinov", phonetic: "/ˈtʃæl.ɪndʒ/", example: "Every challenge brings growth." },
+                { en: "Future", uz: "Kelajak", phonetic: "/ˈfjuː.tʃər/", example: "Build a bright future today." },
+                { en: "Opportunity", uz: "Imkoniyat", phonetic: "/ˌɒp.əˈtʃuː.nə.ti/", example: "Grab every good opportunity." }
+            ],
+            it: [
+                { en: "Algorithm", uz: "Algoritm", phonetic: "/ˈæl.ɡə.rɪ.ðəm/", example: "Efficient algorithms run fast." },
+                { en: "Database", uz: "Ma'lumotlar bazasi", phonetic: "/ˈdeɪ.tə.beɪs/", example: "Store data in SQL database." },
+                { en: "Software", uz: "Dasturiy ta'minot", phonetic: "/ˈsɒft.weər/", example: "Software engineering is rewarding." },
+                { en: "Security", uz: "Xavfsizlik", phonetic: "/sɪˈkjʊə.rə.ti/", example: "Cybersecurity protects user data." },
+                { en: "Network", uz: "Tarmoq", phonetic: "/ˈnet.wɜːk/", example: "The network connection is stable." },
+                { en: "Framework", uz: "Freymvork", phonetic: "/ˈfreɪm.wɜːk/", example: "React is a UI framework." },
+                { en: "Interface", uz: "Interfeys", phonetic: "/ˈɪn.tə.feɪs/", example: "Clean interface improves UX." },
+                { en: "Variable", uz: "O'zgaruvchi", phonetic: "/ˈveə.ri.ə.bəl/", example: "Declare variables with const." },
+                { en: "Function", uz: "Funksiya", phonetic: "/ˈfʌŋk.ʃən/", example: "Call the helper function." },
+                { en: "Deployment", uz: "Serverga joylash", phonetic: "/dɪˈplɔɪ.mənt/", example: "Automate cloud deployment." }
+            ],
+            business: [
+                { en: "Negotiation", uz: "Muzokara", phonetic: "/nəˌɡəʊ.ʃiˈeɪ.ʃən/", example: "Win-win negotiation strategy." },
+                { en: "Revenue", uz: "Daromad", phonetic: "/ˈrev.ən.juː/", example: "Monthly revenue grew steadily." },
+                { en: "Investment", uz: "Investitsiya", phonetic: "/ɪnˈvest.mənt/", example: "Smart investment in technology." },
+                { en: "Strategy", uz: "Strategiya", phonetic: "/ˈstræt.ə.dʒi/", example: "Long-term business strategy." },
+                { en: "Partnership", uz: "Hamkorlik", phonetic: "/ˈpɑːt.nə.ʃɪp/", example: "Strong strategic partnership." }
+            ]
+        };
+
+        // Sound Synthesizer (Web Audio API)
+        const SoundFX = {
+            ctx: null,
+            init() {
+                try {
+                    if (!this.ctx) {
+                        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    }
+                } catch(e) {}
+            },
+            playChime() {
+                try {
+                    this.init();
+                    if (!this.ctx) return;
+                    const now = this.ctx.currentTime;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(587.33, now);
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } catch(e) {}
+            },
+            playFlip() {
+                try {
+                    this.init();
+                    if (!this.ctx) return;
+                    const now = this.ctx.currentTime;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.exponentialRampToValueAtTime(440, now + 0.08);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.1);
+                } catch(e) {}
+            },
+            playWrong() {
+                try {
+                    this.init();
+                    if (!this.ctx) return;
+                    const now = this.ctx.currentTime;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(160, now);
+                    osc.frequency.linearRampToValueAtTime(100, now + 0.2);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } catch(e) {}
+            }
+        };
+
+        // Application State
+        let words = [];
+        let activeTab = 'dashboard';
+        let currentFilter = 'all';
+        let currentFlashIndex = 0;
+        let isCardFlipped = false;
+        
+        // Match game state
+        let matchSelected = [];
+        let matchTimerInterval = null;
+        let matchSeconds = 0;
+
+        // Quiz state
+        let quizIndex = 0;
+        let quizScore = 0;
+        let quizTimerInterval = null;
+        let currentQuizQuestions = [];
+        let currentQuizChoices = [];
+
+        // Spelling state
+        let spellingIndex = 0;
+
+        // Initialize App
+        
+        // ================= TELEGRAM & AUTHENTICATION MODULE =================
+        let currentUser = null;
+        let isSubscriptionActive = false;
+        let isTelegramEnv = false;
+
+        function initTelegramAndAuth() {
+            try {
+                if (window.Telegram && window.Telegram.WebApp) {
+                    const tg = window.Telegram.WebApp;
+                    tg.ready();
+                    tg.expand();
+                    
+                    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                        isTelegramEnv = true;
+                        currentUser = tg.initDataUnsafe.user;
+                    }
+                }
+            } catch(e) {
+                console.warn('Telegram WebApp init error:', e);
+            }
+
+            verifySubscription();
+        }
+
+        async function verifySubscription(isManualCheck = false) {
+            const lockOverlay = document.getElementById('lockOverlay');
+            const lockTelegramId = document.getElementById('lockTelegramId');
+            const lockSubStatus = document.getElementById('lockSubStatus');
+            const lockTitle = document.getElementById('lockTitle');
+            const lockDesc = document.getElementById('lockDescription');
+
+            if (isManualCheck) {
+                showToast("Obuna holati tekshirilmoqda...");
+            }
+
+            if (!currentUser || !currentUser.id) {
+                if (window.Telegram?.WebApp?.initDataUnsafe?.user) {
+                    currentUser = window.Telegram.WebApp.initDataUnsafe.user;
+                }
+            }
+
+            // Check URL param ?id= for testing
+            if (!currentUser || !currentUser.id) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const testId = urlParams.get('id');
+
+                if (testId) {
+                    currentUser = { id: testId, first_name: 'Foydalanuvchi' };
+                } else {
+                    if (lockOverlay) lockOverlay.style.display = 'flex';
+                    if (lockTelegramId) lockTelegramId.innerText = "Aniqlanmadi";
+                    if (lockTitle) lockTitle.innerText = "Telegram orqali kiring";
+                    if (lockDesc) lockDesc.innerText = "Ushbu platforma himoyalangan va faqat @Bm_vocab_bot orqali ochiladi.";
+                    return;
+                }
+            }
+
+            if (lockTelegramId && currentUser) lockTelegramId.innerText = currentUser.id;
+
+            try {
+                const response = await fetch('/api/check-auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        telegramId: currentUser ? currentUser.id : '',
+                        initData: window.Telegram?.WebApp?.initData || ''
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.ok && result.isSubscribed) {
+                    isSubscriptionActive = true;
+                    if (lockOverlay) lockOverlay.style.display = 'none';
+
+                    const userBadge = document.getElementById('userProfileBadge');
+                    const nameDisp = document.getElementById('userNameDisplay');
+                    const daysDisp = document.getElementById('userDaysLeft');
+
+                    if (userBadge) userBadge.classList.remove('hidden');
+                    if (nameDisp) nameDisp.innerText = (currentUser && currentUser.first_name) ? currentUser.first_name : "O'quvchi";
+                    if (daysDisp) daysDisp.innerText = result.daysLeft > 1000 ? "Cheksiz (Admin)" : (result.daysLeft + " kun");
+
+                    loadWordsFromStorage();
+                    fetchUserWordsFromServer();
+
+                    if (isManualCheck) showToast("Obunangiz faol! Xush kelibsiz 🎉");
+                } else {
+                    isSubscriptionActive = false;
+                    if (lockOverlay) lockOverlay.style.display = 'flex';
+                    if (lockSubStatus) {
+                        lockSubStatus.innerText = "To'lov qilinmagan";
+                        lockSubStatus.className = "text-red-400 font-semibold text-[11px]";
+                    }
+                    if (lockTitle) lockTitle.innerText = "Obuna talab qilinadi";
+                    if (lockDesc) lockDesc.innerText = "Platformadan foydalanish uchun 50 000 so'm to'lov qiling va chekni botga yuboring.";
+                    if (isManualCheck) showToast("Obuna topilmadi. Iltimos to'lov qiling.");
+                }
+            } catch (err) {
+                console.error("Auth check failed:", err);
+                if (lockOverlay) lockOverlay.style.display = 'flex';
+                if (isManualCheck) showToast("Server bilan bog'lanishda xatolik.");
+            }
+        }
+
+        async function fetchUserWordsFromServer() {
+            if (!currentUser || !currentUser.id) return;
+            try {
+                const res = await fetch('/api/get-words?telegramId=' + currentUser.id);
+                const data = await res.json();
+                if (data.ok && Array.isArray(data.words) && data.words.length > 0) {
+                    words = data.words;
+                    saveWordsToStorage(false);
+                    updateDashboardStats();
+                    renderWordList();
+                }
+            } catch(e) {}
+        }
+
+        function openPaymentFlow() {
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.close();
+            } else {
+                showToast("Iltimos, Telegram bot orqali chek yuboring");
+            }
+        }
+
+        function getStorageKey() {
+            return (currentUser && currentUser.id) ? 'vocab3x_words_' + currentUser.id : 'vocab3x_words_v3';
+        }
+
+        function saveWordsToStorage(syncWithServer = true) {
+            try {
+                localStorage.setItem(getStorageKey(), JSON.stringify(words));
+            } catch(e) {}
+            updateDashboardStats();
+
+            if (syncWithServer && isSubscriptionActive && currentUser && currentUser.id) {
+                fetch('/api/save-words', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        telegramId: currentUser.id,
+                        words: words
+                    })
+                }).catch(() => {});
+            }
+        }
+
+        function loadWordsFromStorage() {
+            try {
+                const key = getStorageKey();
+                const saved = localStorage.getItem(key) || localStorage.getItem('vocab3x_words_v3') || localStorage.getItem('vocab3x_words_v2');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        words = parsed;
+                    }
+                }
+            } catch(e) {
+                words = [];
+            }
+        }
+
+        function initApp() {
+            initTelegramAndAuth();
+            setupGlobalKeyboardShortcuts();
+        }
+
+        function loadPresetDeck(deckKey) {
+            const deck = PRESET_DECKS[deckKey];
+            if (!deck) return;
+
+            let addedCount = 0;
+            deck.forEach(item => {
+                const exists = words.some(w => w.en.toLowerCase() === item.en.toLowerCase());
+                if (!exists) {
+                    words.push({
+                        id: Date.now() + Math.floor(Math.random() * 100000),
+                        en: item.en,
+                        uz: item.uz,
+                        phonetic: item.phonetic || '',
+                        example: item.example || '',
+                        box: 1,
+                        mistakes: 0
+                    });
+                    addedCount++;
+                }
+            });
+
+            saveWordsToStorage();
+            renderWordList();
+            SoundFX.playChime();
+            showToast(`${addedCount > 0 ? addedCount + ' ta yangi' : 'Barcha'} so'zlar yuklandi! 🎉`);
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            activeTab = tabName;
+            const tabs = ['dashboard', 'flashcard', 'match', 'quiz', 'spelling'];
+            
+            tabs.forEach(t => {
+                const view = document.getElementById('view-' + t);
+                const btn = document.getElementById('tab-' + t);
+                
+                if (view) {
+                    view.style.display = (t === tabName) ? 'block' : 'none';
+                }
+                if (btn) {
+                    if (t === tabName) {
+                        btn.className = 'nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold bg-white/10 text-white shadow-sm transition-all whitespace-nowrap cursor-pointer';
+                    } else {
+                        btn.className = 'nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] transition-all whitespace-nowrap cursor-pointer';
+                    }
+                }
+            });
+
+            if (tabName === 'flashcard') initFlashcardMode();
+            if (tabName === 'match') startMatchGame();
+            if (tabName === 'quiz') startQuizMode();
+            if (tabName === 'spelling') initSpellingMode();
+        }
+
+        function updateDashboardStats() {
+            const total = words.length;
+            const mastered = words.filter(w => w.box >= 5).length;
+            const learning = total - mastered;
+            const rate = total > 0 ? Math.round((mastered / total) * 100) : 0;
+
+            const statTotal = document.getElementById('statTotal');
+            const statMastered = document.getElementById('statMastered');
+            const statLearning = document.getElementById('statLearning');
+            const statRate = document.getElementById('statRate');
+            const progressBar = document.getElementById('statProgressBar');
+            const headerTotal = document.getElementById('headerTotalCount');
+            const headerMastered = document.getElementById('headerMasteredCount');
+
+            if (statTotal) statTotal.innerText = total;
+            if (statMastered) statMastered.innerText = mastered;
+            if (statLearning) statLearning.innerText = learning;
+            if (statRate) statRate.innerText = `${rate}%`;
+            if (progressBar) progressBar.style.width = `${rate}%`;
+            if (headerTotal) headerTotal.innerText = total;
+            if (headerMastered) headerMastered.innerText = mastered;
+        }
+
+        function filterCategory(cat, btn) {
+            currentFilter = cat;
+            document.querySelectorAll('.category-chip').forEach(el => {
+                el.className = 'category-chip px-3 py-1.5 rounded-lg glass-button text-zinc-400 font-medium transition-all cursor-pointer';
+            });
+            if (btn) {
+                btn.className = 'category-chip px-3 py-1.5 rounded-lg bg-white/10 text-white font-medium border border-white/10 transition-all cursor-pointer';
+            }
+            renderWordList();
+        }
+
+        function renderWordList() {
+            const container = document.getElementById('wordListContainer');
+            if (!container) return;
+
+            const searchInput = document.getElementById('searchInput');
+            const search = searchInput ? searchInput.value.toLowerCase() : '';
+
+            let filtered = words.filter(w => 
+                w.en.toLowerCase().includes(search) || w.uz.toLowerCase().includes(search)
+            );
+
+            if (currentFilter === 'box1') filtered = filtered.filter(w => w.box === 1);
+            if (currentFilter === 'box5') filtered = filtered.filter(w => w.box >= 5);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-zinc-500 text-xs glass-card rounded-2xl p-6">
+                        <i class="fa-solid fa-magnifying-glass text-xl mb-2 opacity-40"></i>
+                        <p class="font-medium text-zinc-400">Hech qanday so'z topilmadi.</p>
+                        <button type="button" onclick="loadPresetDeck('a1')" class="mt-3 px-4 py-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/20 font-semibold text-xs transition-all cursor-pointer">
+                            Top 25 so'zni yuklash
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(w => {
+                const safeEn = w.en.replace(/'/g, "\\'");
+                return `
+                <div class="flex items-center justify-between p-3.5 rounded-2xl glass-card hover:bg-white/[0.04] group transition-all">
+                    <div class="flex items-center gap-3">
+                        <button type="button" onclick="speakWord('${safeEn}')" class="w-9 h-9 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs transition-all active:scale-95 cursor-pointer" title="Tinglash">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="font-bold text-white text-sm tracking-tight">${w.en}</h4>
+                                ${w.phonetic ? `<span class="text-[10px] text-zinc-500 font-mono">${w.phonetic}</span>` : ''}
+                            </div>
+                            <p class="text-xs text-zinc-400 mt-0.5">${w.uz}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="hidden sm:flex items-center gap-1" title="Xotira qutisi: ${w.box}/5">
+                            ${[1, 2, 3, 4, 5].map(i => `
+                                <div class="w-1.5 h-3 rounded-full ${i <= w.box ? (w.box >= 5 ? 'bg-emerald-400' : 'bg-blue-400') : 'bg-white/10'}"></div>
+                            `).join('')}
+                        </div>
+
+                        <span class="text-[10px] font-bold px-2.5 py-1 rounded-full ${getBoxBadgeColor(w.box)}">
+                            Quti ${w.box}/5
+                        </span>
+                        
+                        <button type="button" onclick="deleteWord(${w.id})" class="text-zinc-500 hover:text-red-400 text-xs px-2 py-1 transition-colors cursor-pointer" title="O'chirish">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function getBoxBadgeColor(box) {
+            if (box >= 5) return 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+            if (box >= 3) return 'bg-blue-500/10 text-blue-400 border border-blue-500/20';
+            return 'bg-amber-500/10 text-amber-400 border border-amber-500/20';
+        }
+
+        function deleteWord(id) {
+            words = words.filter(w => String(w.id) !== String(id));
+            saveWordsToStorage();
+            renderWordList();
+            showToast("So'z o'chirildi");
+        }
+
+        function clearAllWords() {
+            if (words.length === 0) return;
+            if (confirm("Rostdan ham barcha so'zlarni tozalab tashlamoqchimisiz?")) {
+                words = [];
+                saveWordsToStorage();
+                renderWordList();
+                showToast("Lug'at tozalandi");
+            }
+        }
+
+        // ================= WORD ADD MODAL & MODES =================
+        function switchAddMode(mode) {
+            const singleForm = document.getElementById('singleAddForm');
+            const bulkSection = document.getElementById('bulkAddSection');
+            const tabSingleBtn = document.getElementById('tabSingleBtn');
+            const tabBulkBtn = document.getElementById('tabBulkBtn');
+
+            if (mode === 'single') {
+                if (singleForm) singleForm.style.display = 'block';
+                if (bulkSection) bulkSection.style.display = 'none';
+                if (tabSingleBtn) tabSingleBtn.className = 'flex-1 py-2 rounded-lg font-bold bg-blue-600 text-white transition-all';
+                if (tabBulkBtn) tabBulkBtn.className = 'flex-1 py-2 rounded-lg font-semibold text-zinc-400 hover:text-white transition-all';
+                const singleEn = document.getElementById('singleEnInput');
+                if (singleEn) singleEn.focus();
+            } else {
+                if (singleForm) singleForm.style.display = 'none';
+                if (bulkSection) bulkSection.style.display = 'block';
+                if (tabSingleBtn) tabSingleBtn.className = 'flex-1 py-2 rounded-lg font-semibold text-zinc-400 hover:text-white transition-all';
+                if (tabBulkBtn) tabBulkBtn.className = 'flex-1 py-2 rounded-lg font-bold bg-blue-600 text-white transition-all';
+                const bulk = document.getElementById('bulkInput');
+                if (bulk) bulk.focus();
+            }
+        }
+
+        function openImportModal() {
+            const modal = document.getElementById('importModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                switchAddMode('single');
+                const singleEn = document.getElementById('singleEnInput');
+                if (singleEn) {
+                    singleEn.value = '';
+                    const singleUz = document.getElementById('singleUzInput');
+                    const singleEx = document.getElementById('singleExampleInput');
+                    if (singleUz) singleUz.value = '';
+                    if (singleEx) singleEx.value = '';
+                    setTimeout(() => singleEn.focus(), 120);
+                }
+            }
+        }
+
+        function closeImportModal() {
+            const modal = document.getElementById('importModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function saveSingleWord(e) {
+            e.preventDefault();
+            const enInput = document.getElementById('singleEnInput');
+            const uzInput = document.getElementById('singleUzInput');
+            const exInput = document.getElementById('singleExampleInput');
+
+            if (!enInput || !uzInput) return;
+            const en = enInput.value.trim();
+            const uz = uzInput.value.trim();
+            const example = exInput ? exInput.value.trim() : '';
+
+            if (!en || !uz) {
+                showToast("Iltimos, so'z va tarjimasini kiriting");
+                return;
+            }
+
+            const exists = words.some(w => w.en.toLowerCase() === en.toLowerCase());
+            if (exists) {
+                showToast("Bu so'z allaqachon lug'atingizda bor!");
+                return;
+            }
+
+            words.unshift({
+                id: Date.now(),
+                en: en,
+                uz: uz,
+                phonetic: '',
+                example: example,
+                box: 1,
+                mistakes: 0
+            });
+
+            saveWordsToStorage();
+            renderWordList();
+            closeImportModal();
+            SoundFX.playChime();
+            showToast(`"${en}" so'zi qo'shildi! 🎉`);
+        }
+
+        function saveBulkWords() {
+            const input = document.getElementById('bulkInput');
+            if (!input) return;
+            const text = input.value.trim();
+            if (!text) {
+                showToast("Iltimos, so'z va tarjimasini kiriting");
+                return;
+            }
+
+            const lines = text.split('\n');
+            let added = 0;
+
+            lines.forEach(line => {
+                const parts = line.split(/[-–=:]/);
+                if (parts.length >= 2) {
+                    const en = parts[0].trim();
+                    const uz = parts[1].trim();
+
+                    if (en && uz) {
+                        const exists = words.some(w => w.en.toLowerCase() === en.toLowerCase());
+                        if (!exists) {
+                            words.unshift({
+                                id: Date.now() + Math.floor(Math.random() * 100000),
+                                en: en,
+                                uz: uz,
+                                phonetic: '',
+                                example: '',
+                                box: 1,
+                                mistakes: 0
+                            });
+                            added++;
+                        }
+                    }
+                }
+            });
+
+            if (added > 0) {
+                saveWordsToStorage();
+                renderWordList();
+                closeImportModal();
+                SoundFX.playChime();
+                showToast(`${added} ta yangi so'z saqlandi! 🎉`);
+            } else {
+                showToast("Format noto'g'ri yoki bu so'zlar allaqachon mavjud");
+            }
+        }
+
+        // ================= FLASHCARD LOGIC =================
+        function initFlashcardMode() {
+            if (words.length === 0) return;
+            currentFlashIndex = 0;
+            isCardFlipped = false;
+            updateFlashcardUI();
+        }
+
+        function updateFlashcardUI() {
+            if (words.length === 0) return;
+            const cardInner = document.getElementById('cardInner');
+            if (cardInner) cardInner.classList.remove('rotate-y-180');
+            isCardFlipped = false;
+
+            const word = words[currentFlashIndex % words.length];
+            const fcEn = document.getElementById('fcEnglish');
+            const fcPhonetic = document.getElementById('fcPhonetic');
+            const fcUz = document.getElementById('fcUzbek');
+            const fcEx = document.getElementById('fcExample');
+            const fcBox = document.getElementById('fcBoxTag');
+            const fcProg = document.getElementById('fcProgress');
+
+            if (fcEn) fcEn.innerText = word.en;
+            if (fcPhonetic) fcPhonetic.innerText = word.phonetic || '/.../';
+            if (fcUz) fcUz.innerText = word.uz;
+            if (fcEx) fcEx.innerText = word.example ? `"${word.example}"` : '—';
+            if (fcBox) fcBox.innerText = `Quti: ${word.box}/5`;
+            if (fcProg) fcProg.innerText = `${(currentFlashIndex % words.length) + 1} / ${words.length}`;
+        }
+
+        function flipCard() {
+            SoundFX.playFlip();
+            const cardInner = document.getElementById('cardInner');
+            if (!cardInner) return;
+            isCardFlipped = !isCardFlipped;
+            if (isCardFlipped) {
+                cardInner.classList.add('rotate-y-180');
+            } else {
+                cardInner.classList.remove('rotate-y-180');
+            }
+        }
+
+        function handleCardReview(remembered) {
+            if (words.length === 0) return;
+            const word = words[currentFlashIndex % words.length];
+
+            if (remembered) {
+                SoundFX.playChime();
+                word.box = Math.min(5, word.box + 1);
+            } else {
+                SoundFX.playWrong();
+                word.box = Math.max(1, word.box - 1);
+            }
+
+            saveWordsToStorage();
+            currentFlashIndex = (currentFlashIndex + 1) % words.length;
+            updateFlashcardUI();
+        }
+
+        function speakCurrentWord() {
+            if (words.length > 0) {
+                speakWord(words[currentFlashIndex % words.length].en);
+            }
+        }
+
+        // ================= MATCH PAIRS GAME =================
+        function startMatchGame() {
+            const grid = document.getElementById('matchGrid');
+            if (!grid) return;
+
+            if (words.length < 4) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-zinc-500 text-xs glass-card rounded-2xl p-6">
+                        O'yin boshlash uchun lug'atda kamida 4 ta so'z bo'lishi kerak.
+                    </div>
+                `;
+                return;
+            }
+
+            const count = Math.min(6, words.length);
+            const shuffledWords = [...words].sort(() => 0.5 - Math.random()).slice(0, count);
+
+            let cards = [];
+            shuffledWords.forEach(w => {
+                cards.push({ id: w.id, text: w.en, type: 'en' });
+                cards.push({ id: w.id, text: w.uz, type: 'uz' });
+            });
+
+            cards.sort(() => 0.5 - Math.random());
+
+            matchSelected = [];
+            grid.innerHTML = cards.map((c) => `
+                <div onclick="selectMatchCard(this, ${c.id}, '${c.type}')" 
+                     data-id="${c.id}" data-type="${c.type}" 
+                     class="match-tile glass-card p-5 rounded-2xl cursor-pointer text-center text-sm font-bold text-white flex items-center justify-center min-h-[95px] select-none hover:border-white/25 active:scale-95 transition-all">
+                    ${c.text}
+                </div>
+            `).join('');
+
+            clearInterval(matchTimerInterval);
+            matchSeconds = 0;
+            const timerEl = document.getElementById('matchTimer');
+            if (timerEl) timerEl.innerText = "00:00";
+            matchTimerInterval = setInterval(() => {
+                matchSeconds++;
+                const mins = String(Math.floor(matchSeconds / 60)).padStart(2, '0');
+                const secs = String(matchSeconds % 60).padStart(2, '0');
+                if (timerEl) timerEl.innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function selectMatchCard(el, id, type) {
+            if (el.classList.contains('matched') || el.classList.contains('bg-blue-600')) return;
+
+            SoundFX.playFlip();
+            el.classList.add('bg-blue-600', 'border-blue-400', 'shadow-lg', 'shadow-blue-500/25');
+            matchSelected.push({ element: el, id: id, type: type });
+
+            if (matchSelected.length === 2) {
+                const [first, second] = matchSelected;
+
+                if (String(first.id) === String(second.id) && first.type !== second.type) {
+                    SoundFX.playChime();
+                    setTimeout(() => {
+                        first.element.classList.remove('bg-blue-600', 'border-blue-400', 'shadow-blue-500/25');
+                        second.element.classList.remove('bg-blue-600', 'border-blue-400', 'shadow-blue-500/25');
+
+                        first.element.classList.add('bg-emerald-500/20', 'border-emerald-500/40', 'text-emerald-300', 'matched', 'pointer-events-none');
+                        second.element.classList.add('bg-emerald-500/20', 'border-emerald-500/40', 'text-emerald-300', 'matched', 'pointer-events-none');
+
+                        const wordObj = words.find(w => String(w.id) === String(id));
+                        if (wordObj) wordObj.box = Math.min(5, wordObj.box + 1);
+                        saveWordsToStorage();
+
+                        checkMatchGameWin();
+                    }, 180);
+                } else {
+                    SoundFX.playWrong();
+                    setTimeout(() => {
+                        first.element.classList.remove('bg-blue-600', 'border-blue-400', 'shadow-blue-500/25');
+                        second.element.classList.remove('bg-blue-600', 'border-blue-400', 'shadow-blue-500/25');
+
+                        first.element.classList.add('bg-red-500/25', 'border-red-500/40');
+                        second.element.classList.add('bg-red-500/25', 'border-red-500/40');
+
+                        setTimeout(() => {
+                            first.element.classList.remove('bg-red-500/25', 'border-red-500/40');
+                            second.element.classList.remove('bg-red-500/25', 'border-red-500/40');
+                        }, 350);
+                    }, 220);
+                }
+
+                matchSelected = [];
+            }
+        }
+
+        function checkMatchGameWin() {
+            const remaining = document.querySelectorAll('.match-tile:not(.matched)');
+            if (remaining.length === 0) {
+                clearInterval(matchTimerInterval);
+                if (window.confetti) confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+                SoundFX.playChime();
+                showToast(`Ajoyib! O'yinni ${matchSeconds} soniyada yakunladingiz! 🎉`);
+            }
+        }
+
+        // ================= SPEED QUIZ LOGIC =================
+        function startQuizMode() {
+            const optionsContainer = document.getElementById('quizOptions');
+            if (!optionsContainer) return;
+
+            if (words.length < 4) {
+                optionsContainer.innerHTML = `
+                    <div class="col-span-full text-center py-6 text-zinc-500 text-xs">
+                        Test uchun kamida 4 ta so'z bo'lishi kerak.
+                    </div>
+                `;
+                return;
+            }
+
+            quizIndex = 0;
+            quizScore = 0;
+            currentQuizQuestions = [...words].sort(() => 0.5 - Math.random());
+            const totalNum = document.getElementById('quizTotalNum');
+            if (totalNum) totalNum.innerText = currentQuizQuestions.length;
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            if (quizIndex >= currentQuizQuestions.length) {
+                if (window.confetti) confetti({ particleCount: 150, spread: 90 });
+                SoundFX.playChime();
+                showToast(`Test yakunlandi! Umumiy ball: ${quizScore} 🏆`);
+                startQuizMode();
+                return;
+            }
+
+            const current = currentQuizQuestions[quizIndex];
+            const currentNum = document.getElementById('quizCurrentNum');
+            const scoreEl = document.getElementById('quizScore');
+            const questionWord = document.getElementById('quizQuestionWord');
+
+            if (currentNum) currentNum.innerText = quizIndex + 1;
+            if (scoreEl) scoreEl.innerText = quizScore;
+            if (questionWord) questionWord.innerText = current.en;
+
+            const wrongOptions = words.filter(w => String(w.id) !== String(current.id)).sort(() => 0.5 - Math.random()).slice(0, 3);
+            currentQuizChoices = [current, ...wrongOptions].sort(() => 0.5 - Math.random());
+
+            const optionsContainer = document.getElementById('quizOptions');
+            if (!optionsContainer) return;
+            optionsContainer.innerHTML = currentQuizChoices.map((choice, i) => `
+                <button type="button" onclick="handleQuizAnswer(this, ${String(choice.id) === String(current.id)})" 
+                        class="p-4 rounded-2xl glass-button text-white font-semibold text-sm text-left flex items-center justify-between group active:scale-98 cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <span class="kbd-key">${i + 1}</span>
+                        <span>${choice.uz}</span>
+                    </div>
+                    <i class="fa-regular fa-circle text-zinc-600 text-xs group-hover:text-zinc-400"></i>
+                </button>
+            `).join('');
+
+            clearInterval(quizTimerInterval);
+            const timerBar = document.getElementById('quizTimerBar');
+            if (timerBar) timerBar.style.width = '100%';
+
+            let timeLeft = 100;
+            quizTimerInterval = setInterval(() => {
+                timeLeft -= 2;
+                if (timerBar) timerBar.style.width = `${timeLeft}%`;
+                if (timeLeft <= 0) {
+                    clearInterval(quizTimerInterval);
+                    SoundFX.playWrong();
+                    quizIndex++;
+                    renderQuizQuestion();
+                }
+            }, 100);
+        }
+
+        function handleQuizAnswer(btn, isCorrect) {
+            clearInterval(quizTimerInterval);
+
+            if (isCorrect) {
+                SoundFX.playChime();
+                btn.classList.add('bg-emerald-500/25', 'border-emerald-500/50', 'text-emerald-300');
+                quizScore += 10;
+                
+                const word = currentQuizQuestions[quizIndex];
+                if (word) word.box = Math.min(5, word.box + 1);
+                saveWordsToStorage();
+            } else {
+                SoundFX.playWrong();
+                btn.classList.add('bg-red-500/25', 'border-red-500/50', 'text-red-300');
+            }
+
+            setTimeout(() => {
+                quizIndex++;
+                renderQuizQuestion();
+            }, 450);
+        }
+
+        function speakQuizWord() {
+            if (currentQuizQuestions[quizIndex]) {
+                speakWord(currentQuizQuestions[quizIndex].en);
+            }
+        }
+
+        // ================= SPELLING PRACTICE LOGIC =================
+        function initSpellingMode() {
+            if (words.length === 0) return;
+            spellingIndex = 0;
+            renderSpellingCard();
+        }
+
+        function renderSpellingCard() {
+            if (words.length === 0) return;
+            const current = words[spellingIndex % words.length];
+
+            const targetUz = document.getElementById('spellingTargetUz');
+            if (targetUz) targetUz.innerText = current.uz;
+
+            const input = document.getElementById('spellingInput');
+            if (input) {
+                input.value = '';
+                setTimeout(() => input.focus(), 100);
+            }
+            const feedback = document.getElementById('spellingFeedback');
+            if (feedback) feedback.innerText = '';
+            const hintBox = document.getElementById('spellingHintBox');
+            if (hintBox) hintBox.classList.add('hidden');
+
+            const en = current.en;
+            let hintText = en[0] + ' ' + '_ '.repeat(Math.max(1, en.length - 2)) + en[en.length - 1];
+            if (hintBox) hintBox.innerText = hintText.toUpperCase();
+        }
+
+        function showSpellingHint() {
+            const hintBox = document.getElementById('spellingHintBox');
+            if (hintBox) hintBox.classList.remove('hidden');
+        }
+
+        function speakSpellingWord() {
+            if (words.length > 0) {
+                speakWord(words[spellingIndex % words.length].en);
+            }
+        }
+
+        function checkSpellingAnswer(e) {
+            e.preventDefault();
+            if (words.length === 0) return;
+
+            const current = words[spellingIndex % words.length];
+            const input = document.getElementById('spellingInput');
+            if (!input) return;
+            const userText = input.value.trim().toLowerCase();
+            const feedback = document.getElementById('spellingFeedback');
+
+            if (userText === current.en.toLowerCase()) {
+                SoundFX.playChime();
+                if (feedback) {
+                    feedback.className = "text-xs font-bold text-emerald-400";
+                    feedback.innerText = "To'g'ri! Barakalla 🎉";
+                }
+                speakWord(current.en);
+
+                current.box = Math.min(5, current.box + 1);
+                saveWordsToStorage();
+
+                setTimeout(() => {
+                    spellingIndex++;
+                    renderSpellingCard();
+                }, 900);
+            } else {
+                SoundFX.playWrong();
+                if (feedback) {
+                    feedback.className = "text-xs font-bold text-red-400";
+                    feedback.innerText = `Xato! To'g'ri javob: "${current.en}"`;
+                }
+            }
+        }
+
+        // ================= SPEECH ENGINE =================
+        function speakWord(text) {
+            if ('speechSynthesis' in window) {
+                try {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.9;
+                    window.speechSynthesis.speak(utterance);
+                } catch(e) {}
+            }
+        }
+
+        // ================= GLOBAL KEYBOARD SHORTCUTS =================
+        function setupGlobalKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+                    if (e.key === 'Escape') {
+                        document.activeElement.blur();
+                        closeImportModal();
+                    }
+                    return;
+                }
+
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k' || e.key === '/') {
+                    e.preventDefault();
+                    switchTab('dashboard');
+                    const searchInput = document.getElementById('searchInput');
+                    if (searchInput) searchInput.focus();
+                    return;
+                }
+
+                if (activeTab === 'flashcard') {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        flipCard();
+                    } else if (e.key === '1') {
+                        handleCardReview(false);
+                    } else if (e.key === '2') {
+                        handleCardReview(true);
+                    }
+                } else if (activeTab === 'quiz') {
+                    const num = parseInt(e.key);
+                    if (num >= 1 && num <= 4 && currentQuizChoices[num - 1]) {
+                        const buttons = document.querySelectorAll('#quizOptions button');
+                        if (buttons[num - 1]) buttons[num - 1].click();
+                    }
+                }
+            });
+        }
+
+        // ================= TOAST NOTIFICATIONS =================
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            if (toast && toastMessage) {
+                toastMessage.innerText = message;
+                toast.style.display = 'flex';
+                clearTimeout(toast._timeout);
+                toast._timeout = setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 2600);
+            }
+        }
+
+        // Boot
+        window.addEventListener('DOMContentLoaded', initApp);
+        initApp();
+    </script>
+
+    <!-- ================= AUTH & SUBSCRIPTION LOCK OVERLAY ================= -->
+    <div id="lockOverlay" class="fixed inset-0 z-50 bg-[#070709]/95 backdrop-blur-2xl flex items-center justify-center p-4 transition-all duration-300">
+        <div class="glass-card max-w-md w-full p-6 sm:p-8 rounded-3xl border border-white/15 text-center relative overflow-hidden shadow-2xl">
+            <div class="absolute -top-24 -left-24 w-48 h-48 bg-blue-600/30 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-purple-600/30 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center text-white text-2xl mx-auto mb-4 shadow-lg shadow-amber-500/25">
+                <i class="fa-solid fa-lock" id="lockIcon"></i>
+            </div>
+
+            <h3 class="text-xl font-bold text-white mb-1.5 tracking-tight" id="lockTitle">Obuna talab qilinadi</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed mb-5" id="lockDescription">
+                Vocab 3X Pro — o'quvchilar uchun shaxsiy so'z yodlash tizimi bo'lib, oylik to'lov orqali ishlaydi.
+            </p>
+
+            <div class="glass-card p-4 rounded-2xl mb-4 text-left border border-white/10 bg-white/[0.03]">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-xs font-semibold text-zinc-300">Vocab 3X Pro Oylik Obuna</span>
+                    <span class="text-sm font-extrabold text-blue-400">50 000 so'm / oy</span>
+                </div>
+                
+                <div class="bg-black/50 p-3 rounded-xl border border-white/10 mb-3 space-y-1 text-center">
+                    <span class="text-[10px] text-zinc-400 uppercase font-semibold">To'lov uchun karta raqami:</span>
+                    <p class="text-sm font-mono font-bold text-blue-300 select-all tracking-wider">5614 6820 5096 7480</p>
+                </div>
+
+                <div class="text-[11px] text-zinc-400 space-y-1.5">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-check text-emerald-400 text-[10px]"></i>
+                        <span>O'z shaxsiy so'zlaringizni qo'shish va cheksiz saqlash</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-check text-emerald-400 text-[10px]"></i>
+                        <span>Leitner 5-qutilli aqlli eslab qolish tizimi</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-check text-emerald-400 text-[10px]"></i>
+                        <span>Flesh-karta, Viktorina, Juftlik va Yozish mashqlari</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lockUserInfo" class="text-xs text-zinc-400 mb-5 bg-zinc-900/60 p-3 rounded-xl border border-white/5 flex items-center justify-between">
+                <span>Telegram ID: <code id="lockTelegramId" class="text-blue-400 font-mono">Aniqlanmoqda...</code></span>
+                <span id="lockSubStatus" class="text-amber-400 font-semibold text-[11px]">Faol emas</span>
+            </div>
+
+            <div class="space-y-2.5">
+                <button type="button" onclick="openPaymentFlow()" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all active:scale-98 cursor-pointer flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-receipt"></i>
+                    <span id="lockActionBtnText">To'lov chekini botga yuborish</span>
+                </button>
+                <button type="button" onclick="verifySubscription(true)" class="w-full py-2.5 px-4 rounded-xl glass-button text-zinc-300 hover:text-white font-medium text-xs transition-all active:scale-98 cursor-pointer flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-arrows-rotate text-xs"></i>
+                    <span>To'lovni tekshirish</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

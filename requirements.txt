@@ -1,0 +1,1 @@
+﻿# Zero dependencies required! Uses standard Python 3 library.

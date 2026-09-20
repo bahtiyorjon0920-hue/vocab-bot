@@ -1,0 +1,108 @@
+{
+  "users": {
+    "7837908689": {
+      "id": "7837908689",
+      "username": "@BM_visual",
+      "firstName": "BM_visual",
+      "lastName": "",
+      "joinedAt": 1789836187868,
+      "subscriptionExpiresAt": 0,
+      "subscriptionHistory": [],
+      "words": [
+        {
+          "id": 1,
+          "en": "Hello",
+          "uz": "Salom",
+          "box": 1
+        }
+      ],
+      "lastActive": 1789883500082
+    },
+    "8964648219": {
+      "id": "8964648219",
+      "username": "@Tony_visual",
+      "firstName": "Tony",
+      "lastName": "",
+      "joinedAt": 1789836636777,
+      "subscriptionExpiresAt": 1792477017263,
+      "subscriptionHistory": [
+        {
+          "date": 1789885017263,
+          "days": 30,
+          "amount": 50000,
+          "grantedBy": "admin_interactive",
+          "expiresAt": 1792477017263
+        }
+      ],
+      "words": []
+    },
+    "12345678": {
+      "id": "12345678",
+      "username": "",
+      "firstName": "",
+      "lastName": "",
+      "joinedAt": 1789838206343,
+      "subscriptionExpiresAt": 1792430206344,
+      "subscriptionHistory": [
+        {
+          "date": 1789838206344,
+          "days": 30,
+          "amount": 50000,
+          "grantedBy": "admin_manual",
+          "expiresAt": 1792430206344
+        }
+      ],
+      "words": []
+    },
+    "6890928098": {
+      "id": "6890928098",
+      "username": "",
+      "firstName": "Abdurahmon",
+      "lastName": "",
+      "joinedAt": 1789883564761,
+      "subscriptionExpiresAt": 0,
+      "subscriptionHistory": [],
+      "words": []
+    },
+    "1123218674": {
+      "id": "1123218674",
+      "username": "@M8818T",
+      "firstName": "Мирзажонов",
+      "lastName": "",
+      "joinedAt": 1789884614933,
+      "subscriptionExpiresAt": 1792476653269,
+      "subscriptionHistory": [
+        {
+          "date": 1789884653269,
+          "days": 30,
+          "amount": 50000,
+          "grantedBy": "admin_manual",
+          "expiresAt": 1792476653269
+        }
+      ],
+      "words": []
+    },
+    "/add@Tony_visual": {
+      "id": "/add@Tony_visual",
+      "username": "",
+      "firstName": "",
+      "lastName": "",
+      "joinedAt": 1789884976112,
+      "subscriptionExpiresAt": 1792476976112,
+      "subscriptionHistory": [
+        {
+          "date": 1789884976112,
+          "days": 30,
+          "amount": 50000,
+          "grantedBy": "admin_interactive",
+          "expiresAt": 1792476976112
+        }
+      ],
+      "words": []
+    }
+  },
+  "stats": {
+    "totalRevenue": 200000,
+    "approvedPayments": 4
+  }
+}

@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: vocab-platform
+    env: python
+    buildCommand: ''
+    startCommand: python server.py
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: BOT_TOKEN
+        value: 8949498815:AAFvuN0WiyftffIgrPR5pYXHeiRTVEIfB70
+      - key: ADMIN_ID
+        value: '7837908689'
+      - key: ADMIN_USERNAME
+        value: BM_visual
+      - key: CARD_NUMBER
+        value: '5614 6820 5096 7480'
+      - key: PRICE_PER_MONTH
+        value: '50 000'
