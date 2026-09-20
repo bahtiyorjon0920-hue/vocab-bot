@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="uz" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocab 3X Pro — Professional So'z Yodlash Platformasi</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { accent: '#2997ff' },
+                        dark: { bg: '#070709', card: '#121217' }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            background-color: #070709;
+            color: #f4f4f6;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(41, 151, 255, 0.12), transparent 100%),
+                radial-gradient(ellipse 60% 40% at 100% 100%, rgba(99, 102, 241, 0.08), transparent 100%);
+            background-attachment: fixed;
+        }
+
+        .glass-nav {
+            background: rgba(13, 13, 18, 0.88);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: rgba(18, 18, 24, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.16);
+        }
+
+        .glass-button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .glass-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .perspective-1200 { perspective: 1200px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+
+        .kbd-key {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #94a3b8;
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.16); border-radius: 9999px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-blue-600 selection:text-white">
+
+    <!-- Top Sticky Navigation Bar -->
+    <header class="sticky top-0 z-50 glass-nav px-4 lg:px-8 py-3.5">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="switchTab('dashboard')">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white font-extrabold text-base shadow-lg shadow-blue-500/30 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold tracking-tight text-white flex items-center gap-1.5">
+                        Vocab<span class="text-blue-400 font-black">3X</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono font-medium">PRO</span>
+                    </h1>
+                    <p class="text-[10px] text-zinc-400 font-medium tracking-wider uppercase">Spaced Repetition Web</p>
+                </div>
+            </div>
+
+            <!-- User Status & Actions -->
+            <div class="flex items-center gap-2.5">
+                <!-- Admin Panel Button (shown for Admin) -->
+                <button id="adminPanelBtn" onclick="openAdminModal()" class="hidden px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 font-bold text-xs flex items-center gap-1.5 transition-all shadow-md shadow-amber-500/10 active:scale-95">
+                    <i class="fa-solid fa-crown text-amber-400"></i>
+                    <span>Admin Panel</span>
+                </button>
+
+                <!-- User Profile Capsule -->
+                <div id="userProfileBadge" class="hidden flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/80 border border-white/10 text-xs font-semibold text-zinc-300">
+                    <i class="fa-solid fa-circle-user text-blue-400 text-sm"></i>
+                    <span id="userNameDisplay">O'quvchi</span>
+                    <span class="text-zinc-600">•</span>
+                    <span id="userDaysLeft" class="text-emerald-400">30 kun</span>
+                </div>
+
+                <!-- Auth / Logout Buttons -->
+                <button id="loginTriggerBtn" onclick="openAuthModal('login')" class="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all shadow-md shadow-blue-600/30 flex items-center gap-1.5 active:scale-95">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                    <span>Kirish</span>
+                </button>
+
+                <button id="logoutBtn" onclick="handleLogout()" class="hidden px-2.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white text-xs border border-white/10 transition-all" title="Chiqish">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
+
+                <button type="button" onclick="openImportModal()" class="hidden sm:flex px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs transition-all border border-white/10 items-center gap-1.5 active:scale-95">
+                    <i class="fa-solid fa-plus text-[11px]"></i>
+                    <span>So'z qo'shish</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="max-w-6xl mx-auto w-full px-4 pt-6">
+        <div class="p-1.5 rounded-2xl bg-zinc-900/90 border border-white/[0.08] flex items-center justify-start sm:justify-center gap-1.5 overflow-x-auto scrollbar-none shadow-xl">
+            <button type="button" onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold bg-white/10 text-white shadow-sm transition-all whitespace-nowrap cursor-pointer">
+                <i class="fa-solid fa-layer-group text-xs"></i> Lug'at & Boshqaruv
+            </button>
+            <button type="button" onclick="switchTab('flashcard')" id="tab-flashcard" class="nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] transition-all whitespace-nowrap cursor-pointer">
+                <i class="fa-solid fa-clone text-xs"></i> Flesh-Karta
+            </button>
+            <button type="button" onclick="switchTab('match')" id="tab-match" class="nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] transition-all whitespace-nowrap cursor-pointer">
+                <i class="fa-solid fa-puzzle-piece text-xs"></i> Juftlik O'yini
+            </button>
+            <button type="button" onclick="switchTab('quiz')" id="tab-quiz" class="nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] transition-all whitespace-nowrap cursor-pointer">
+                <i class="fa-solid fa-bolt text-xs"></i> Tezkor Test
+            </button>
+            <button type="button" onclick="switchTab('spelling')" id="tab-spelling" class="nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] transition-all whitespace-nowrap cursor-pointer">
+                <i class="fa-solid fa-keyboard text-xs"></i> Yozish Mashqi
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="max-w-6xl mx-auto w-full px-4 py-6 flex-grow">
+
+        <!-- ================= TAB 1: DASHBOARD ================= -->
+        <section id="view-dashboard" class="tab-content space-y-6">
+            <!-- Hero Banner -->
+            <div class="glass-card rounded-3xl p-6 md:p-8 relative overflow-hidden">
+                <div class="absolute -right-16 -bottom-16 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-2xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
+                        <i class="fa-solid fa-brain text-[11px]"></i> 3X Leitner Xotira Tizimi
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white leading-tight">
+                        So'zlarni unutilmas qilib xotirangizga muhrlang.
+                    </h2>
+                    <p class="text-zinc-400 text-xs sm:text-sm mt-2.5 leading-relaxed">
+                        Oraliq takrorlash va interaktiv o'yinlar orqali so'zlarni 3 barobar tezroq o'rganing.
+                    </p>
+                    <div class="flex flex-wrap items-center gap-2.5 mt-6">
+                        <button type="button" onclick="openImportModal()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all shadow-lg shadow-blue-600/30 flex items-center gap-2 active:scale-95 cursor-pointer">
+                            <i class="fa-solid fa-plus"></i> Yangi so'z kiritish
+                        </button>
+                        <button type="button" onclick="loadPresetDeck('a1')" class="px-4 py-2.5 rounded-xl glass-button text-zinc-300 hover:text-white font-medium text-xs flex items-center gap-2">
+                            <i class="fa-solid fa-bolt text-amber-400"></i> 🌟 Top 25 Asosiy
+                        </button>
+                        <button type="button" onclick="loadPresetDeck('it')" class="px-4 py-2.5 rounded-xl glass-button text-zinc-300 hover:text-white font-medium text-xs flex items-center gap-2">
+                            <i class="fa-solid fa-code text-blue-400"></i> 💻 IT & Texnologiya
+                        </button>
+                        <button type="button" onclick="loadPresetDeck('business')" class="px-4 py-2.5 rounded-xl glass-button text-zinc-300 hover:text-white font-medium text-xs flex items-center gap-2">
+                            <i class="fa-solid fa-briefcase text-purple-400"></i> 💼 Biznes Lug'ati
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+                <div class="glass-card p-5 rounded-2xl">
+                    <div class="flex items-center justify-between text-zinc-400"><span class="text-xs font-semibold">Jami So'zlar</span><i class="fa-solid fa-book-open text-xs"></i></div>
+                    <h3 id="statTotal" class="text-2xl sm:text-3xl font-black text-white mt-2">0</h3>
+                    <p class="text-[11px] text-zinc-500 mt-1 font-medium">Lug'atingiz hajmi</p>
+                </div>
+                <div class="glass-card p-5 rounded-2xl border-emerald-500/20 bg-emerald-500/[0.03]">
+                    <div class="flex items-center justify-between text-emerald-400"><span class="text-xs font-semibold">O'zlashtirilgan</span><i class="fa-solid fa-check-double text-xs"></i></div>
+                    <h3 id="statMastered" class="text-2xl sm:text-3xl font-black text-emerald-400 mt-2">0</h3>
+                    <p class="text-[11px] text-emerald-500/80 mt-1 font-medium">5-qutidagi so'zlar</p>
+                </div>
+                <div class="glass-card p-5 rounded-2xl">
+                    <div class="flex items-center justify-between text-blue-400"><span class="text-xs font-semibold">O'rganilmoqda</span><i class="fa-solid fa-arrows-rotate text-xs"></i></div>
+                    <h3 id="statLearning" class="text-2xl sm:text-3xl font-black text-blue-400 mt-2">0</h3>
+                    <p class="text-[11px] text-zinc-500 mt-1 font-medium">1-4 qutilarda</p>
+                </div>
+                <div class="glass-card p-5 rounded-2xl">
+                    <div class="flex items-center justify-between text-purple-400"><span class="text-xs font-semibold">O'zlashtirish</span><i class="fa-solid fa-chart-pie text-xs"></i></div>
+                    <h3 id="statRate" class="text-2xl sm:text-3xl font-black text-purple-400 mt-2">0%</h3>
+                    <div class="w-full bg-white/[0.06] h-1.5 rounded-full overflow-hidden mt-2.5">
+                        <div id="statProgressBar" class="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 h-full w-0 transition-all duration-700"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Words List Section -->
+            <div class="glass-card rounded-3xl p-5 md:p-7">
+                <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 mb-5">
+                    <div>
+                        <h3 class="text-lg font-bold text-white tracking-tight">Mening Lug'atim</h3>
+                        <p class="text-xs text-zinc-400 mt-0.5">Barcha kiritilgan so'zlar ro'yxati</p>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <div class="relative flex-grow md:w-72">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-xs"></i>
+                            <input type="text" id="searchInput" oninput="renderWordList()" placeholder="So'zlarni qidirish..." 
+                                class="w-full bg-black/50 border border-white/[0.1] rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
+                        </div>
+                        <button type="button" onclick="clearAllWords()" class="px-3 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-semibold border border-red-500/20 transition-all flex items-center gap-1.5 cursor-pointer" title="Lug'atni tozalash">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-3 mb-2 scrollbar-none text-xs">
+                    <button type="button" onclick="filterCategory('all', this)" class="category-chip px-3 py-1.5 rounded-lg bg-white/10 text-white font-medium border border-white/10 transition-all cursor-pointer">Barchasi</button>
+                    <button type="button" onclick="filterCategory('box1', this)" class="category-chip px-3 py-1.5 rounded-lg glass-button text-zinc-400 font-medium transition-all cursor-pointer">Quti 1 (Yangi)</button>
+                    <button type="button" onclick="filterCategory('box5', this)" class="category-chip px-3 py-1.5 rounded-lg glass-button text-zinc-400 font-medium transition-all cursor-pointer">Quti 5 (Yodlangan)</button>
+                </div>
+
+                <div id="wordListContainer" class="space-y-2 max-h-[500px] overflow-y-auto pr-1"></div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: FLASHCARD MODE ================= -->
+        <section id="view-flashcard" class="tab-content max-w-xl mx-auto py-2" style="display: none;">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">Flesh-Karta Rejimi</span>
+                    <span id="fcBoxTag" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-white/[0.06] text-zinc-400 border border-white/[0.08]">Quti: 1/5</span>
+                </div>
+                <div id="fcProgress" class="text-xs font-mono font-semibold text-zinc-400">1 / 10</div>
+            </div>
+
+            <div id="cardFlipWrapper" onclick="flipCard()" class="perspective-1200 w-full h-88 sm:h-96 cursor-pointer group select-none">
+                <div id="cardInner" class="relative w-full h-full transform-style-3d transition-transform duration-500 glass-card rounded-3xl p-8 flex flex-col justify-between items-center text-center border border-white/10 shadow-2xl">
+                    <div class="absolute inset-0 backface-hidden p-8 flex flex-col justify-between items-center rounded-3xl bg-gradient-to-b from-white/[0.04] to-transparent">
+                        <div class="w-full flex justify-between items-center">
+                            <span class="text-[11px] uppercase tracking-widest text-zinc-500 font-bold">Inglizcha</span>
+                            <button type="button" onclick="event.stopPropagation(); speakCurrentWord();" class="w-10 h-10 rounded-2xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer">
+                                <i class="fa-solid fa-volume-high text-sm"></i>
+                            </button>
+                        </div>
+                        <div class="my-auto text-center space-y-3">
+                            <h2 id="fcEnglish" class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">Apple</h2>
+                            <p id="fcPhonetic" class="text-xs font-mono text-blue-400/80">/ˈæp.əl/</p>
+                            <div class="pt-2"><span class="text-xs text-zinc-400 flex items-center justify-center gap-2"><span>Aylantirish uchun bosing</span><kbd class="kbd-key">Space</kbd></span></div>
+                        </div>
+                        <div class="text-[11px] text-zinc-500 font-medium"><i class="fa-solid fa-rotate text-[10px] mr-1"></i> Orqa tomonida o'zbekcha tarjimasi</div>
+                    </div>
+
+                    <div class="absolute inset-0 backface-hidden rotate-y-180 p-8 flex flex-col justify-between items-center rounded-3xl bg-gradient-to-b from-blue-950/40 via-zinc-900 to-zinc-950 border border-blue-500/30">
+                        <div class="w-full flex justify-between items-center">
+                            <span class="text-[11px] uppercase tracking-widest text-blue-400 font-bold">O'zbekcha Tarjimasi</span>
+                            <button type="button" onclick="event.stopPropagation(); speakCurrentWord();" class="w-10 h-10 rounded-2xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer">
+                                <i class="fa-solid fa-volume-high text-sm"></i>
+                            </button>
+                        </div>
+                        <div class="my-auto text-center space-y-2">
+                            <h2 id="fcUzbek" class="text-3xl sm:text-4xl font-bold text-blue-300 tracking-tight">Olma</h2>
+                            <p id="fcExample" class="text-xs text-zinc-400 italic max-w-sm">"An apple a day keeps the doctor away."</p>
+                        </div>
+                        <div class="text-[11px] text-zinc-400 font-medium">O'zlashtirish holatini belgilang:</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3.5 mt-6">
+                <button type="button" onclick="handleCardReview(false)" class="py-3.5 rounded-2xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/25 text-red-400 font-semibold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
+                    <i class="fa-solid fa-xmark text-sm"></i> Qiynaldim <kbd class="kbd-key">1</kbd>
+                </button>
+                <button type="button" onclick="handleCardReview(true)" class="py-3.5 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/25 text-emerald-400 font-semibold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
+                    <i class="fa-solid fa-check text-sm"></i> Bilaman / Oson <kbd class="kbd-key">2</kbd>
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: MATCH PAIRS GAME ================= -->
+        <section id="view-match" class="tab-content max-w-3xl mx-auto py-2" style="display: none;">
+            <div class="flex items-center justify-between mb-6 glass-card p-4 sm:p-5 rounded-2xl">
+                <div>
+                    <h3 class="text-base font-bold text-white tracking-tight">Juftlikni Topish O'yini</h3>
+                    <p class="text-xs text-zinc-400">Inglizcha va O'zbekcha so'zlarni tezlik bilan juftlang</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right">
+                        <p class="text-[10px] uppercase text-zinc-400 font-bold">Vaqt</p>
+                        <p id="matchTimer" class="text-xl font-mono font-black text-blue-400">00:00</p>
+                    </div>
+                    <button type="button" onclick="startMatchGame()" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-all flex items-center gap-1.5 shadow-lg shadow-blue-600/20 active:scale-95 cursor-pointer">
+                        <i class="fa-solid fa-rotate-right"></i> Qayta boshlash
+                    </button>
+                </div>
+            </div>
+            <div id="matchGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+        </section>
+
+        <!-- ================= TAB 4: SPEED QUIZ MODE ================= -->
+        <section id="view-quiz" class="tab-content max-w-xl mx-auto py-2" style="display: none;">
+            <div class="glass-card rounded-3xl p-6 sm:p-8 space-y-6">
+                <div class="flex items-center justify-between text-xs text-zinc-400 font-medium">
+                    <span>Savol: <strong id="quizCurrentNum" class="text-white font-bold">1</strong> / <span id="quizTotalNum">10</span></span>
+                    <span>Ball: <strong id="quizScore" class="text-blue-400 font-bold text-sm">0</strong></span>
+                </div>
+                <div class="w-full bg-white/[0.06] h-1.5 rounded-full overflow-hidden">
+                    <div id="quizTimerBar" class="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 h-full w-full transition-all duration-100 ease-linear"></div>
+                </div>
+                <div class="text-center py-6 space-y-2">
+                    <span class="text-[11px] text-zinc-400 uppercase tracking-widest font-bold">Ushbu so'zning to'g'ri tarjimasi qaysi?</span>
+                    <h2 id="quizQuestionWord" class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Apple</h2>
+                </div>
+                <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 5: SPELLING PRACTICE ================= -->
+        <section id="view-spelling" class="tab-content max-w-lg mx-auto py-4" style="display: none;">
+            <div class="glass-card rounded-3xl p-6 sm:p-8 space-y-6 text-center">
+                <div>
+                    <span class="text-[11px] text-zinc-400 uppercase tracking-widest font-bold">O'zbekcha tarjimasi:</span>
+                    <h2 id="spellPrompt" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-1">Olma</h2>
+                </div>
+                <div class="space-y-3">
+                    <input type="text" id="spellInput" autocomplete="off" autofocus placeholder="Inglizcha so'zni yozing..." oninput="checkSpellingRealtime()" 
+                        class="w-full bg-black/60 border border-white/15 rounded-2xl px-5 py-4 text-center text-lg sm:text-xl font-bold tracking-wider text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500 transition-all font-mono">
+                    <div id="spellFeedback" class="text-xs font-semibold h-4"></div>
+                </div>
+                <div class="flex items-center justify-between pt-2">
+                    <button type="button" onclick="skipSpelling()" class="px-4 py-2 rounded-xl glass-button text-xs text-zinc-400 hover:text-white">O'tkazib yuborish</button>
+                    <button type="button" onclick="submitSpelling()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all shadow-md shadow-blue-600/30">Tekshirish</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ================= AUTHENTICATION MODAL (LOGIN & REGISTER) ================= -->
+    <div id="authModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl flex items-center justify-center p-4 transition-all duration-300 hidden">
+        <div class="glass-card max-w-md w-full p-6 sm:p-8 rounded-3xl border border-white/15 relative overflow-hidden shadow-2xl">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-lg shadow-lg shadow-blue-500/30">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <button type="button" onclick="closeAuthModal()" class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-zinc-400 hover:text-white flex items-center justify-center text-sm transition-all cursor-pointer" title="Yopish">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Auth Tabs -->
+            <div class="flex rounded-xl bg-white/[0.06] p-1 mb-6 border border-white/10">
+                <button type="button" id="authTabLogin" onclick="switchAuthTab('login')" class="flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all">Kirish</button>
+                <button type="button" id="authTabRegister" onclick="switchAuthTab('register')" class="flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all">Ro'yxatdan o'tish</button>
+            </div>
+
+            <!-- Error message container -->
+            <div id="authErrorMsg" class="hidden mb-4 p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-medium text-center"></div>
+
+            <!-- Login Form -->
+            <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-3.5">
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Gmail yoki Username</label>
+                    <input type="text" id="loginQuery" required placeholder="user@gmail.com yoki username" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Parol</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all active:scale-98 cursor-pointer mt-2">
+                    Kirish 🚀
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" onsubmit="handleRegisterSubmit(event)" class="space-y-3.5 hidden">
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Gmail / Email Pochta</label>
+                    <input type="email" id="regEmail" required placeholder="ismingiz@gmail.com" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">O'zingizga Username tanlang</label>
+                    <input type="text" id="regUsername" required placeholder="masalan: shermatov_01" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Ism va Familiyangiz</label>
+                    <input type="text" id="regFullName" placeholder="Bahtiyor Shermatov" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Parol</label>
+                    <input type="password" id="regPassword" required placeholder="Kamida 4 ta belgi" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all active:scale-98 cursor-pointer mt-2">
+                    Ro'yxatdan o'tish ✨
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= SUBSCRIPTION PAYWALL OVERLAY ================= -->
+    <div id="paywallOverlay" class="fixed inset-0 z-40 bg-[#070709]/95 backdrop-blur-2xl flex items-center justify-center p-4 transition-all duration-300 hidden">
+        <div class="glass-card max-w-lg w-full p-6 sm:p-8 rounded-3xl border border-white/15 text-center relative overflow-hidden shadow-2xl">
+            
+            <!-- Top Controls: Back and Close -->
+            <div class="flex items-center justify-between mb-2">
+                <button type="button" onclick="closePaywallModal()" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-zinc-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
+                    <i class="fa-solid fa-arrow-left"></i> Ortga
+                </button>
+                <button type="button" onclick="closePaywallModal()" class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-zinc-400 hover:text-white flex items-center justify-center text-sm transition-all cursor-pointer" title="Yopish">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center text-white text-2xl mx-auto mb-4 shadow-lg shadow-amber-500/25">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <h3 class="text-2xl font-black text-white mb-1.5 tracking-tight">Obuna talab qilinadi</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed mb-5">
+                Platformaga to'liq kirish va barcha so'z mashqlaridan foydalanish oylik to'lov asosida ishlaydi.
+            </p>
+
+            <div class="glass-card p-4 sm:p-5 rounded-2xl mb-5 text-left border border-white/10 bg-white/[0.03]">
+                <div class="flex justify-between items-center mb-3 pb-3 border-b border-white/10">
+                    <span class="text-xs font-semibold text-zinc-300">Oylik to'liq obuna:</span>
+                    <span class="text-base font-black text-emerald-400">50 000 so'm / oy</span>
+                </div>
+                <div>
+                    <span class="text-[11px] text-zinc-400 font-medium">To'lov kartasi (ustiga bosing - nusxalanadi):</span>
+                    <div onclick="copyCardNumber()" class="mt-1.5 p-3 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-between cursor-pointer hover:bg-blue-500/15 transition-all">
+                        <span id="paywallCardNumber" class="font-mono font-extrabold text-blue-300 text-sm tracking-widest">5614 6820 5096 7480</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-400/20 text-blue-300 font-semibold">Nusxalash 📋</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Click & Payme Buttons -->
+            <div class="grid grid-cols-2 gap-2.5 mb-5">
+                <a href="/pay/click" target="_blank" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-emerald-600/20">
+                    <i class="fa-solid fa-bolt"></i> Click orqali
+                </a>
+                <a href="/pay/payme" target="_blank" class="py-2.5 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-cyan-600/20">
+                    <i class="fa-solid fa-credit-card"></i> Payme orqali
+                </a>
+            </div>
+
+            <!-- Receipt Upload Box -->
+            <div class="border-t border-white/10 pt-4 text-left">
+                <label class="block text-xs font-bold text-zinc-300 mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-file-invoice text-blue-400"></i> To'lov chekini (rasmini) yuklang:
+                </label>
+                
+                <div id="pendingAlertBox" class="hidden mb-3 p-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs">
+                    <div class="flex items-center gap-2 font-bold mb-1">
+                        <i class="fa-solid fa-clock animate-spin"></i>
+                        <span>Chekingiz qabul qilindi!</span>
+                    </div>
+                    <p class="text-[11px] text-amber-200/80">Admin to'lovni tasdiqlashi bilan tizim avtomatik ochiladi. Iltimos kuting...</p>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <input type="file" id="receiptFileInput" accept="image/*" onchange="handleReceiptFileSelect(event)" class="hidden">
+                    <button type="button" onclick="document.getElementById('receiptFileInput').click()" class="flex-1 py-2.5 px-3 rounded-xl glass-button text-xs text-zinc-300 hover:text-white font-medium flex items-center justify-center gap-2 truncate">
+                        <i class="fa-solid fa-image text-blue-400"></i>
+                        <span id="receiptFileName">Rasm tanlash...</span>
+                    </button>
+                    <button type="button" onclick="uploadReceipt()" id="receiptUploadBtn" class="py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-all shadow-md shadow-blue-600/30 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        Yuborish 📤
+                    </button>
+                </div>
+                <div id="receiptPreviewWrapper" class="hidden mt-3 text-center">
+                    <img id="receiptPreviewImg" src="" alt="Chek" class="max-h-32 mx-auto rounded-xl border border-white/20 shadow-md">
+                </div>
+            </div>
+
+            <!-- Paywall Actions / Exit -->
+            <div class="mt-5 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+                <button type="button" onclick="handleLogout()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white font-semibold text-xs border border-white/10 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-right-from-bracket"></i> Chiqish (Logout)
+                </button>
+                <button type="button" onclick="switchToAdminLogin()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs border border-amber-500/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-crown"></i> Admin (BM_visual) kirish
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 👑 ADMIN DASHBOARD MODAL ================= -->
+    <div id="adminModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 transition-all duration-300 hidden">
+        <div class="glass-card max-w-4xl w-full h-[90vh] p-5 sm:p-7 rounded-3xl border border-white/20 flex flex-col shadow-2xl relative overflow-hidden">
+            
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between pb-4 border-b border-white/10 flex-shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-crown text-base"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+                            <span>Admin Boshqaruv Markazi</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">@BM_visual</span>
+                        </h2>
+                        <p class="text-[11px] text-zinc-400">Foydalanuvchilar, to'lov cheklari va obunalar</p>
+                    </div>
+                </div>
+                <button onclick="closeAdminModal()" class="w-8 h-8 rounded-xl glass-button text-zinc-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Admin Stats Bar -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 my-4 flex-shrink-0">
+                <div class="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                    <span class="text-[10px] uppercase font-bold text-zinc-400">Jami O'quvchilar</span>
+                    <p id="admStatTotal" class="text-lg font-black text-white mt-0.5">0 ta</p>
+                </div>
+                <div class="p-3 rounded-xl bg-emerald-500/[0.06] border border-emerald-500/15">
+                    <span class="text-[10px] uppercase font-bold text-emerald-400">Faol Obunachilar</span>
+                    <p id="admStatActive" class="text-lg font-black text-emerald-400 mt-0.5">0 ta</p>
+                </div>
+                <div class="p-3 rounded-xl bg-amber-500/[0.06] border border-amber-500/15">
+                    <span class="text-[10px] uppercase font-bold text-amber-400">Kutilayotgan Cheklar</span>
+                    <p id="admStatPending" class="text-lg font-black text-amber-400 mt-0.5">0 ta</p>
+                </div>
+                <div class="p-3 rounded-xl bg-blue-500/[0.06] border border-blue-500/15">
+                    <span class="text-[10px] uppercase font-bold text-blue-400">Jami Tushum</span>
+                    <p id="admStatRevenue" class="text-lg font-black text-blue-400 mt-0.5">0 so'm</p>
+                </div>
+            </div>
+
+            <!-- Admin Tabs Navigation -->
+            <div class="flex rounded-xl bg-white/[0.04] p-1 mb-3 border border-white/10 flex-shrink-0">
+                <button type="button" id="admTabReceipts" onclick="switchAdminTab('receipts')" class="flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all">
+                    🔔 Cheklarni Tasdiqlash (<span id="admPendingCountBadge">0</span>)
+                </button>
+                <button type="button" id="admTabUsers" onclick="switchAdminTab('users')" class="flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all">
+                    👥 O'quvchilar Ro'yxati
+                </button>
+                <button type="button" id="admTabManual" onclick="switchAdminTab('manual')" class="flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all">
+                    ➕ Qo'lda Obuna Berish
+                </button>
+            </div>
+
+            <!-- Admin Tab 1: Receipts Review -->
+            <div id="admViewReceipts" class="flex-grow overflow-y-auto space-y-3 pr-1">
+                <div id="admReceiptsList" class="space-y-3"></div>
+            </div>
+
+            <!-- Admin Tab 2: Users Management -->
+            <div id="admViewUsers" class="flex-grow overflow-y-auto space-y-3 pr-1 hidden">
+                <div class="flex items-center gap-2 mb-2">
+                    <input type="text" id="admUserSearch" oninput="renderAdminUsers()" placeholder="Username yoki Gmail orqali qidirish..." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="overflow-x-auto rounded-2xl border border-white/10">
+                    <table class="w-full text-left text-xs text-zinc-300">
+                        <thead class="bg-white/[0.05] text-zinc-400 uppercase text-[10px] font-bold border-b border-white/10">
+                            <tr>
+                                <th class="p-3">O'quvchi</th>
+                                <th class="p-3">Gmail</th>
+                                <th class="p-3">Holat</th>
+                                <th class="p-3">Qolgan kun</th>
+                                <th class="p-3 text-right">Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admUsersTableBody" class="divide-y divide-white/5"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Admin Tab 3: Manual Grant -->
+            <div id="admViewManual" class="flex-grow overflow-y-auto pr-1 hidden">
+                <div class="glass-card p-6 rounded-2xl max-w-md mx-auto space-y-4 my-auto">
+                    <h3 class="text-sm font-bold text-white">Istalgan hisobga obuna qo'shish</h3>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Username yoki Gmail</label>
+                        <input type="text" id="admManualTarget" placeholder="masalan: shermatov yoki ali@gmail.com" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Beriladigan kunlar soni</label>
+                        <input type="number" id="admManualDays" value="30" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                    </div>
+                    <button type="button" onclick="handleAdminGrantSub()" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/30 transition-all active:scale-98">
+                        Obunani faollashtirish ✅
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ================= ADD WORD MODAL ================= -->
+    <div id="importModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl flex items-center justify-center p-4 transition-all duration-300 hidden">
+        <div class="glass-card max-w-lg w-full p-6 rounded-3xl border border-white/15 relative overflow-hidden shadow-2xl">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-plus text-blue-400"></i> Yangi So'z Qo'shish
+                </h3>
+                <button onclick="closeImportModal()" class="w-8 h-8 rounded-xl glass-button text-zinc-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="flex rounded-xl bg-white/[0.06] p-1 mb-4 border border-white/10">
+                <button type="button" onclick="switchAddTab('single')" id="addTabSingle" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/15 text-white">Bittalab kiritish</button>
+                <button type="button" onclick="switchAddTab('bulk')" id="addTabBulk" class="flex-1 py-1.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-white">Matndan yuklash (Ko'p so'z)</button>
+            </div>
+
+            <div id="addSingleView" class="space-y-3">
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Inglizcha so'z *</label>
+                    <input type="text" id="singleEn" placeholder="masalan: Incredible" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 mb-1">O'zbekcha tarjimasi *</label>
+                    <input type="text" id="singleUz" placeholder="masalan: Aqlbovar qilmas" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Misol gap (ixtiyoriy)</label>
+                    <input type="text" id="singleEx" placeholder="masalan: It was an incredible journey." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500">
+                </div>
+                <button type="button" onclick="addSingleWord()" class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/30 transition-all active:scale-98 mt-2">
+                    Lug'atga qo'shish ✨
+                </button>
+            </div>
+
+            <div id="addBulkView" class="space-y-3 hidden">
+                <p class="text-xs text-zinc-400">Har bir qatorga: <code>English - Uzbek</code> yoki <code>English : Uzbek</code> ko'rinishida yozing:</p>
+                <textarea id="bulkTextarea" rows="6" placeholder="Apple - Olma&#10;Book - Kitob&#10;Sky - Osmon" class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-xs text-white font-mono placeholder-zinc-600 focus:outline-none focus:border-blue-500"></textarea>
+                <button type="button" onclick="addBulkWords()" class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/30 transition-all active:scale-98">
+                    Barchasini saqlash 📥
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ================= JAVASCRIPT APPLICATION LOGIC ================= -->
+    <script>
+        // Preset Decks Data
+        const PRESET_DECKS = {
+            a1: [
+                { en: "Always", uz: "Doimo", phonetic: "/ˈɔːl.weɪz/", example: "I always study English." },
+                { en: "Because", uz: "Chunki", phonetic: "/bɪˈkəz/", example: "I learn because it is useful." },
+                { en: "Between", uz: "Orasida", phonetic: "/bɪˈtwiːn/", example: "Between you and me." },
+                { en: "Different", uz: "Har xil / Boshqacha", phonetic: "/ˈdɪf.ər.ənt/", example: "We have different ideas." },
+                { en: "Important", uz: "Muhim", phonetic: "/ɪmˈpɔː.tənt/", example: "Practice is important." },
+                { en: "Knowledge", uz: "Bilim", phonetic: "/ˈnɒl.ɪdʒ/", example: "Knowledge is power." },
+                { en: "Language", uz: "Til", phonetic: "/ˈlæŋ.ɡwɪdʒ/", example: "English is a global language." },
+                { en: "Remember", uz: "Eslab qolmoq", phonetic: "/rɪˈmem.bər/", example: "Remember new words daily." },
+                { en: "Success", uz: "Muvaffaqiyat", phonetic: "/səkˈses/", example: "Hard work brings success." },
+                { en: "Understand", uz: "Tushunmoq", phonetic: "/ˌʌn.dəˈstænd/", example: "I understand this topic." }
+            ],
+            it: [
+                { en: "Algorithm", uz: "Algoritm", phonetic: "/ˈæl.ɡə.rɪ.ðəm/", example: "Efficient algorithm." },
+                { en: "Database", uz: "Ma'lumotlar bazasi", phonetic: "/ˈdeɪ.tə.beɪs/", example: "SQL database storage." },
+                { en: "Deployment", uz: "Serverga joylash", phonetic: "/dɪˈplɔɪ.mənt/", example: "Continuous deployment." },
+                { en: "Security", uz: "Xavfsizlik", phonetic: "/sɪˈkjʊə.rə.ti/", example: "High system security." },
+                { en: "Framework", uz: "Freymvork", phonetic: "/ˈfreɪm.wɜːk/", example: "Fast web framework." }
+            ],
+            business: [
+                { en: "Revenue", uz: "Daromad / Tushum", phonetic: "/ˈrev.ən.juː/", example: "Monthly revenue growth." },
+                { en: "Investment", uz: "Investitsiya", phonetic: "/ɪnˈvest.mənt/", example: "Smart tech investment." },
+                { en: "Strategy", uz: "Strategiya", phonetic: "/ˈstræt.ə.dʒi/", example: "Long-term growth strategy." },
+                { en: "Negotiation", uz: "Muzokara", phonetic: "/nəˌɡəʊ.ʃiˈeɪ.ʃən/", example: "Business negotiation." }
+            ]
+        };
+
+        // Audio Effects Synthesizer
+        const SoundFX = {
+            ctx: null,
+            init() {
+                try {
+                    if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                } catch(e) {}
+            },
+            playChime() {
+                try {
+                    this.init(); if (!this.ctx) return;
+                    const now = this.ctx.currentTime;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(587.33, now);
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                    osc.connect(gain); gain.connect(this.ctx.destination);
+                    osc.start(now); osc.stop(now + 0.3);
+                } catch(e) {}
+            },
+            playFlip() {
+                try {
+                    this.init(); if (!this.ctx) return;
+                    const now = this.ctx.currentTime;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.exponentialRampToValueAtTime(440, now + 0.08);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+                    osc.connect(gain); gain.connect(this.ctx.destination);
+                    osc.start(now); osc.stop(now + 0.1);
+                } catch(e) {}
+            },
+            playWrong() {
+                try {
+                    this.init(); if (!this.ctx) return;
+                    const now = this.ctx.currentTime;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(160, now);
+                    osc.frequency.linearRampToValueAtTime(100, now + 0.2);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                    osc.connect(gain); gain.connect(this.ctx.destination);
+                    osc.start(now); osc.stop(now + 0.25);
+                } catch(e) {}
+            }
+        };
+
+        // App State
+        let currentUser = null;
+        let sessionToken = localStorage.getItem('vocab_token') || '';
+        let words = [];
+        let activeTab = 'dashboard';
+        let currentFilter = 'all';
+        let currentFlashIndex = 0;
+        let isCardFlipped = false;
+        let selectedReceiptBase64 = '';
+        let pollTimer = null;
+
+        // Game states
+        let matchSelected = [];
+        let matchTimerInterval = null;
+        let matchSeconds = 0;
+        let quizIndex = 0;
+        let quizScore = 0;
+        let quizTimerInterval = null;
+        let currentQuizQuestions = [];
+        let spellingIndex = 0;
+
+        // Admin state
+        let adminUsersList = [];
+        let adminReceiptsList = [];
+
+        // App Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            initAuth();
+            setupKeyboardShortcuts();
+        });
+
+        // ================= AUTHENTICATION & SUBSCRIPTION =================
+        async function initAuth() {
+            sessionToken = localStorage.getItem('vocab_token') || '';
+            if (!sessionToken) {
+                showAuthRequiredState();
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/me', {
+                    headers: { 'X-Session-Token': sessionToken }
+                });
+                const data = await res.json();
+                if (data.ok && data.user) {
+                    currentUser = data.user;
+                    handleAuthSuccess(currentUser);
+                } else {
+                    localStorage.removeItem('vocab_token');
+                    sessionToken = '';
+                    showAuthRequiredState();
+                }
+            } catch(e) {
+                console.error('Auth verification error:', e);
+                showAuthRequiredState();
+            }
+        }
+
+        function handleAuthSuccess(user) {
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('loginTriggerBtn').classList.add('hidden');
+            document.getElementById('logoutBtn').classList.remove('hidden');
+            document.getElementById('userProfileBadge').classList.remove('hidden');
+            
+            document.getElementById('userNameDisplay').innerText = user.fullName || user.username;
+            const daysText = user.role === 'admin' ? '👑 Cheksiz (Admin)' : (user.isSubscribed ? `${user.daysLeft} kun qoldi` : 'Obuna faol emas');
+            document.getElementById('userDaysLeft').innerText = daysText;
+            document.getElementById('userDaysLeft').className = user.isSubscribed ? 'text-emerald-400' : 'text-red-400';
+
+            // Show Admin Panel Button if admin
+            if (user.role === 'admin') {
+                document.getElementById('adminPanelBtn').classList.remove('hidden');
+            } else {
+                document.getElementById('adminPanelBtn').classList.add('hidden');
+            }
+
+            // Paywall logic
+            if (user.isSubscribed) {
+                document.getElementById('paywallOverlay').classList.add('hidden');
+                clearInterval(pollTimer);
+                loadUserWords();
+            } else {
+                document.getElementById('paywallOverlay').classList.remove('hidden');
+                checkPendingReceiptStatus(user);
+                startSubStatusPolling();
+            }
+        }
+
+        function checkPendingReceiptStatus(user) {
+            const pendingBox = document.getElementById('pendingAlertBox');
+            if (user.receiptStatus === 'pending') {
+                pendingBox.classList.remove('hidden');
+            } else {
+                pendingBox.classList.add('hidden');
+            }
+        }
+
+        function startSubStatusPolling() {
+            clearInterval(pollTimer);
+            pollTimer = setInterval(async () => {
+                if (!sessionToken) return;
+                try {
+                    const res = await fetch('/api/me', { headers: { 'X-Session-Token': sessionToken } });
+                    const data = await res.json();
+                    if (data.ok && data.user) {
+                        currentUser = data.user;
+                        if (currentUser.isSubscribed) {
+                            clearInterval(pollTimer);
+                            document.getElementById('paywallOverlay').classList.add('hidden');
+                            document.getElementById('userDaysLeft').innerText = `${currentUser.daysLeft} kun qoldi`;
+                            document.getElementById('userDaysLeft').className = 'text-emerald-400';
+                            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                            showToast('🎉 Obunangiz faollashtirildi! Xush kelibsiz!');
+                            loadUserWords();
+                        } else {
+                            checkPendingReceiptStatus(currentUser);
+                        }
+                    }
+                } catch(e) {}
+            }, 4000);
+        }
+
+        function showAuthRequiredState() {
+            document.getElementById('userProfileBadge').classList.add('hidden');
+            document.getElementById('adminPanelBtn').classList.add('hidden');
+            document.getElementById('logoutBtn').classList.add('hidden');
+            document.getElementById('loginTriggerBtn').classList.remove('hidden');
+            document.getElementById('paywallOverlay').classList.add('hidden');
+            openAuthModal('login');
+        }
+
+        function switchToAdminLogin() {
+            if (sessionToken) {
+                fetch('/api/logout', { method: 'POST', headers: { 'X-Session-Token': sessionToken } }).catch(() => {});
+            }
+            localStorage.removeItem('vocab_token');
+            sessionToken = '';
+            currentUser = null;
+            document.getElementById('paywallOverlay').classList.add('hidden');
+            openAuthModal('login');
+            setTimeout(() => {
+                const q = document.getElementById('loginQuery');
+                if (q) {
+                    q.value = 'BM_visual';
+                    const p = document.getElementById('loginPassword');
+                    if (p) { p.value = ''; p.focus(); }
+                }
+            }, 100);
+        }
+
+        function closePaywallModal() {
+            document.getElementById('paywallOverlay').classList.add('hidden');
+        }
+
+        function openAuthModal(tab = 'login') {
+            document.getElementById('authModal').classList.remove('hidden');
+            switchAuthTab(tab);
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+        }
+
+        function switchAuthTab(tab) {
+            const isLogin = tab === 'login';
+            document.getElementById('loginForm').classList.toggle('hidden', !isLogin);
+            document.getElementById('registerForm').classList.toggle('hidden', isLogin);
+            document.getElementById('authTabLogin').className = isLogin ? 'flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all' : 'flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all';
+            document.getElementById('authTabRegister').className = !isLogin ? 'flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all' : 'flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all';
+            document.getElementById('authErrorMsg').classList.add('hidden');
+        }
+
+        async function handleLoginSubmit(e) {
+            e.preventDefault();
+            const query = document.getElementById('loginQuery').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const errBox = document.getElementById('authErrorMsg');
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ login: query, password })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    sessionToken = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('vocab_token', sessionToken);
+                    showToast('Xush kelibsiz, ' + (currentUser.fullName || currentUser.username) + '! 👋');
+                    handleAuthSuccess(currentUser);
+                } else {
+                    errBox.innerText = data.error || 'Login yoki parol noto\'g\'ri!';
+                    errBox.classList.remove('hidden');
+                }
+            } catch(err) {
+                errBox.innerText = 'Server bilan bog\'lanishda xatolik yuz berdi.';
+                errBox.classList.remove('hidden');
+            }
+        }
+
+        async function handleRegisterSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('regEmail').value.trim();
+            const username = document.getElementById('regUsername').value.trim();
+            const fullName = document.getElementById('regFullName').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            const errBox = document.getElementById('authErrorMsg');
+
+            try {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, username, fullName, password })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    sessionToken = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('vocab_token', sessionToken);
+                    showToast('🎉 Akkauntingiz muvaffaqiyatli yaratildi!');
+                    handleAuthSuccess(currentUser);
+                } else {
+                    errBox.innerText = data.error || 'Ro\'yxatdan o\'tishda xatolik!';
+                    errBox.classList.remove('hidden');
+                }
+            } catch(err) {
+                errBox.innerText = 'Server bilan bog\'lanishda xatolik yuz berdi.';
+                errBox.classList.remove('hidden');
+            }
+        }
+
+        async function handleLogout() {
+            if (sessionToken) {
+                fetch('/api/logout', { method: 'POST', headers: { 'X-Session-Token': sessionToken } }).catch(() => {});
+            }
+            localStorage.removeItem('vocab_token');
+            sessionToken = '';
+            currentUser = null;
+            words = [];
+            renderWordList();
+            updateDashboardStats();
+            showToast('Tizimdan chiqildi.');
+            showAuthRequiredState();
+        }
+
+        // ================= RECEIPT UPLOAD & COPY CARD =================
+        function copyCardNumber() {
+            navigator.clipboard.writeText('5614682050967480').then(() => {
+                showToast('✅ Karta raqami nusxalandi: 5614 6820 5096 7480');
+            });
+        }
+
+        function handleReceiptFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            document.getElementById('receiptFileName').innerText = file.name;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                selectedReceiptBase64 = evt.target.result;
+                document.getElementById('receiptPreviewImg').src = selectedReceiptBase64;
+                document.getElementById('receiptPreviewWrapper').classList.remove('hidden');
+                document.getElementById('receiptUploadBtn').removeAttribute('disabled');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function uploadReceipt() {
+            if (!selectedReceiptBase64 || !sessionToken) return;
+            const uploadBtn = document.getElementById('receiptUploadBtn');
+            uploadBtn.innerText = 'Yuklanmoqda...';
+            uploadBtn.setAttribute('disabled', 'true');
+
+            try {
+                const res = await fetch('/api/submit-receipt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ image: selectedReceiptBase64 })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('✅ Chek adminga muvaffaqiyatli yuborildi!');
+                    document.getElementById('pendingAlertBox').classList.remove('hidden');
+                    document.getElementById('receiptPreviewWrapper').classList.add('hidden');
+                    document.getElementById('receiptFileName').innerText = 'Rasm tanlash...';
+                    selectedReceiptBase64 = '';
+                    uploadBtn.innerText = 'Yuborish 📤';
+                    startSubStatusPolling();
+                } else {
+                    showToast('❌ Xatolik: ' + (data.error || 'Yuklab bo\'lmadi'));
+                    uploadBtn.innerText = 'Yuborish 📤';
+                    uploadBtn.removeAttribute('disabled');
+                }
+            } catch(e) {
+                showToast('❌ Serverga yuklashda xatolik yuz berdi');
+                uploadBtn.innerText = 'Yuborish 📤';
+                uploadBtn.removeAttribute('disabled');
+            }
+        }
+
+        // ================= 👑 ADMIN MODAL LOGIC =================
+        function openAdminModal() {
+            document.getElementById('adminModal').classList.remove('hidden');
+            loadAdminData();
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        function switchAdminTab(tab) {
+            document.getElementById('admViewReceipts').classList.toggle('hidden', tab !== 'receipts');
+            document.getElementById('admViewUsers').classList.toggle('hidden', tab !== 'users');
+            document.getElementById('admViewManual').classList.toggle('hidden', tab !== 'manual');
+
+            document.getElementById('admTabReceipts').className = tab === 'receipts' ? 'flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all' : 'flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all';
+            document.getElementById('admTabUsers').className = tab === 'users' ? 'flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all' : 'flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all';
+            document.getElementById('admTabManual').className = tab === 'manual' ? 'flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all' : 'flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all';
+        }
+
+        async function loadAdminData() {
+            if (!sessionToken || !currentUser || currentUser.role !== 'admin') return;
+
+            try {
+                // Fetch Stats
+                const statsRes = await fetch('/api/admin/stats', { headers: { 'X-Session-Token': sessionToken } });
+                const statsData = await statsRes.json();
+                if (statsData.ok) {
+                    const s = statsData.stats;
+                    document.getElementById('admStatTotal').innerText = s.totalUsers + ' ta';
+                    document.getElementById('admStatActive').innerText = s.activeCount + ' ta';
+                    document.getElementById('admStatPending').innerText = s.pendingReceipts + ' ta';
+                    document.getElementById('admStatRevenue').innerText = Number(s.totalRevenue).toLocaleString() + " so'm";
+                    document.getElementById('admPendingCountBadge').innerText = s.pendingReceipts;
+                }
+
+                // Fetch Receipts
+                const rcptRes = await fetch('/api/admin/receipts', { headers: { 'X-Session-Token': sessionToken } });
+                const rcptData = await rcptRes.json();
+                if (rcptData.ok) {
+                    adminReceiptsList = rcptData.receipts;
+                    renderAdminReceipts();
+                }
+
+                // Fetch Users
+                const usersRes = await fetch('/api/admin/users', { headers: { 'X-Session-Token': sessionToken } });
+                const usersData = await usersRes.json();
+                if (usersData.ok) {
+                    adminUsersList = usersData.users;
+                    renderAdminUsers();
+                }
+            } catch(e) {
+                console.error('Admin data load error:', e);
+            }
+        }
+
+        function renderAdminReceipts() {
+            const container = document.getElementById('admReceiptsList');
+            if (!adminReceiptsList || adminReceiptsList.length === 0) {
+                container.innerHTML = '<div class="p-8 text-center text-zinc-500 text-xs font-medium"><i class="fa-solid fa-check-circle text-2xl text-emerald-500/40 mb-2 block"></i>Hozircha yangi kutilayotgan cheklar yo\'q. Barchasi ko\'rib chiqilgan!</div>';
+                return;
+            }
+
+            container.innerHTML = adminReceiptsList.map(r => {
+                const dateStr = new Date(r.submittedAt).toLocaleString('uz-UZ');
+                return `
+                <div class="glass-card p-4 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-white/10">
+                    <div class="flex items-center gap-3.5">
+                        <img src="${r.image}" alt="Chek" onclick="window.open('${r.image}')" class="w-16 h-16 rounded-xl object-cover border border-white/20 cursor-pointer hover:scale-105 transition-transform flex-shrink-0">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="text-xs font-bold text-white">${r.fullName || r.username}</h4>
+                                <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-mono">@${r.username}</span>
+                            </div>
+                            <p class="text-[11px] text-zinc-400 mt-0.5">📧 ${r.email}</p>
+                            <p class="text-[10px] text-zinc-500 mt-0.5 font-mono"><i class="fa-regular fa-clock mr-1"></i>${dateStr}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                        <button onclick="adminApproveReceipt('${r.id}')" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition-all active:scale-95">
+                            ✅ Tasdiqlash (30 kun)
+                        </button>
+                        <button onclick="adminRejectReceipt('${r.id}')" class="px-3 py-2 rounded-xl bg-red-500/15 hover:bg-red-500/25 text-red-400 font-semibold text-xs border border-red-500/20 transition-all active:scale-95">
+                            ❌ Rad etish
+                        </button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        async function adminApproveReceipt(receiptId) {
+            try {
+                const res = await fetch('/api/admin/approve-receipt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ receiptId, days: 30 })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('✅ To\'lov tasdiqlandi va 30 kunlik obuna berildi!');
+                    loadAdminData();
+                }
+            } catch(e) { showToast('Xatolik yuz berdi'); }
+        }
+
+        async function adminRejectReceipt(receiptId) {
+            try {
+                const res = await fetch('/api/admin/reject-receipt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ receiptId })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('❌ Chek rad etildi');
+                    loadAdminData();
+                }
+            } catch(e) { showToast('Xatolik yuz berdi'); }
+        }
+
+        function renderAdminUsers() {
+            const query = (document.getElementById('admUserSearch').value || '').toLowerCase().trim();
+            const tbody = document.getElementById('admUsersTableBody');
+            const filtered = adminUsersList.filter(u => 
+                (u.username || '').toLowerCase().includes(query) ||
+                (u.email || '').toLowerCase().includes(query) ||
+                (u.fullName || '').toLowerCase().includes(query)
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-zinc-500">Foydalanuvchilar topilmadi</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(u => `
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                    <td class="p-3">
+                        <div class="font-bold text-white text-xs">${u.fullName || u.username} ${u.role === 'admin' ? '👑' : ''}</div>
+                        <div class="text-[10px] text-zinc-400 font-mono">@${u.username}</div>
+                    </td>
+                    <td class="p-3 font-mono text-[11px] text-zinc-300">${u.email}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${u.isActive ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}">
+                            ${u.isActive ? '🟢 Faol' : '🔴 Tugagan'}
+                        </span>
+                    </td>
+                    <td class="p-3 font-bold text-xs ${u.isActive ? 'text-emerald-300' : 'text-zinc-500'}">
+                        ${u.role === 'admin' ? 'Cheksiz' : u.daysLeft + ' kun'}
+                    </td>
+                    <td class="p-3 text-right space-x-1">
+                        <button onclick="adminGrantSubDirect('${u.id}', 30)" class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 text-[11px] font-semibold transition-all" title="+30 kun">+30 kun</button>
+                        ${u.role !== 'admin' ? `
+                            <button onclick="adminRevokeSubDirect('${u.id}')" class="px-2 py-1 rounded-lg bg-amber-500/15 text-amber-300 hover:bg-amber-500/25 text-[11px] font-semibold transition-all" title="Obunani bekor qilish">⛔</button>
+                            <button onclick="adminDeleteUserDirect('${u.id}')" class="px-2 py-1 rounded-lg bg-red-500/15 text-red-400 hover:bg-red-500/25 text-[11px] font-semibold transition-all" title="O'chirish">🗑</button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function adminGrantSubDirect(targetId, days = 30) {
+            try {
+                const res = await fetch('/api/admin/grant-sub', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ target: targetId, days })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('✅ Obuna faollashtirildi!');
+                    loadAdminData();
+                }
+            } catch(e) {}
+        }
+
+        async function adminRevokeSubDirect(targetId) {
+            if (!confirm('Ushbu foydalanuvchining obunasini to\'xtatmoqchimisiz?')) return;
+            try {
+                const res = await fetch('/api/admin/revoke-sub', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ target: targetId })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('⛔ Obuna to\'xtatildi');
+                    loadAdminData();
+                }
+            } catch(e) {}
+        }
+
+        async function adminDeleteUserDirect(targetId) {
+            if (!confirm('Rostdan ham ushbu hisobni butunlay o\'chirmoqchimisiz?')) return;
+            try {
+                const res = await fetch('/api/admin/delete-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ target: targetId })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('🗑 Foydalanuvchi o\'chirildi');
+                    loadAdminData();
+                }
+            } catch(e) {}
+        }
+
+        async function handleAdminGrantSub() {
+            const target = document.getElementById('admManualTarget').value.trim();
+            const days = parseInt(document.getElementById('admManualDays').value) || 30;
+            if (!target) { showToast('Foydalanuvchi username yoki emaili kerak'); return; }
+
+            try {
+                const res = await fetch('/api/admin/grant-sub', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ target, days })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast(`✅ ${target} ga ${days} kunlik obuna berildi!`);
+                    document.getElementById('admManualTarget').value = '';
+                    loadAdminData();
+                    switchAdminTab('users');
+                } else {
+                    showToast('❌ Xatolik: ' + (data.error || 'Topilmadi'));
+                }
+            } catch(e) { showToast('Xatolik yuz berdi'); }
+        }
+
+        // ================= VOCABULARY & WORDS STORAGE =================
+        async function loadUserWords() {
+            if (!currentUser || !sessionToken) return;
+            try {
+                const res = await fetch('/api/get-words', { headers: { 'X-Session-Token': sessionToken } });
+                const data = await res.json();
+                if (data.ok && Array.isArray(data.words)) {
+                    words = data.words;
+                    if (words.length === 0) {
+                        loadPresetDeck('a1', false);
+                    }
+                    updateDashboardStats();
+                    renderWordList();
+                }
+            } catch(e) {
+                console.error('Load words error:', e);
+            }
+        }
+
+        function saveWords(syncWithServer = true) {
+            updateDashboardStats();
+            renderWordList();
+
+            if (syncWithServer && sessionToken && currentUser && currentUser.isSubscribed) {
+                fetch('/api/save-words', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Session-Token': sessionToken },
+                    body: JSON.stringify({ words })
+                }).catch(() => {});
+            }
+        }
+
+        function loadPresetDeck(deckKey, showFeedback = true) {
+            const deck = PRESET_DECKS[deckKey];
+            if (!deck) return;
+
+            let added = 0;
+            deck.forEach(item => {
+                if (!words.some(w => w.en.toLowerCase() === item.en.toLowerCase())) {
+                    words.push({
+                        id: Date.now() + Math.floor(Math.random() * 10000),
+                        en: item.en,
+                        uz: item.uz,
+                        phonetic: item.phonetic || '',
+                        example: item.example || '',
+                        box: 1,
+                        mistakes: 0
+                    });
+                    added++;
+                }
+            });
+
+            saveWords(true);
+            if (showFeedback) showToast(`🌟 ${added} ta yangi so'z qo'shildi!`);
+        }
+
+        function openImportModal() {
+            document.getElementById('importModal').classList.remove('hidden');
+        }
+
+        function closeImportModal() {
+            document.getElementById('importModal').classList.add('hidden');
+        }
+
+        function switchAddTab(tab) {
+            document.getElementById('addSingleView').classList.toggle('hidden', tab !== 'single');
+            document.getElementById('addBulkView').classList.toggle('hidden', tab !== 'bulk');
+            document.getElementById('addTabSingle').className = tab === 'single' ? 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/15 text-white' : 'flex-1 py-1.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-white';
+            document.getElementById('addTabBulk').className = tab === 'bulk' ? 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/15 text-white' : 'flex-1 py-1.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-white';
+        }
+
+        function addSingleWord() {
+            const en = document.getElementById('singleEn').value.trim();
+            const uz = document.getElementById('singleUz').value.trim();
+            const ex = document.getElementById('singleEx').value.trim();
+
+            if (!en || !uz) {
+                showToast('Inglizcha va O\'zbekcha maydonlarini to\'ldiring');
+                return;
+            }
+
+            words.unshift({
+                id: Date.now(),
+                en, uz, phonetic: '', example: ex, box: 1, mistakes: 0
+            });
+
+            document.getElementById('singleEn').value = '';
+            document.getElementById('singleUz').value = '';
+            document.getElementById('singleEx').value = '';
+            closeImportModal();
+            saveWords(true);
+            showToast('✅ So\'z muvaffaqiyatli qo\'shildi!');
+        }
+
+        function addBulkWords() {
+            const text = document.getElementById('bulkTextarea').value.trim();
+            if (!text) return;
+
+            const lines = text.split('\n');
+            let count = 0;
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (!line) return;
+                let parts = line.split(/[-–—:]/);
+                if (parts.length >= 2) {
+                    const en = parts[0].trim();
+                    const uz = parts.slice(1).join(' ').trim();
+                    if (en && uz && !words.some(w => w.en.toLowerCase() === en.toLowerCase())) {
+                        words.push({ id: Date.now() + Math.random(), en, uz, phonetic: '', example: '', box: 1, mistakes: 0 });
+                        count++;
+                    }
+                }
+            });
+
+            document.getElementById('bulkTextarea').value = '';
+            closeImportModal();
+            saveWords(true);
+            showToast(`📥 ${count} ta so'z yuklandi!`);
+        }
+
+        function clearAllWords() {
+            if (confirm('Rostdan ham barcha so\'zlaringizni o\'chirmoqchimisiz?')) {
+                words = [];
+                saveWords(true);
+                showToast('Lug\'at tozalandi');
+            }
+        }
+
+        function deleteWord(id) {
+            words = words.filter(w => w.id !== id);
+            saveWords(true);
+            showToast('So\'z o\'chirildi');
+        }
+
+        function filterCategory(cat, btn) {
+            currentFilter = cat;
+            document.querySelectorAll('.category-chip').forEach(c => {
+                c.className = 'category-chip px-3 py-1.5 rounded-lg glass-button text-zinc-400 font-medium transition-all cursor-pointer';
+            });
+            if (btn) btn.className = 'category-chip px-3 py-1.5 rounded-lg bg-white/10 text-white font-medium border border-white/10 transition-all cursor-pointer';
+            renderWordList();
+        }
+
+        function renderWordList() {
+            const query = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+            const container = document.getElementById('wordListContainer');
+
+            let list = words.filter(w => 
+                w.en.toLowerCase().includes(query) || w.uz.toLowerCase().includes(query)
+            );
+
+            if (currentFilter === 'box1') list = list.filter(w => w.box === 1);
+            if (currentFilter === 'box5') list = list.filter(w => w.box === 5);
+
+            if (list.length === 0) {
+                container.innerHTML = '<div class="p-8 text-center text-zinc-500 text-xs">Hech qanday so\'z topilmadi</div>';
+                return;
+            }
+
+            container.innerHTML = list.map(w => `
+                <div class="glass-card p-3 sm:p-4 rounded-xl flex items-center justify-between gap-3 group">
+                    <div class="flex items-center gap-3">
+                        <button onclick="speakWord('${w.en}')" class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center hover:bg-blue-500/20 text-xs transition-all">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="text-sm font-bold text-white">${w.en}</h4>
+                                <span class="text-[10px] px-2 py-0.5 rounded-md bg-white/[0.06] text-zinc-400 font-mono">Quti ${w.box}</span>
+                            </div>
+                            <p class="text-xs text-zinc-300 mt-0.5">${w.uz}</p>
+                            ${w.example ? `<p class="text-[11px] text-zinc-500 italic mt-0.5">"${w.example}"</p>` : ''}
+                        </div>
+                    </div>
+                    <button onclick="deleteWord(${w.id})" class="w-8 h-8 rounded-lg glass-button text-zinc-500 hover:text-red-400 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <i class="fa-solid fa-trash text-xs"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function updateDashboardStats() {
+            const total = words.length;
+            const mastered = words.filter(w => w.box === 5).length;
+            const learning = words.filter(w => w.box < 5).length;
+            const rate = total > 0 ? Math.round((mastered / total) * 100) : 0;
+
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statMastered').innerText = mastered;
+            document.getElementById('statLearning').innerText = learning;
+            document.getElementById('statRate').innerText = rate + '%';
+            document.getElementById('statProgressBar').style.width = rate + '%';
+        }
+
+        // ================= TAB SWITCHING =================
+        function switchTab(tabId) {
+            activeTab = tabId;
+            document.querySelectorAll('.tab-content').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.nav-tab').forEach(b => {
+                b.className = 'nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] transition-all whitespace-nowrap cursor-pointer';
+            });
+
+            const targetSection = document.getElementById('view-' + tabId);
+            const targetBtn = document.getElementById('tab-' + tabId);
+
+            if (targetSection) targetSection.style.display = 'block';
+            if (targetBtn) targetBtn.className = 'nav-tab px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold bg-white/10 text-white shadow-sm transition-all whitespace-nowrap cursor-pointer';
+
+            if (tabId === 'flashcard') startFlashcards();
+            if (tabId === 'match') startMatchGame();
+            if (tabId === 'quiz') startSpeedQuiz();
+            if (tabId === 'spelling') startSpellingMode();
+        }
+
+        // ================= FLASHCARDS LOGIC =================
+        function startFlashcards() {
+            if (words.length === 0) {
+                showToast('Flesh-karta uchun avval so\'z qo\'shing');
+                switchTab('dashboard');
+                return;
+            }
+            currentFlashIndex = 0;
+            isCardFlipped = false;
+            renderFlashcard();
+        }
+
+        function renderFlashcard() {
+            const w = words[currentFlashIndex];
+            if (!w) return;
+
+            document.getElementById('fcEnglish').innerText = w.en;
+            document.getElementById('fcPhonetic').innerText = w.phonetic || '';
+            document.getElementById('fcUzbek').innerText = w.uz;
+            document.getElementById('fcExample').innerText = w.example ? `"${w.example}"` : '';
+            document.getElementById('fcBoxTag').innerText = `Quti: ${w.box}/5`;
+            document.getElementById('fcProgress').innerText = `${currentFlashIndex + 1} / ${words.length}`;
+
+            isCardFlipped = false;
+            document.getElementById('cardInner').classList.remove('rotate-y-180');
+        }
+
+        function flipCard() {
+            isCardFlipped = !isCardFlipped;
+            SoundFX.playFlip();
+            document.getElementById('cardInner').classList.toggle('rotate-y-180', isCardFlipped);
+        }
+
+        function handleCardReview(known) {
+            const w = words[currentFlashIndex];
+            if (!w) return;
+
+            if (known) {
+                w.box = Math.min(5, (w.box || 1) + 1);
+                SoundFX.playChime();
+            } else {
+                w.box = 1;
+                w.mistakes = (w.mistakes || 0) + 1;
+                SoundFX.playWrong();
+            }
+
+            saveWords(true);
+            currentFlashIndex = (currentFlashIndex + 1) % words.length;
+            renderFlashcard();
+        }
+
+        function speakCurrentWord() {
+            const w = words[currentFlashIndex];
+            if (w) speakWord(w.en);
+        }
+
+        function speakWord(text) {
+            if ('speechSynthesis' in window) {
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'en-US';
+                window.speechSynthesis.speak(u);
+            }
+        }
+
+        // ================= MATCH PAIRS GAME =================
+        function startMatchGame() {
+            if (words.length < 4) {
+                showToast('Juftlik o\'yini uchun kamida 4 ta so\'z kerak');
+                return;
+            }
+
+            clearInterval(matchTimerInterval);
+            matchSeconds = 0;
+            document.getElementById('matchTimer').innerText = '00:00';
+            matchTimerInterval = setInterval(() => {
+                matchSeconds++;
+                const mins = String(Math.floor(matchSeconds / 60)).padStart(2, '0');
+                const secs = String(matchSeconds % 60).padStart(2, '0');
+                document.getElementById('matchTimer').innerText = `${mins}:${secs}`;
+            }, 1000);
+
+            const pool = [...words].sort(() => 0.5 - Math.random()).slice(0, 6);
+            let cards = [];
+            pool.forEach(w => {
+                cards.push({ id: w.id, text: w.en, type: 'en' });
+                cards.push({ id: w.id, text: w.uz, type: 'uz' });
+            });
+            cards.sort(() => 0.5 - Math.random());
+
+            matchSelected = [];
+            const grid = document.getElementById('matchGrid');
+            grid.innerHTML = cards.map((c, i) => `
+                <div onclick="handleMatchCardClick(${c.id}, '${c.type}', this)" data-id="${c.id}" data-type="${c.type}" 
+                    class="match-card glass-card p-4 sm:p-5 rounded-2xl flex items-center justify-center text-center font-bold text-xs sm:text-sm text-white cursor-pointer select-none transition-all hover:scale-102 active:scale-95 h-24 border border-white/10">
+                    ${c.text}
+                </div>
+            `).join('');
+        }
+
+        function handleMatchCardClick(id, type, elem) {
+            if (elem.classList.contains('matched') || elem.classList.contains('selected')) return;
+            if (matchSelected.length === 2) return;
+
+            elem.classList.add('selected', '!border-blue-500', 'bg-blue-500/20');
+            matchSelected.push({ id, type, elem });
+
+            if (matchSelected.length === 2) {
+                const [first, second] = matchSelected;
+                if (first.id === second.id && first.type !== second.type) {
+                    SoundFX.playChime();
+                    first.elem.classList.remove('selected', '!border-blue-500', 'bg-blue-500/20');
+                    second.elem.classList.remove('selected', '!border-blue-500', 'bg-blue-500/20');
+                    first.elem.classList.add('matched', 'opacity-0', 'pointer-events-none');
+                    second.elem.classList.add('matched', 'opacity-0', 'pointer-events-none');
+                    matchSelected = [];
+
+                    const remaining = document.querySelectorAll('.match-card:not(.matched)').length;
+                    if (remaining === 0) {
+                        clearInterval(matchTimerInterval);
+                        confetti({ particleCount: 100, spread: 70 });
+                        showToast(`🏆 Ajoyib! Vaqt: ${document.getElementById('matchTimer').innerText}`);
+                    }
+                } else {
+                    SoundFX.playWrong();
+                    first.elem.classList.add('!border-red-500', 'bg-red-500/20');
+                    second.elem.classList.add('!border-red-500', 'bg-red-500/20');
+                    setTimeout(() => {
+                        first.elem.classList.remove('selected', '!border-blue-500', 'bg-blue-500/20', '!border-red-500', 'bg-red-500/20');
+                        second.elem.classList.remove('selected', '!border-blue-500', 'bg-blue-500/20', '!border-red-500', 'bg-red-500/20');
+                        matchSelected = [];
+                    }, 600);
+                }
+            }
+        }
+
+        // ================= SPEED QUIZ MODE =================
+        function startSpeedQuiz() {
+            if (words.length < 4) {
+                showToast('Test rejimi uchun kamida 4 ta so\'z kerak');
+                return;
+            }
+            currentQuizQuestions = [...words].sort(() => 0.5 - Math.random());
+            quizIndex = 0;
+            quizScore = 0;
+            document.getElementById('quizTotalNum').innerText = currentQuizQuestions.length;
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            const current = currentQuizQuestions[quizIndex];
+            if (!current) {
+                confetti({ particleCount: 100 });
+                showToast(`🎉 Test tugadi! Natija: ${quizScore} ball`);
+                switchTab('dashboard');
+                return;
+            }
+
+            document.getElementById('quizCurrentNum').innerText = quizIndex + 1;
+            document.getElementById('quizScore').innerText = quizScore;
+            document.getElementById('quizQuestionWord').innerText = current.en;
+
+            let choices = [current.uz];
+            const others = words.filter(w => w.id !== current.id).sort(() => 0.5 - Math.random()).slice(0, 3);
+            others.forEach(o => choices.push(o.uz));
+            choices.sort(() => 0.5 - Math.random());
+
+            document.getElementById('quizOptions').innerHTML = choices.map(opt => `
+                <button type="button" onclick="handleQuizChoice('${opt.replace(/'/g, "\\'")}', this)" 
+                    class="py-3.5 px-4 rounded-2xl glass-card hover:bg-white/10 text-white font-semibold text-xs sm:text-sm text-left border border-white/10 transition-all flex items-center justify-between cursor-pointer active:scale-98">
+                    <span>${opt}</span>
+                    <i class="fa-solid fa-chevron-right text-xs text-zinc-500"></i>
+                </button>
+            `).join('');
+        }
+
+        function handleQuizChoice(selected, btn) {
+            const current = currentQuizQuestions[quizIndex];
+            if (!current) return;
+
+            if (selected.toLowerCase() === current.uz.toLowerCase()) {
+                SoundFX.playChime();
+                btn.className = 'py-3.5 px-4 rounded-2xl bg-emerald-500/20 border border-emerald-500 text-emerald-300 font-bold text-xs sm:text-sm text-left';
+                quizScore += 10;
+            } else {
+                SoundFX.playWrong();
+                btn.className = 'py-3.5 px-4 rounded-2xl bg-red-500/20 border border-red-500 text-red-300 font-bold text-xs sm:text-sm text-left';
+            }
+
+            setTimeout(() => {
+                quizIndex++;
+                renderQuizQuestion();
+            }, 600);
+        }
+
+        // ================= SPELLING MODE =================
+        function startSpellingMode() {
+            if (words.length === 0) return;
+            spellingIndex = 0;
+            renderSpelling();
+        }
+
+        function renderSpelling() {
+            const w = words[spellingIndex];
+            if (!w) return;
+
+            document.getElementById('spellPrompt').innerText = w.uz;
+            const input = document.getElementById('spellInput');
+            input.value = '';
+            input.className = 'w-full bg-black/60 border border-white/15 rounded-2xl px-5 py-4 text-center text-lg sm:text-xl font-bold tracking-wider text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500 transition-all font-mono';
+            document.getElementById('spellFeedback').innerText = '';
+            input.focus();
+        }
+
+        function checkSpellingRealtime() {
+            const w = words[spellingIndex];
+            if (!w) return;
+            const val = document.getElementById('spellInput').value.trim();
+            if (val.toLowerCase() === w.en.toLowerCase()) {
+                SoundFX.playChime();
+                document.getElementById('spellInput').className = 'w-full bg-emerald-950/40 border border-emerald-500 rounded-2xl px-5 py-4 text-center text-lg sm:text-xl font-bold tracking-wider text-emerald-300 font-mono';
+                document.getElementById('spellFeedback').innerText = '✅ To\'g\'ri!';
+                document.getElementById('spellFeedback').className = 'text-xs font-bold text-emerald-400 h-4';
+                setTimeout(() => {
+                    spellingIndex = (spellingIndex + 1) % words.length;
+                    renderSpelling();
+                }, 700);
+            }
+        }
+
+        function submitSpelling() {
+            const w = words[spellingIndex];
+            if (!w) return;
+            const val = document.getElementById('spellInput').value.trim();
+            if (val.toLowerCase() === w.en.toLowerCase()) {
+                checkSpellingRealtime();
+            } else {
+                SoundFX.playWrong();
+                document.getElementById('spellInput').className = 'w-full bg-red-950/40 border border-red-500 rounded-2xl px-5 py-4 text-center text-lg sm:text-xl font-bold tracking-wider text-red-300 font-mono';
+                document.getElementById('spellFeedback').innerText = `❌ To'g'ri javob: ${w.en}`;
+                document.getElementById('spellFeedback').className = 'text-xs font-bold text-red-400 h-4';
+            }
+        }
+
+        function skipSpelling() {
+            spellingIndex = (spellingIndex + 1) % words.length;
+            renderSpelling();
+        }
+
+        // ================= GLOBAL HELPERS & KEYBOARD SHORTCUTS =================
+        function setupKeyboardShortcuts() {
+            window.addEventListener('keydown', (e) => {
+                if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+                if (activeTab === 'flashcard') {
+                    if (e.code === 'Space') { e.preventDefault(); flipCard(); }
+                    if (e.key === '1') { e.preventDefault(); handleCardReview(false); }
+                    if (e.key === '2') { e.preventDefault(); handleCardReview(true); }
+                }
+            });
+        }
+
+        function showToast(msg) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'glass-card px-4 py-3 rounded-xl border border-white/20 text-xs font-bold text-white shadow-2xl flex items-center gap-2 transform transition-all duration-300 translate-y-5 opacity-0';
+            toast.innerHTML = `<i class="fa-solid fa-bell text-blue-400"></i><span>${msg}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => { toast.classList.remove('translate-y-5', 'opacity-0'); }, 10);
+            setTimeout(() => {
+                toast.classList.add('translate-y-5', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
