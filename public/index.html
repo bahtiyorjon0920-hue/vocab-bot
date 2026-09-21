@@ -506,21 +506,28 @@
     </a>
 
     <!-- ================= AUTHENTICATION MODAL (LOGIN & REGISTER) ================= -->
-    <div id="authModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl flex items-center justify-center p-4 transition-all duration-300 hidden">
+    <div id="authModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4 transition-all duration-300 hidden">
         <div class="glass-card max-w-md w-full p-6 sm:p-8 rounded-3xl border border-white/15 relative overflow-hidden shadow-2xl">
             <div class="flex items-center justify-between mb-4">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-lg shadow-lg shadow-blue-500/30">
-                    <i class="fa-solid fa-lock"></i>
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white text-xl shadow-lg shadow-blue-500/30">
+                    <i class="fa-solid fa-graduation-cap"></i>
                 </div>
-                <button type="button" onclick="closeAuthModal()" class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-zinc-400 hover:text-white flex items-center justify-center text-sm transition-all cursor-pointer" title="Yopish">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <div class="text-right">
+                    <span class="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Vocab 3X PRO</span>
+                    <p class="text-xs text-blue-400 font-bold">Xush kelibsiz!</p>
+                </div>
             </div>
 
+            <!-- Telegram Support Link Inside Auth Modal -->
+            <a href="https://t.me/BM_visual" target="_blank" class="mb-4 py-2.5 px-3 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/30 text-sky-300 font-bold text-xs flex items-center justify-center gap-2 transition-all">
+                <i class="fa-brands fa-telegram text-sky-400 text-base"></i>
+                <span>Savollar yoki obuna uchun: @BM_visual</span>
+            </a>
+
             <!-- Auth Tabs -->
-            <div class="flex rounded-xl bg-white/[0.06] p-1 mb-6 border border-white/10">
-                <button type="button" id="authTabLogin" onclick="switchAuthTab('login')" class="flex-1 py-2 rounded-lg text-xs font-bold bg-white/15 text-white transition-all">Kirish</button>
-                <button type="button" id="authTabRegister" onclick="switchAuthTab('register')" class="flex-1 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all">Ro'yxatdan o'tish</button>
+            <div class="flex rounded-xl bg-white/[0.06] p-1 mb-5 border border-white/10">
+                <button type="button" id="authTabLogin" onclick="switchAuthTab('login')" class="flex-1 py-2.5 rounded-lg text-xs font-bold bg-white/15 text-white transition-all">Kirish</button>
+                <button type="button" id="authTabRegister" onclick="switchAuthTab('register')" class="flex-1 py-2.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-all">Ro'yxatdan o'tish</button>
             </div>
 
             <!-- Error message container -->
@@ -559,89 +566,46 @@
     </div>
 
     <!-- ================= SUBSCRIPTION PAYWALL OVERLAY ================= -->
-    <div id="paywallOverlay" class="fixed inset-0 z-40 bg-[#070709]/95 backdrop-blur-2xl flex items-center justify-center p-4 transition-all duration-300 hidden">
-        <div class="glass-card max-w-lg w-full p-6 sm:p-8 rounded-3xl border border-white/15 text-center relative overflow-hidden shadow-2xl">
+    <div id="paywallOverlay" class="fixed inset-0 z-50 bg-[#070709]/95 backdrop-blur-2xl flex items-center justify-center p-4 transition-all duration-300 hidden">
+        <div class="glass-card max-w-lg w-full p-6 sm:p-9 rounded-3xl border border-amber-500/30 text-center relative overflow-hidden shadow-2xl space-y-5">
             
-            <!-- Top Controls: Back and Close -->
-            <div class="flex items-center justify-between mb-2">
-                <button type="button" onclick="closePaywallModal()" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-zinc-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
-                    <i class="fa-solid fa-arrow-left"></i> Ortga
-                </button>
-                <button type="button" onclick="closePaywallModal()" class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-zinc-400 hover:text-white flex items-center justify-center text-sm transition-all cursor-pointer" title="Yopish">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center text-white text-2xl mx-auto mb-4 shadow-lg shadow-amber-500/25">
+            <!-- Glowing Lock Icon -->
+            <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-amber-500 via-orange-500 to-red-500 flex items-center justify-center text-white text-4xl mx-auto shadow-2xl shadow-amber-500/40 animate-pulse">
                 <i class="fa-solid fa-lock"></i>
             </div>
 
-            <h3 class="text-2xl font-black text-white mb-1.5 tracking-tight">Obuna talab qilinadi</h3>
-            <p class="text-xs text-zinc-400 leading-relaxed mb-5">
-                Platformaga to'liq kirish va barcha so'z mashqlaridan foydalanish oylik to'lov asosida ishlaydi.
-            </p>
+            <!-- Title & Notice -->
+            <div>
+                <h3 class="text-2xl sm:text-3xl font-black text-white tracking-tight">Platformadan Foydalanish Uchun Obuna Bo'ling</h3>
+                <p class="text-xs sm:text-sm text-zinc-300 leading-relaxed mt-2">
+                    3X Leitner xotira tizimi, barcha darajadagi so'zlar, flesh-kartalar va 6 soniyalik tezkor testlardan foydalanish oylik to'lov asosida ishlaydi.
+                </p>
+            </div>
 
-            <div class="glass-card p-4 sm:p-5 rounded-2xl mb-5 text-left border border-white/10 bg-white/[0.03]">
-                <div class="flex justify-between items-center mb-3 pb-3 border-b border-white/10">
-                    <span class="text-xs font-semibold text-zinc-300">Oylik to'liq obuna:</span>
-                    <span class="text-base font-black text-emerald-400">50 000 so'm / oy</span>
+            <!-- Pricing Banner -->
+            <div class="p-4 rounded-2xl bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-purple-500/10 border border-white/10 flex items-center justify-between">
+                <div class="text-left">
+                    <span class="text-[11px] text-zinc-400 font-semibold block">To'liq kirish obunasi:</span>
+                    <span class="text-xs text-zinc-300">Cheksiz so'zlar va testlar</span>
                 </div>
-                <div>
-                    <span class="text-[11px] text-zinc-400 font-medium">To'lov kartasi (ustiga bosing - nusxalanadi):</span>
-                    <div onclick="copyCardNumber()" class="mt-1.5 p-3 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-between cursor-pointer hover:bg-blue-500/15 transition-all">
-                        <span id="paywallCardNumber" class="font-mono font-extrabold text-blue-300 text-sm tracking-widest">5614 6820 5096 7480</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-400/20 text-blue-300 font-semibold">Nusxalash 📋</span>
-                    </div>
+                <div class="text-right">
+                    <span class="text-lg sm:text-xl font-black text-emerald-400">50 000 so'm</span>
+                    <span class="text-[11px] text-zinc-400 block">/ oy</span>
                 </div>
             </div>
 
-            <!-- Click & Payme Buttons -->
-            <div class="grid grid-cols-2 gap-2.5 mb-3">
-                <a href="/pay/click" target="_blank" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-emerald-600/20">
-                    <i class="fa-solid fa-bolt"></i> Click orqali
-                </a>
-                <a href="/pay/payme" target="_blank" class="py-2.5 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-cyan-600/20">
-                    <i class="fa-solid fa-credit-card"></i> Payme orqali
-                </a>
-            </div>
-
-            <!-- Direct Telegram Support Link -->
-            <a href="https://t.me/BM_visual" target="_blank" class="mb-5 p-2.5 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/25 text-sky-300 text-xs font-semibold flex items-center justify-center gap-2 transition-all">
-                <i class="fa-brands fa-telegram text-sky-400 text-base"></i>
-                <span>Savollar yoki yordam uchun: @BM_visual</span>
+            <!-- Telegram Admin Contact Button (Exclusive Payment Method) -->
+            <a href="https://t.me/BM_visual" target="_blank" class="w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-black text-sm sm:text-base flex items-center justify-center gap-3 shadow-xl shadow-sky-500/35 hover:shadow-sky-500/50 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer">
+                <i class="fa-brands fa-telegram text-2xl text-white"></i>
+                <span>Adminga Yozish va Obunani Yoqish (@BM_visual)</span>
             </a>
 
-            <!-- Receipt Upload Box -->
-            <div class="border-t border-white/10 pt-4 text-left">
-                <label class="block text-xs font-bold text-zinc-300 mb-2 flex items-center gap-1.5">
-                    <i class="fa-solid fa-file-invoice text-blue-400"></i> To'lov chekini (rasmini) yuklang:
-                </label>
-                
-                <div id="pendingAlertBox" class="hidden mb-3 p-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs">
-                    <div class="flex items-center gap-2 font-bold mb-1">
-                        <i class="fa-solid fa-clock animate-spin"></i>
-                        <span>Chekingiz qabul qilindi!</span>
-                    </div>
-                    <p class="text-[11px] text-amber-200/80">Admin to'lovni tasdiqlashi bilan tizim avtomatik ochiladi. Iltimos kuting...</p>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <input type="file" id="receiptFileInput" accept="image/*" onchange="handleReceiptFileSelect(event)" class="hidden">
-                    <button type="button" onclick="document.getElementById('receiptFileInput').click()" class="flex-1 py-2.5 px-3 rounded-xl glass-button text-xs text-zinc-300 hover:text-white font-medium flex items-center justify-center gap-2 truncate">
-                        <i class="fa-solid fa-image text-blue-400"></i>
-                        <span id="receiptFileName">Rasm tanlash...</span>
-                    </button>
-                    <button type="button" onclick="uploadReceipt()" id="receiptUploadBtn" class="py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-all shadow-md shadow-blue-600/30 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                        Yuborish 📤
-                    </button>
-                </div>
-                <div id="receiptPreviewWrapper" class="hidden mt-3 text-center">
-                    <img id="receiptPreviewImg" src="" alt="Chek" class="max-h-32 mx-auto rounded-xl border border-white/20 shadow-md">
-                </div>
-            </div>
+            <p class="text-[11px] text-zinc-400 leading-relaxed">
+                👆 Yuqoridagi tugmani bosib, Telegram orqali adminga yozing. Admin to'lovni qabul qilib, akkauntingizni 1 daqiqada faollashtirib beradi.
+            </p>
 
             <!-- Paywall Actions / Exit -->
-            <div class="mt-5 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+            <div class="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2.5">
                 <button type="button" onclick="handleLogout()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white font-semibold text-xs border border-white/10 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
                     <i class="fa-solid fa-right-from-bracket"></i> Chiqish (Logout)
                 </button>
@@ -1071,6 +1035,9 @@
             document.getElementById('logoutBtn').classList.add('hidden');
             document.getElementById('loginTriggerBtn').classList.remove('hidden');
             document.getElementById('paywallOverlay').classList.add('hidden');
+            words = [];
+            renderDashboardTable();
+            updateDashboardStats();
             openAuthModal('login');
         }
 
@@ -1103,6 +1070,10 @@
         }
 
         function closeAuthModal() {
+            if (!currentUser) {
+                showToast("Platformadan foydalanish uchun tizimga kiring yoki ro'yxatdan o'ting!");
+                return;
+            }
             document.getElementById('authModal').classList.add('hidden');
         }
 
@@ -1707,6 +1678,15 @@
 
         // ================= TAB SWITCHING =================
         function switchTab(tabId) {
+            if (!currentUser) {
+                openAuthModal('login');
+                return;
+            }
+            if (!currentUser.isSubscribed && currentUser.role !== 'admin') {
+                document.getElementById('paywallOverlay').classList.remove('hidden');
+                return;
+            }
+
             activeTab = tabId;
             document.querySelectorAll('.tab-content').forEach(s => {
                 s.style.display = 'none';
